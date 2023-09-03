@@ -23,6 +23,7 @@ class MainMenuState extends MusicBeatState
 	public static var inExtra:Bool = false;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
+	var menuItemsExtra:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
 	
