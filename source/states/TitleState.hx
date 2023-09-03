@@ -47,6 +47,7 @@ class TitleState extends MusicBeatState
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
 
 	public static var initialized:Bool = false;
+	var introfaded:Bool = false;
 
 	var blackScreen:FlxSprite;
 	var credGroup:FlxGroup;
@@ -176,8 +177,6 @@ class TitleState extends MusicBeatState
 		MusicBeatState.switchState(new ChartingState());
 		#else
 		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
-			FlxTransitionableState.skipNextTransIn = true;
-			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new FlashingState());
 		} else {
 			if (initialized)
@@ -216,6 +215,7 @@ class TitleState extends MusicBeatState
 	function startCutscenesOut()
 	{
 		var imaTween = FlxTween.tween(introspr, {alpha: 0}, 0.5, {onComplete: function(twn:FlxTween) {
+			introfaded = true;
 			startIntro();
 		}, ease: FlxEase.linear});
 	}
@@ -426,7 +426,7 @@ class TitleState extends MusicBeatState
 
 		// EASTER EGG
 
-		if (initialized && !transitioning && skippedIntro)
+		if (initialized && !transitioning && skippedIntro && introfaded)
 		{
 			if (newTitle && !pressedEnter)
 			{
@@ -516,7 +516,7 @@ class TitleState extends MusicBeatState
 			#end
 		}
 
-		if (initialized && pressedEnter && !skippedIntro)
+		if (initialized && pressedEnter && !skippedIntro && introfaded)
 		{
 			skipIntro();
 		}
@@ -581,7 +581,7 @@ class TitleState extends MusicBeatState
 				gfDance.animation.play('danceLeft');
 		}
 
-		if(!closedState) {
+		if(!closedState && introfaded) {
 			sickBeats++;
 			switch (sickBeats)
 			{
@@ -657,7 +657,7 @@ class TitleState extends MusicBeatState
 	var increaseVolume:Bool = false;
 	function skipIntro():Void
 	{
-		if (!skippedIntro)
+		if (!skippedIntro && introfaded)
 		{
 			if (playJingle) //Ignore deez
 			{
