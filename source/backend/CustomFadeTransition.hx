@@ -15,7 +15,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 
 		this.isTransIn = isTransIn;
 		
-		loadImage = new FlxSprite(0, 0, Paths.image('menus/loadingScreen' + FlxG.random.int(1, 2)));
+		loadImage = new FlxSprite(0, 0).loadGraphic(Paths.image('menus/loadingScreen' + FlxG.random.int(1, 2)) );
 		add(loadImage);
 		
 		if (isTransIn) {
