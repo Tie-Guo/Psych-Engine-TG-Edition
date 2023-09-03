@@ -28,10 +28,11 @@ class CustomFadeTransition extends MusicBeatSubstate {
 			alpha = 1;
 		}
 		
-		loadText = new FlxText(0, 0, FlxG.width, 'Loading...\nPlease wait', 50);
-		loadText.setFormat(Paths.font('vcr.ttf'), 32, FlxColor.WHITE, CENTER);
+		loadText = new FlxText(0, 0, FlxG.width, 'Loading... \nPlease wait', 50);
+		loadText.setFormat(Paths.font('vcr.ttf'), 50, FlxColor.WHITE, CENTER);
 		add(loadText);
-		loadText.alpha = (isTransIn ? 0 : 1);
+		if (isTransIn) loadText.alpha = 0;
+		else loadText.alpha = 1;
 		loadText.screenCenter();
 		loadText.x -= 300;
 		
