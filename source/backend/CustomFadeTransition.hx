@@ -7,69 +7,68 @@ class CustomFadeTransition extends MusicBeatSubstate {
 	private var leTween:FlxTween = null;
 	public static var nextCamera:FlxCamera;
 	var isTransIn:Bool = false;
-	var transBlack:FlxSprite;
-	var transGradient:FlxSprite;
+	var loadImage:FlxSprite;
+	var loadText:FlxText;
 
 	public function new(duration:Float, isTransIn:Bool) {
 		super();
 
 		this.isTransIn = isTransIn;
-		var zoom:Float = FlxMath.bound(FlxG.camera.zoom, 0.05, 1);
-		var width:Int = Std.int(FlxG.width / zoom);
-		var height:Int = Std.int(FlxG.height / zoom);
-		transGradient = FlxGradient.createGradientFlxSprite(1, height, (isTransIn ? [0x0, FlxColor.BLACK] : [FlxColor.BLACK, 0x0]));
-		transGradient.scale.x = width;
-		transGradient.updateHitbox();
-		transGradient.scrollFactor.set();
-		add(transGradient);
-
-		transBlack = new FlxSprite().makeGraphic(1, height + 400, FlxColor.BLACK);
-		transBlack.scale.x = width;
-		transBlack.updateHitbox();
-		transBlack.scrollFactor.set();
-		add(transBlack);
-
-		transGradient.x -= (width - FlxG.width) / 2;
-		transBlack.x = transGradient.x;
-
+		
+		loadImage = new FlxSprite(0, 0, Paths.image('menus/loadingScreen' + FlxG.random.int(1, 2)));
+		add(loadImage);
+		
+		if (isTransIn) {
+			loadImage.scale.x = 1.5;
+			loadImage.scale.y = 1.5;
+			alpha = 0;
+		} else {
+			loadImage.scale.x = 1;
+			loadImage.scale.y = 1;
+			alpha = 1;
+		}
+		
+		loadText = new FlxText(0, 0, FlxG.width, 'Loading...\nPlease wait', 50);
+		loadText.setFormat(Paths.font('vcr.ttf'), 32, FlxColor.WHITE, CENTER);
+		add(loadText);
+		loadText.alpha = (isTransIn ? 0 : 1);
+		loadText.screenCenter();
+		loadText.x -= 300;
+		
 		if(isTransIn) {
-			transGradient.y = transBlack.y - transBlack.height;
-			FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration, {
+			FlxTween.tween(loadImage, {scale.x: 1, scale.y: 1, alpha: 1}, 0.3, {
 				onComplete: function(twn:FlxTween) {
 					close();
 				},
-			ease: FlxEase.linear});
+			ease: FlxEase.circOut});
+			
+			FlxTween.tween(loadText, {alpha: 1}, 0.3, {
+				onComplete: function(twn:FlxTween) {
+					close();
+				},
+			ease: FlxEase.circOut});
 		} else {
-			transGradient.y = -transGradient.height;
-			transBlack.y = transGradient.y - transBlack.height + 50;
-			leTween = FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration, {
+			leTween = FlxTween.tween(loadImage, {scale.x: 1.5, scale.y: 1.5, alpha: 0}, 0.3, {
 				onComplete: function(twn:FlxTween) {
 					if(finishCallback != null) {
 						finishCallback();
 					}
 				},
-			ease: FlxEase.linear});
+			ease: FlxEase.circIn});
+			
+			leTween = FlxTween.tween(loadText, {alpha: 0}, 0.3, {
+				onComplete: function(twn:FlxTween) {
+					if(finishCallback != null) {
+						finishCallback();
+					}
+				},
+			ease: FlxEase.circIn});
 		}
 
 		if(nextCamera != null) {
-			transBlack.cameras = [nextCamera];
-			transGradient.cameras = [nextCamera];
+			loadImage.cameras = [nextCamera];
 		}
 		nextCamera = null;
-	}
-
-	override function update(elapsed:Float) {
-		if(isTransIn) {
-			transBlack.y = transGradient.y + transGradient.height;
-		} else {
-			transBlack.y = transGradient.y - transBlack.height;
-		}
-		super.update(elapsed);
-		if(isTransIn) {
-			transBlack.y = transGradient.y + transGradient.height;
-		} else {
-			transBlack.y = transGradient.y - transBlack.height;
-		}
 	}
 
 	override function destroy() {
