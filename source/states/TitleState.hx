@@ -168,7 +168,7 @@ class TitleState extends MusicBeatState
 	{
 		introspr = new FlxSprite(0, 0, Paths.image('menus/titleintro'));
 		add(introspr);
-		spr.alpha = 0;
+		introspr.alpha = 0;
 		var imaTween = FlxTween.tween(introspr, {alpha: 1}, 0.5, {onComplete: function(twn:FlxTween) {
 			new FlxTimer().start(1, function(tmr:FlxTimer)
 			{
