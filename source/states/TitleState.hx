@@ -82,19 +82,6 @@ class TitleState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 		
-		//https://github.com/beihu235/AndroidDialogs
-		var lang:String = '';
-		if (DeviceLanguage.getLang() == 'zh') 
-		lang = 'psych0.71h 安卓端口测试\nb站-北狐丶逐梦移植\n禁止上传到任何资源网站';
-		else
-		lang = 'psych0.71h android port test\nport by NF|beihu';
-		if(!checkToast){
-				
-		checkToast = true;
-		AndroidDialogsExtend.OpenToast(lang,2);
-		
-		}
-		
 		#if android
 		FlxG.android.preventDefaultKeys = [BACK];
 		removeVirtualPad();
@@ -117,30 +104,6 @@ class TitleState extends MusicBeatState
 		FlxG.save.bind('funkin', CoolUtil.getSavePath());
 
 		ClientPrefs.loadPrefs();
-
-		#if CHECK_FOR_UPDATES
-		if(ClientPrefs.data.checkForUpdates && !closedState) {
-			trace('checking for update');
-			var http = new haxe.Http("https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/main/gitVersion.txt");
-
-			http.onData = function (data:String)
-			{
-				updateVersion = data.split('\n')[0].trim();
-				var curVersion:String = MainMenuState.psychEngineVersion.trim();
-				trace('version online: ' + updateVersion + ', your version: ' + curVersion);
-				if(updateVersion != curVersion) {
-					trace('versions arent matching!');
-					mustUpdate = true;
-				}
-			}
-
-			http.onError = function (error) {
-				trace('error: $error');
-			}
-
-			http.request();
-		}
-		#end
 
 		Highscore.load();
 
@@ -181,29 +144,17 @@ class TitleState extends MusicBeatState
 		{
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
+		
+		FlxTransitionableState.skipNextTransIn = true;
+		FlxTransitionableState.skipNextTransOut = true;
 
 		FlxG.mouse.visible = false;
-		#if FREEPLAY
-		MusicBeatState.switchState(new FreeplayState());
-		#elseif CHARTING
-		MusicBeatState.switchState(new ChartingState());
-		#else
+
 		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
-			FlxTransitionableState.skipNextTransIn = true;
-			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new FlashingState());
 		} else {
-			if (initialized)
-				startIntro();
-			else
-			{
-				new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					startIntro();
-				});
-			}
+			startCutscenesIn();
 		}
-		#end
 	}
 
 	var logoBl:FlxSprite;
@@ -211,6 +162,33 @@ class TitleState extends MusicBeatState
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
 	var swagShader:ColorSwap = null;
+	var introspr:FlxSprite;
+	
+	function startCutscenesIn()
+	{
+		introspr = new FlxSprite(0, 0, Paths.image('menus/titleintro'));
+		add(introspr);
+		spr.alpha = 0;
+		var imaTween = FlxTween.tween(introspr, {alpha: 1}, 0.5, {
+			onComplete: function(twn:FlxTween) {
+				new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					startCutscenesOut();
+				});
+			}
+		},
+		ease: FlxEase.linear});
+	}
+	
+	function startCutscenesOut()
+	{
+		var imaTween = FlxTween.tween(introspr, {alpha: 0}, 0.5, {
+				onComplete: function(twn:FlxTween) {
+					startIntro();
+			}
+		},
+		ease: FlxEase.linear});
+	}
 
 	function startIntro()
 	{
@@ -220,6 +198,8 @@ class TitleState extends MusicBeatState
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 			}
 		}
+		
+		remove(introspr);
 
 		Conductor.bpm = titleJSON.bpm;
 		persistentUpdate = true;
