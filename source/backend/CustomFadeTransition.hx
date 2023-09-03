@@ -12,7 +12,6 @@ class CustomFadeTransition extends MusicBeatSubstate {
 	var loadImage:FlxSprite;
 	var loadText:FlxText;
 
-
 	public function new(duration:Float, isTransIn:Bool) {
 		super();
 
@@ -24,8 +23,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		var num = '2';
 		if (FlxG.random.int(1, 2) == 1) num = '1';
 		
-		loadImage = new FlxSprite(0, 0).loadGraphic(Paths.image('menus/loadingScreen' + num) );
-		add(loadImage);
+		loadImage = new FlxSprite(0, 0).loadGraphic(Paths.image('menuBG'));
 		
 		if (isTransIn) {
 			loadImage.scale.x = 1.5;
@@ -93,10 +91,6 @@ class CustomFadeTransition extends MusicBeatSubstate {
 			loadImage.cameras = [nextCamera];
 		}
 		nextCamera = null;
-	}
-
-	override function update(elapsed:Float) {
-		//
 	}
 
 	override function destroy() {
