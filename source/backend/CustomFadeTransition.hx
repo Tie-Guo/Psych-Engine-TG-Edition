@@ -27,11 +27,11 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		if (isTransIn) {
 			loadImage.scale.x = 1.5;
 			loadImage.scale.y = 1.5;
-			alpha = 0;
+			loadImage.alpha = 0;
 		} else {
 			loadImage.scale.x = 1;
 			loadImage.scale.y = 1;
-			alpha = 1;
+			loadImage.alpha = 1;
 		}
 		
 		loadText = new FlxText(0, 0, FlxG.width, 'Loading... \nPlease wait', 50);
