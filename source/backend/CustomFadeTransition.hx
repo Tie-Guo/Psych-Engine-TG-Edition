@@ -17,23 +17,49 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		var zoom:Float = FlxMath.bound(FlxG.camera.zoom, 0.05, 1);
 		var width:Int = Std.int(FlxG.width / zoom);
 		var height:Int = Std.int(FlxG.height / zoom);
+		var timeduration:Float = 0.3;
 		
 		loadBG = new FlxSprite().loadGraphic(Paths.image('menus/loadingScreen' + FlxG.random.int(1, 2)));
 		add(loadBG);
-		if (isTransIn) loadBG.alpha = 0;
 		
 		loadTX = new FlxText(50, 200, 0, 'Loading... \nWait it...', 50);
 		loadTX.setFormat(Paths.font('vcr.ttf'), 50, FlxColor.WHITE);
 		add(loadTX);
+		
+		if (isTransIn) {
+			loadBG.alpha = 0;
+			loadBG.scale.x = 1.5;
+			loadBG.scale.y = 1.5;
+			loadTX.alpha = 0;
+		} else {
+			loadBG.alpha = 1;
+			loadBG.scale.x = 1;
+			loadBG.scale.y = 1;
+			loadTX.alpha = 1;
+		}
 
 		if(isTransIn) {
-			FlxTween.tween(loadBG, {alpha: 1}, duration, {
+			FlxTween.tween(loadBG, {alpha: 1}, timeduration, {
+				onComplete: function(twn:FlxTween) {
+					close();
+				},
+			ease: FlxEase.linear});
+			
+			FlxTween.tween(loadTX, {alpha: 1}, timeduration, {
 				onComplete: function(twn:FlxTween) {
 					close();
 				},
 			ease: FlxEase.linear});
 		} else {
-			leTween = FlxTween.tween(loadBG, {alpha: 0}, duration, {
+			leTween = FlxTween.tween(loadBG, {alpha: 0}, timeduration, {
+				onComplete: function(twn:FlxTween) {
+					if(finishCallback != null) {
+						finishCallback();
+					}
+				},
+			ease: FlxEase.linear});
+			
+			leTween = FlxTween.tween(loadTX, {alpha: 0}, timeduration, {
 				onComplete: function(twn:FlxTween) {
 					if(finishCallback != null) {
 						finishCallback();
