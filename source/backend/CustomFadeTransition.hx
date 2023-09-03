@@ -5,6 +5,7 @@ import flixel.util.FlxGradient;
 class CustomFadeTransition extends MusicBeatSubstate {
 	public static var finishCallback:Void->Void;
 	private var leTween:FlxTween = null;
+	private var leTween2:FlxTween = null;
 	public static var nextCamera:FlxCamera;
 	var isTransIn:Bool = false;
 	var loadImage:FlxSprite;
@@ -37,13 +38,13 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		loadText.x -= 300;
 		
 		if(isTransIn) {
-			FlxTween.tween(loadImage, {scale.x: 1, scale.y: 1, alpha: 1}, 0.3, {
+			leTween2 = FlxTween.tween(loadImage, {scale.x: 1, scale.y: 1, alpha: 1}, 0.3, {
 				onComplete: function(twn:FlxTween) {
 					close();
 				},
 			ease: FlxEase.circOut});
 			
-			FlxTween.tween(loadText, {alpha: 1}, 0.3, {
+			leTween2 = FlxTween.tween(loadText, {alpha: 1}, 0.3, {
 				onComplete: function(twn:FlxTween) {
 					close();
 				},
