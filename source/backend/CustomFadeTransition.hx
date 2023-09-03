@@ -5,16 +5,21 @@ import flixel.util.FlxGradient;
 class CustomFadeTransition extends MusicBeatSubstate {
 	public static var finishCallback:Void->Void;
 	private var leTween:FlxTween = null;
-	private var leTween2:FlxTween = null;
 	public static var nextCamera:FlxCamera;
 	var isTransIn:Bool = false;
+	var transBlack:FlxSprite;
+	var transGradient:FlxSprite;
 	var loadImage:FlxSprite;
 	var loadText:FlxText;
+
 
 	public function new(duration:Float, isTransIn:Bool) {
 		super();
 
 		this.isTransIn = isTransIn;
+		var zoom:Float = FlxMath.bound(FlxG.camera.zoom, 0.05, 1);
+		var width:Int = Std.int(FlxG.width / zoom);
+		var height:Int = Std.int(FlxG.height / zoom);
 		
 		loadImage = new FlxSprite(0, 0).loadGraphic(Paths.image('menus/loadingScreen' + FlxG.random.int(1, 2)) );
 		add(loadImage);
@@ -71,6 +76,10 @@ class CustomFadeTransition extends MusicBeatSubstate {
 			loadImage.cameras = [nextCamera];
 		}
 		nextCamera = null;
+	}
+
+	override function update(elapsed:Float) {
+		//
 	}
 
 	override function destroy() {
