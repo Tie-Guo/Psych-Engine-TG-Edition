@@ -105,6 +105,30 @@ class TitleState extends MusicBeatState
 
 		ClientPrefs.loadPrefs();
 
+		#if CHECK_FOR_UPDATES
+		if(ClientPrefs.data.checkForUpdates && !closedState) {
+			trace('checking for update');
+			var http = new haxe.Http("https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/main/gitVersion.txt");
+
+			http.onData = function (data:String)
+			{
+				updateVersion = data.split('\n')[0].trim();
+				var curVersion:String = MainMenuState.psychEngineVersion.trim();
+				trace('version online: ' + updateVersion + ', your version: ' + curVersion);
+				if(updateVersion != curVersion) {
+					trace('versions arent matching!');
+					mustUpdate = true;
+				}
+			}
+
+			http.onError = function (error) {
+				trace('error: $error');
+			}
+
+			http.request();
+		}
+		#end
+
 		Highscore.load();
 
 		// IGNORE THIS!!!
@@ -146,14 +170,27 @@ class TitleState extends MusicBeatState
 		}
 
 		FlxG.mouse.visible = false;
-
+		#if FREEPLAY
+		MusicBeatState.switchState(new FreeplayState());
+		#elseif CHARTING
+		MusicBeatState.switchState(new ChartingState());
+		#else
 		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new FlashingState());
 		} else {
-			startCutscenesIn();
+			if (initialized)
+				startCutscenesIn();
+			else
+			{
+				new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					startCutscenesIn();
+				});
+			}
 		}
+		#end
 	}
 
 	var logoBl:FlxSprite;
@@ -191,8 +228,6 @@ class TitleState extends MusicBeatState
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 			}
 		}
-		
-		remove(introspr);
 
 		Conductor.bpm = titleJSON.bpm;
 		persistentUpdate = true;
