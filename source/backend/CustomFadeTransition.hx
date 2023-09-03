@@ -43,7 +43,13 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		loadText.x -= 300;
 		
 		if(isTransIn) {
-			leTween2 = FlxTween.tween(loadImage, {scale.x: 1, scale.y: 1, alpha: 1}, 0.3, {
+			leTween2 = FlxTween.tween(loadImage.scale, {x: 1, y: 1}, 0.3, {
+				onComplete: function(twn:FlxTween) {
+					close();
+				},
+			ease: FlxEase.circOut});
+			
+			leTween2 = FlxTween.tween(loadImage, {alpha: 1}, 0.3, {
 				onComplete: function(twn:FlxTween) {
 					close();
 				},
@@ -55,7 +61,15 @@ class CustomFadeTransition extends MusicBeatSubstate {
 				},
 			ease: FlxEase.circOut});
 		} else {
-			leTween = FlxTween.tween(loadImage, {scale.x: 1.5, scale.y: 1.5, alpha: 0}, 0.3, {
+			leTween = FlxTween.tween(loadImage.scale, {x: 1.5, y: 1.5}, 0.3, {
+				onComplete: function(twn:FlxTween) {
+					if(finishCallback != null) {
+						finishCallback();
+					}
+				},
+			ease: FlxEase.circIn});
+			
+			leTween = FlxTween.tween(loadImage, {alpha: 0}, 0.3, {
 				onComplete: function(twn:FlxTween) {
 					if(finishCallback != null) {
 						finishCallback();
