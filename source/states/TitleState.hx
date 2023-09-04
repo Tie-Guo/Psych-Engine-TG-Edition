@@ -48,7 +48,7 @@ class TitleState extends MusicBeatState
 
 	public static var initialized:Bool = false;
 	public static var inGame:Bool = false;
-	var introfaded:Bool = false;
+	public static var introfaded:Bool = false;
 
 	var blackScreen:FlxSprite;
 	var credGroup:FlxGroup;
@@ -84,7 +84,7 @@ class TitleState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 		
-		FlxTransitionableState.skipNextTransOut = true;
+		
 		
 		#if android
 		FlxG.android.preventDefaultKeys = [BACK];
@@ -180,6 +180,8 @@ class TitleState extends MusicBeatState
 		MusicBeatState.switchState(new ChartingState());
 		#else
 		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
+			FlxTransitionableState.skipNextTransIn = true;
+			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new FlashingState());
 		} else {
 			if (initialized)
@@ -204,6 +206,10 @@ class TitleState extends MusicBeatState
 	
 	function startCutscenesIn()
 	{
+		if (inGame) {
+			startIntro();
+			return;
+		}
 		introspr = new FlxSprite(0, 0, Paths.image('menus/titleintro'));
 		add(introspr);
 		introspr.alpha = 0;
@@ -430,7 +436,7 @@ class TitleState extends MusicBeatState
 
 		// EASTER EGG
 
-		if (initialized && !transitioning && skippedIntro && introfaded)
+		if (initialized && !transitioning && skippedIntro)
 		{
 			if (newTitle && !pressedEnter)
 			{
@@ -520,7 +526,7 @@ class TitleState extends MusicBeatState
 			#end
 		}
 
-		if (initialized && pressedEnter && !skippedIntro && introfaded)
+		if (initialized && pressedEnter && !skippedIntro)
 		{
 			skipIntro();
 		}
@@ -585,7 +591,7 @@ class TitleState extends MusicBeatState
 				gfDance.animation.play('danceLeft');
 		}
 
-		if(!closedState && introfaded) {
+		if(!closedState) {
 			sickBeats++;
 			switch (sickBeats)
 			{
@@ -661,7 +667,7 @@ class TitleState extends MusicBeatState
 	var increaseVolume:Bool = false;
 	function skipIntro():Void
 	{
-		if (!skippedIntro && introfaded)
+		if (!skippedIntro)
 		{
 			if (playJingle) //Ignore deez
 			{
