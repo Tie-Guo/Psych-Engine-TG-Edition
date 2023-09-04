@@ -20,7 +20,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		var height:Int = Std.int(FlxG.height / zoom);
 		var timeduration:Float = 0.3;
 		
-		if (MusicBeatState.getState() != TitleState) {
+		if (!TitleState.inGame) {
 			loadBG = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
 		} else
 			loadBG = new FlxSprite().loadGraphic(Paths.image('menus/loadingScreen' + FlxG.random.int(1, 2)));
