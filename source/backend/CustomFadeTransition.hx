@@ -24,6 +24,9 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		camLoad = new FlxCamera();
 		FlxG.cameras.add(camLoad, false);
 		
+		if (nextCamera == null)
+			nextCamera = camLoad;
+		
 		var bo:Bool = TitleState.inGame;
 		
 		if (!bo) {
@@ -45,7 +48,6 @@ class CustomFadeTransition extends MusicBeatSubstate {
 			loadBG.alpha = 1;
 			loadBG.scale.x = 1;
 			loadBG.scale.y = 1;
-			loadBG.updateHitbox();
 			loadTX.alpha = 1;
 		}
 
@@ -92,9 +94,12 @@ class CustomFadeTransition extends MusicBeatSubstate {
 				},
 			ease: FlxEase.quartInOut});
 		}
-
-		loadBG.cameras = [camLoad];
-		loadTX.cameras = [camLoad];
+		
+		if (nextCamera != null) {
+			loadBG.cameras = [nextCamera];
+			loadTX.cameras = [nextCamera];
+		}
+		nextCamera = null;
 	}
 
 	override function destroy() {
