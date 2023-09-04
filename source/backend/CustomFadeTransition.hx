@@ -6,6 +6,7 @@ import states.TitleState;
 class CustomFadeTransition extends MusicBeatSubstate {
 	public static var finishCallback:Void->Void;
 	private var leTween:FlxTween = null;
+	public static var nextCamera:FlxCamera;
 	public static var camLoad:FlxCamera;
 	var isTransIn:Bool = false;
 	var loadBG:FlxSprite;
@@ -23,13 +24,15 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		camLoad = new FlxCamera();
 		FlxG.cameras.add(camLoad, false);
 		
-		if (!TitleState.inGame) {
+		var bo:Bool = TitleState.inGame;
+		
+		if (!bo) {
 			loadBG = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK); // Game get exit when start game
 		} else
 			loadBG = new FlxSprite().loadGraphic(Paths.image('menus/loadingScreen1'));
 		add(loadBG);
 		
-		loadTX = new FlxText(120, 200, 0, (!TitleState.inGame ? '' : 'Loading... \nWait it...'), 50);
+		loadTX = new FlxText(120, 200, 0, !bo ? '' : 'Loading... \nWait it...', 50);
 		loadTX.setFormat(Paths.font('vcr.ttf'), 50, FlxColor.WHITE);
 		add(loadTX);
 		
