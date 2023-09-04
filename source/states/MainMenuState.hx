@@ -253,8 +253,8 @@ class MainMenuState extends MusicBeatState
 	function openSelected()
 	{
 		if (optionShit[curSelected] == 'extra' && !inChanging) {
-			inExtra = true;
 			inChanging = true;
+			FlxG.sound.play(Paths.sound('confirmMenu'));
 			doTweenG();
 		} else {
 			selectedSomethin = true;
@@ -299,8 +299,8 @@ class MainMenuState extends MusicBeatState
 	{
 		var daChoice:String = optionShitExtra[curSelectedExtra];
 		if (daChoice == 'back' && !inChanging) {
-			inExtra = false;
 			inChanging = true;
+			FlxG.sound.play(Paths.sound('confirmMenu'));
 			doTweenG();
 		} else if (daChoice == 'donate') {
 			CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
@@ -341,10 +341,10 @@ class MainMenuState extends MusicBeatState
 	
 	function doTweenG()
 	{
-		if (inExtra && inChanging) {
+		if (inExtra) {
 			menuItemsExtra.forEach(function(spr:FlxSprite) {
 				FlxTween.tween(spr, {x: spr.x + 1000}, 0.6, {
-					ease: FlxEase.quadOut, onComplete: function(twn:FlxTween)
+					ease: FlxEase.backInOut, onComplete: function(twn:FlxTween)
 					{
 						inChanging = false;
 					}
@@ -352,12 +352,12 @@ class MainMenuState extends MusicBeatState
 			});
 			
 			menuItems.forEach(function(spr:FlxSprite) {
-				FlxTween.tween(spr, {x: spr.x + 1000}, 0.6, {ease: FlxEase.quadOut});
+				FlxTween.tween(spr, {x: spr.x + 1000}, 0.6, {ease: FlxEase.backInOut});
 			});
 		} else {
 			menuItems.forEach(function(spr:FlxSprite) {
 				FlxTween.tween(spr, {x: spr.x - 1000}, 0.6, {
-					ease: FlxEase.quadOut, onComplete: function(twn:FlxTween)
+					ease: FlxEase.backInOut, onComplete: function(twn:FlxTween)
 					{
 						inChanging = false;
 					}
@@ -365,9 +365,10 @@ class MainMenuState extends MusicBeatState
 			});
 			
 			menuItemsExtra.forEach(function(spr:FlxSprite) {
-				FlxTween.tween(spr, {x: spr.x - 1000}, 0.6, {ease: FlxEase.quadOut});
+				FlxTween.tween(spr, {x: spr.x - 1000}, 0.6, {ease: FlxEase.backInOut});
 			});
 		}
+		inExtra = !inExtra;
 	}
 
 	function changeItem(huh:Int = 0)
