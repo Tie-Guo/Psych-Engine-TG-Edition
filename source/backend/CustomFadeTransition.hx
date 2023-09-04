@@ -18,12 +18,12 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		var zoom:Float = FlxMath.bound(FlxG.camera.zoom, 0.05, 1);
 		var width:Int = Std.int(FlxG.width / zoom);
 		var height:Int = Std.int(FlxG.height / zoom);
-		var timeduration:Float = 0.3;
+		var timeduration:Float = 0.75;
 		
 		if (!TitleState.inGame) {
-			loadBG = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
+			loadBG = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK); // Game get exit when start game
 		} else
-			loadBG = new FlxSprite().loadGraphic(Paths.image('menus/loadingScreen' + FlxG.random.int(1, 2)));
+			loadBG = new FlxSprite().loadGraphic(Paths.image('menus/loadingScreen1'));
 		add(loadBG);
 		
 		loadTX = new FlxText(50, 200, 0, 'Loading... \nWait it...', 50);
@@ -39,6 +39,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 			loadBG.alpha = 1;
 			loadBG.scale.x = 1;
 			loadBG.scale.y = 1;
+			loadBG.updateHitbox();
 			loadTX.alpha = 1;
 		}
 
@@ -54,6 +55,12 @@ class CustomFadeTransition extends MusicBeatSubstate {
 					close();
 				},
 			ease: FlxEase.linear});
+			
+			FlxTween.tween(loadBG.scale, {x: 1, y: 1}, timeduration, {
+				onComplete: function(twn:FlxTween) {
+					close();
+				},
+			ease: FlxEase.linear});
 		} else {
 			leTween = FlxTween.tween(loadBG, {alpha: 0}, timeduration, {
 				onComplete: function(twn:FlxTween) {
@@ -64,6 +71,14 @@ class CustomFadeTransition extends MusicBeatSubstate {
 			ease: FlxEase.linear});
 			
 			leTween = FlxTween.tween(loadTX, {alpha: 0}, timeduration, {
+				onComplete: function(twn:FlxTween) {
+					if(finishCallback != null) {
+						finishCallback();
+					}
+				},
+			ease: FlxEase.linear});
+			
+			leTween = FlxTween.tween(loadBG.scale, {x: 1.5, y: 1.5}, timeduration, {
 				onComplete: function(twn:FlxTween) {
 					if(finishCallback != null) {
 						finishCallback();
