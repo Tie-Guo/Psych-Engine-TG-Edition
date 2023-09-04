@@ -212,9 +212,9 @@ class MainMenuState extends MusicBeatState
 		}
 		FlxG.camera.followLerp = FlxMath.bound(elapsed * 9 / (FlxG.updateFramerate / 60), 0, 1);
 
-		if (!selectedSomethin)
+		if (!selectedSomethin && !inChanging)
 		{
-			if (controls.UI_UP_P)
+			if (controls.UI_UP_P_)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeItem(-1);
@@ -233,7 +233,7 @@ class MainMenuState extends MusicBeatState
 				MusicBeatState.switchState(new TitleState());
 			}
 
-			if (controls.ACCEPT && !inChanging)
+			if (controls.ACCEPT)
 			{
 				if (inExtra) openSelected();
 				else openSelectedExtra();
