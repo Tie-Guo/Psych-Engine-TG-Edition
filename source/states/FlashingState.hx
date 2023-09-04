@@ -133,7 +133,11 @@ class FlashingState extends MusicBeatState
 		warnText.screenCenter(Y);
 		add(warnText);
 		warnText.alpha = 0;
-		FlxTween.tween(warnText, {alpha: 1}, 0.4, {onComplete: function (twn:FlxTween) canExit = true;});
+		FlxTween.tween(warnText, {alpha: 1}, 0.4, {onComplete: 
+		function(twn:FlxTween) {
+				canExit = true;
+			}
+		});
 		
 		#if android
 			removeVirtualPad();
