@@ -21,73 +21,51 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		var height:Int = Std.int(FlxG.height / zoom);
 		var timeduration:Float = 0.75;
 		
-		loadcam = new FlxCamera();
-		FlxG.cameras.add(loadcam, false);
+		if (loadcam == null) {
+			loadcam = new FlxCamera();
+			loadcam.bgColor = 0x00;
+			FlxG.cameras.add(loadcam, false);
+		}
 		
 		if (!TitleState.inGame) {
 			loadBG = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK); // Game get exit when start game
 		} else
 			loadBG = new FlxSprite().loadGraphic(Paths.image('menus/loadingScreen1'));
+			
 		add(loadBG);
 		
 		loadTX = new FlxText(50, 200, 0, 'Loading... \nWait it...', 50);
 		loadTX.setFormat(Paths.font('vcr.ttf'), 50, FlxColor.WHITE);
 		add(loadTX);
 		
-		if (!isTransIn) {
-			loadBG.alpha = 0;
-			loadBG.scale.x = 1.5;
-			loadBG.scale.y = 1.5;
-			loadTX.alpha = 0;
-		} else {
+		if (isTransIn) {
 			loadBG.alpha = 1;
 			loadBG.scale.x = 1;
 			loadBG.scale.y = 1;
 			loadTX.alpha = 1;
+		} else {
+			loadBG.alpha = 0;
+			loadBG.scale.x = 1.5;
+			loadBG.scale.y = 1.5;
+			loadTX.alpha = 0;
 		}
 
-		if(!isTransIn) {
-			FlxTween.tween(loadBG, {alpha: 1}, timeduration, {
-				onComplete: function(twn:FlxTween) {
-					close();
-				},
-			ease: FlxEase.quartInOut});
-			
-			FlxTween.tween(loadTX, {alpha: 1}, timeduration, {
-				onComplete: function(twn:FlxTween) {
-					close();
-				},
-			ease: FlxEase.quartInOut});
-			
-			FlxTween.tween(loadBG.scale, {x: 1, y: 1}, timeduration, {
-				onComplete: function(twn:FlxTween) {
-					close();
-				},
-			ease: FlxEase.quartInOut});
-		} else {
+		if(isTransIn) {
 			leTween = FlxTween.tween(loadBG, {alpha: 0}, timeduration, {
 				onComplete: function(twn:FlxTween) {
 					if(finishCallback != null) {
 						finishCallback();
 					}
-				},
-			ease: FlxEase.quartInOut});
-			
-			leTween = FlxTween.tween(loadTX, {alpha: 0}, timeduration, {
+				}, ease: FlxEase.quartInOut});
+			leTween = FlxTween.tween(loadTX, {alpha: 0}, timeduration, {ease: FlxEase.quartInOut});
+			leTween = FlxTween.tween(loadBG.scale, {x: 1.5, y: 1.5}, timeduration, {ease: FlxEase.quartInOut});
+		} else {
+			FlxTween.tween(loadBG, {alpha: 1}, timeduration, {
 				onComplete: function(twn:FlxTween) {
-					if(finishCallback != null) {
-						finishCallback();
-					}
-				},
-			ease: FlxEase.quartInOut});
-			
-			leTween = FlxTween.tween(loadBG.scale, {x: 1.5, y: 1.5}, timeduration, {
-				onComplete: function(twn:FlxTween) {
-					if(finishCallback != null) {
-						finishCallback();
-					}
-				},
-			ease: FlxEase.quartInOut});
+					close();
+				}, ease: FlxEase.quartInOut});
+			FlxTween.tween(loadTX, {alpha: 1}, timeduration, {ease: FlxEase.quartInOut});
+			FlxTween.tween(loadBG.scale, {x: 1, y: 1}, timeduration, {ease: FlxEase.quartInOut});
 		}
 
 		if(nextCamera != null) {
@@ -97,7 +75,6 @@ class CustomFadeTransition extends MusicBeatSubstate {
 			loadBG.cameras = [loadcam];
 			loadTX.cameras = [loadcam];
 		}
-			
 		nextCamera = null;
 	}
 
