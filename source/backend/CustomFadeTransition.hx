@@ -7,6 +7,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 	public static var finishCallback:Void->Void;
 	private var leTween:FlxTween = null;
 	public static var nextCamera:FlxCamera;
+	var loadcam:FlxCamera;
 	var isTransIn:Bool = false;
 	var loadBG:FlxSprite;
 	var loadTX:FlxText;
@@ -19,6 +20,9 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		var width:Int = Std.int(FlxG.width / zoom);
 		var height:Int = Std.int(FlxG.height / zoom);
 		var timeduration:Float = 0.75;
+		
+		loadcam = new FlxCamera();
+		FlxG.cameras.add(loadcam, false);
 		
 		if (!TitleState.inGame) {
 			loadBG = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK); // Game get exit when start game
@@ -47,19 +51,19 @@ class CustomFadeTransition extends MusicBeatSubstate {
 				onComplete: function(twn:FlxTween) {
 					close();
 				},
-			ease: FlxEase.linear});
+			ease: FlxEase.quartInOut});
 			
 			FlxTween.tween(loadTX, {alpha: 1}, timeduration, {
 				onComplete: function(twn:FlxTween) {
 					close();
 				},
-			ease: FlxEase.linear});
+			ease: FlxEase.quartInOut});
 			
 			FlxTween.tween(loadBG.scale, {x: 1, y: 1}, timeduration, {
 				onComplete: function(twn:FlxTween) {
 					close();
 				},
-			ease: FlxEase.linear});
+			ease: FlxEase.quartInOut});
 		} else {
 			leTween = FlxTween.tween(loadBG, {alpha: 0}, timeduration, {
 				onComplete: function(twn:FlxTween) {
@@ -67,7 +71,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 						finishCallback();
 					}
 				},
-			ease: FlxEase.linear});
+			ease: FlxEase.quartInOut});
 			
 			leTween = FlxTween.tween(loadTX, {alpha: 0}, timeduration, {
 				onComplete: function(twn:FlxTween) {
@@ -75,7 +79,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 						finishCallback();
 					}
 				},
-			ease: FlxEase.linear});
+			ease: FlxEase.quartInOut});
 			
 			leTween = FlxTween.tween(loadBG.scale, {x: 1.5, y: 1.5}, timeduration, {
 				onComplete: function(twn:FlxTween) {
@@ -83,13 +87,17 @@ class CustomFadeTransition extends MusicBeatSubstate {
 						finishCallback();
 					}
 				},
-			ease: FlxEase.linear});
+			ease: FlxEase.quartInOut});
 		}
 
 		if(nextCamera != null) {
 			loadBG.cameras = [nextCamera];
 			loadTX.cameras = [nextCamera];
+		} else {
+			loadBG.cameras = [loadcam];
+			loadTX.cameras = [loadcam];
 		}
+			
 		nextCamera = null;
 	}
 
