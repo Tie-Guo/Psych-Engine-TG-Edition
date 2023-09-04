@@ -1,16 +1,14 @@
 package backend;
 
 import flixel.util.FlxGradient;
-import states.TitleState;
 
 class CustomFadeTransition extends MusicBeatSubstate {
 	public static var finishCallback:Void->Void;
 	private var leTween:FlxTween = null;
 	public static var nextCamera:FlxCamera;
-	var loadcam:FlxCamera;
 	var isTransIn:Bool = false;
-	var loadBG:FlxSprite;
-	var loadTX:FlxText;
+	var transBlack:FlxSprite;
+	var transGradient:FlxSprite;
 
 	public function new(duration:Float, isTransIn:Bool) {
 		super();
@@ -19,63 +17,59 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		var zoom:Float = FlxMath.bound(FlxG.camera.zoom, 0.05, 1);
 		var width:Int = Std.int(FlxG.width / zoom);
 		var height:Int = Std.int(FlxG.height / zoom);
-		var timeduration:Float = 0.75;
-		
-		if (loadcam == null) {
-			loadcam = new FlxCamera();
-			loadcam.bgColor = 0x00;
-			FlxG.cameras.add(loadcam, false);
-		}
-		
-		if (!TitleState.inGame) {
-			loadBG = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK); // Game get exit when start game
-		} else
-			loadBG = new FlxSprite().loadGraphic(Paths.image('menus/loadingScreen1'));
-			
-		add(loadBG);
-		
-		loadTX = new FlxText(50, 200, 0, 'Loading... \nWait it...', 50);
-		loadTX.setFormat(Paths.font('vcr.ttf'), 50, FlxColor.WHITE);
-		add(loadTX);
-		
-		if (isTransIn) {
-			loadBG.alpha = 1;
-			loadBG.scale.x = 1;
-			loadBG.scale.y = 1;
-			loadTX.alpha = 1;
-		} else {
-			loadBG.alpha = 0;
-			loadBG.scale.x = 1.5;
-			loadBG.scale.y = 1.5;
-			loadTX.alpha = 0;
-		}
+		transGradient = FlxGradient.createGradientFlxSprite(1, height, (isTransIn ? [0x0, FlxColor.BLACK] : [FlxColor.BLACK, 0x0]));
+		transGradient.scale.x = width;
+		transGradient.updateHitbox();
+		transGradient.scrollFactor.set();
+		add(transGradient);
+
+		transBlack = new FlxSprite().makeGraphic(1, height + 400, FlxColor.BLACK);
+		transBlack.scale.x = width;
+		transBlack.updateHitbox();
+		transBlack.scrollFactor.set();
+		add(transBlack);
+
+		transGradient.x -= (width - FlxG.width) / 2;
+		transBlack.x = transGradient.x;
 
 		if(isTransIn) {
-			leTween = FlxTween.tween(loadBG, {alpha: 0}, timeduration, {
+			transGradient.y = transBlack.y - transBlack.height;
+			FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration, {
+				onComplete: function(twn:FlxTween) {
+					close();
+				},
+			ease: FlxEase.linear});
+		} else {
+			transGradient.y = -transGradient.height;
+			transBlack.y = transGradient.y - transBlack.height + 50;
+			leTween = FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration, {
 				onComplete: function(twn:FlxTween) {
 					if(finishCallback != null) {
 						finishCallback();
 					}
-				}, ease: FlxEase.quartInOut});
-			leTween = FlxTween.tween(loadTX, {alpha: 0}, timeduration, {ease: FlxEase.quartInOut});
-			leTween = FlxTween.tween(loadBG.scale, {x: 1.5, y: 1.5}, timeduration, {ease: FlxEase.quartInOut});
-		} else {
-			FlxTween.tween(loadBG, {alpha: 1}, timeduration, {
-				onComplete: function(twn:FlxTween) {
-					close();
-				}, ease: FlxEase.quartInOut});
-			FlxTween.tween(loadTX, {alpha: 1}, timeduration, {ease: FlxEase.quartInOut});
-			FlxTween.tween(loadBG.scale, {x: 1, y: 1}, timeduration, {ease: FlxEase.quartInOut});
+				},
+			ease: FlxEase.linear});
 		}
 
 		if(nextCamera != null) {
-			loadBG.cameras = [nextCamera];
-			loadTX.cameras = [nextCamera];
-		} else {
-			loadBG.cameras = [loadcam];
-			loadTX.cameras = [loadcam];
+			transBlack.cameras = [nextCamera];
+			transGradient.cameras = [nextCamera];
 		}
 		nextCamera = null;
+	}
+
+	override function update(elapsed:Float) {
+		if(isTransIn) {
+			transBlack.y = transGradient.y + transGradient.height;
+		} else {
+			transBlack.y = transGradient.y - transBlack.height;
+		}
+		super.update(elapsed);
+		if(isTransIn) {
+			transBlack.y = transGradient.y + transGradient.height;
+		} else {
+			transBlack.y = transGradient.y - transBlack.height;
+		}
 	}
 
 	override function destroy() {
