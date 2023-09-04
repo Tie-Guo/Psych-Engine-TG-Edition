@@ -16,10 +16,11 @@ class FlashingState extends MusicBeatState
 
 	var warnText:FlxText;
 	var languText:FlxText;
+	var languChText:FlxText;
 	override function create()
 	{
 		super.create();
-		langu = Language.languages;
+		langList = Language.languages;
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
