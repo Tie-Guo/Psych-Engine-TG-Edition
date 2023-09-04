@@ -7,7 +7,6 @@ class CustomFadeTransition extends MusicBeatSubstate {
 	public static var finishCallback:Void->Void;
 	private var leTween:FlxTween = null;
 	public static var nextCamera:FlxCamera;
-	public static var camLoad:FlxCamera;
 	var isTransIn:Bool = false;
 	var loadBG:FlxSprite;
 	var loadTX:FlxText;
@@ -19,13 +18,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		var zoom:Float = FlxMath.bound(FlxG.camera.zoom, 0.05, 1);
 		var width:Int = Std.int(FlxG.width / zoom);
 		var height:Int = Std.int(FlxG.height / zoom);
-		var timeduration:Float = 0.4;
-		
-		camLoad = new FlxCamera();
-		FlxG.cameras.add(camLoad, false);
-		
-		if (nextCamera == null)
-			nextCamera = camLoad;
+		var timeduration:Float = 0.75;
 		
 		if (!TitleState.inGame) {
 			loadBG = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK); // Game get exit when start game
@@ -33,11 +26,11 @@ class CustomFadeTransition extends MusicBeatSubstate {
 			loadBG = new FlxSprite().loadGraphic(Paths.image('menus/loadingScreen1'));
 		add(loadBG);
 		
-		loadTX = new FlxText(120, 200, 0, 'Loading... \nWait it...', 50);
+		loadTX = new FlxText(50, 200, 0, 'Loading... \nWait it...', 50);
 		loadTX.setFormat(Paths.font('vcr.ttf'), 50, FlxColor.WHITE);
 		add(loadTX);
 		
-		if (isTransIn) {
+		if (!isTransIn) {
 			loadBG.alpha = 0;
 			loadBG.scale.x = 1.5;
 			loadBG.scale.y = 1.5;
@@ -54,19 +47,19 @@ class CustomFadeTransition extends MusicBeatSubstate {
 				onComplete: function(twn:FlxTween) {
 					close();
 				},
-			ease: FlxEase.quartInOut});
+			ease: FlxEase.linear});
 			
 			FlxTween.tween(loadTX, {alpha: 1}, timeduration, {
 				onComplete: function(twn:FlxTween) {
 					close();
 				},
-			ease: FlxEase.quartInOut});
+			ease: FlxEase.linear});
 			
 			FlxTween.tween(loadBG.scale, {x: 1, y: 1}, timeduration, {
 				onComplete: function(twn:FlxTween) {
 					close();
 				},
-			ease: FlxEase.quartInOut});
+			ease: FlxEase.linear});
 		} else {
 			leTween = FlxTween.tween(loadBG, {alpha: 0}, timeduration, {
 				onComplete: function(twn:FlxTween) {
@@ -74,7 +67,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 						finishCallback();
 					}
 				},
-			ease: FlxEase.quartInOut});
+			ease: FlxEase.linear});
 			
 			leTween = FlxTween.tween(loadTX, {alpha: 0}, timeduration, {
 				onComplete: function(twn:FlxTween) {
@@ -82,7 +75,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 						finishCallback();
 					}
 				},
-			ease: FlxEase.quartInOut});
+			ease: FlxEase.linear});
 			
 			leTween = FlxTween.tween(loadBG.scale, {x: 1.5, y: 1.5}, timeduration, {
 				onComplete: function(twn:FlxTween) {
@@ -90,10 +83,10 @@ class CustomFadeTransition extends MusicBeatSubstate {
 						finishCallback();
 					}
 				},
-			ease: FlxEase.quartInOut});
+			ease: FlxEase.linear});
 		}
-		
-		if (nextCamera != null) {
+
+		if(nextCamera != null) {
 			loadBG.cameras = [nextCamera];
 			loadTX.cameras = [nextCamera];
 		}
