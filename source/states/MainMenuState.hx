@@ -235,7 +235,7 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.ACCEPT)
 			{
-				if (inExtra) openSelected();
+				if (!inExtra) openSelected();
 				else openSelectedExtra();
 			}
 			#if (desktop || android)
