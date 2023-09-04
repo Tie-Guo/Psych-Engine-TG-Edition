@@ -21,6 +21,7 @@ class MainMenuState extends MusicBeatState
 	public static var curSelected:Int = 0;
 	public static var curSelectedExtra:Int = 0;
 	public static var inExtra:Bool = false;
+	var inChanging:Bool = false;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	var menuItemsExtra:FlxTypedGroup<FlxSprite>;
@@ -107,18 +108,18 @@ class MainMenuState extends MusicBeatState
 		
 		for (i in 0...optionShitExtra.length)
 		{
-			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
+			var offset:Float = 108 - (Math.max(optionShitExtra.length, 4) - 4) * 80;
 			var menuItem:FlxSprite = new FlxSprite(0, (i * 140)  + offset);
 			menuItem.antialiasing = ClientPrefs.data.antialiasing;
 			menuItem.scale.x = scale;
 			menuItem.scale.y = scale;
-			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
-			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
-			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
+			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShitExtra[i]);
+			menuItem.animation.addByPrefix('idle', optionShitExtra[i] + " basic", 24);
+			menuItem.animation.addByPrefix('selected', optionShitExtra[i] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = i;
 			menuItem.screenCenter(X);
-			menuItem.visible = false;
+			menuItem.x += 1000;
 			menuItemsExtra.add(menuItem);
 			var scr:Float = (optionShitExtra.length - 4) * 0.135;
 			if(optionShitExtra.length < 6) scr = 0;
@@ -151,7 +152,7 @@ class MainMenuState extends MusicBeatState
 		FlxG.camera.follow(camFollow, null, 0);
 		
 		
-		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "TG Edition v" + tgEngineVersion, 12);
+		var versionShit:FlxText = new FlxText(12, FlxG.height - 64, 0, "TG Edition v" + tgEngineVersion, 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
@@ -167,6 +168,9 @@ class MainMenuState extends MusicBeatState
 		// NG.core.calls.event.logEvent('swag').send();
 
 		changeItem();
+		inExtra = true;
+		changeItem();
+		inExtra = false;
 
 		#if ACHIEVEMENTS_ALLOWED
 		Achievements.loadAchievements();
@@ -229,7 +233,7 @@ class MainMenuState extends MusicBeatState
 				MusicBeatState.switchState(new TitleState());
 			}
 
-			if (controls.ACCEPT)
+			if (controls.ACCEPT && !inChanging)
 			{
 				if (inExtra) openSelected();
 				else openSelectedExtra();
@@ -248,9 +252,9 @@ class MainMenuState extends MusicBeatState
 	
 	function openSelected()
 	{
-		if (optionShit[curSelected] == 'extra') {
+		if (optionShit[curSelected] == 'extra' && !inChanging) {
 			inExtra = true;
-			selectedSomethin = true;
+			inChanging = true;
 			doTweenG();
 		} else {
 			selectedSomethin = true;
@@ -294,9 +298,9 @@ class MainMenuState extends MusicBeatState
 	function openSelectedExtra()
 	{
 		var daChoice:String = optionShitExtra[curSelectedExtra];
-		if (daChoice == 'back') {
+		if (daChoice == 'back' && !inChanging) {
 			inExtra = false;
-			selectedSomethin = true;
+			inChanging = true;
 			doTweenG();
 		} else if (daChoice == 'donate') {
 			CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
@@ -337,12 +341,12 @@ class MainMenuState extends MusicBeatState
 	
 	function doTweenG()
 	{
-		if (inExtra) {
+		if (inExtra && inChanging) {
 			menuItemsExtra.forEach(function(spr:FlxSprite) {
 				FlxTween.tween(spr, {x: spr.x + 1000}, 0.6, {
 					ease: FlxEase.quadOut, onComplete: function(twn:FlxTween)
 					{
-						selectedSomethin = false;
+						inChanging = false;
 					}
 				});
 			});
@@ -355,7 +359,7 @@ class MainMenuState extends MusicBeatState
 				FlxTween.tween(spr, {x: spr.x - 1000}, 0.6, {
 					ease: FlxEase.quadOut, onComplete: function(twn:FlxTween)
 					{
-						selectedSomethin = false;
+						inChanging = false;
 					}
 				});
 			});
