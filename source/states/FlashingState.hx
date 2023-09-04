@@ -112,7 +112,7 @@ class FlashingState extends MusicBeatState
 	
 	function event()
 	{
-		if (Language.get() == 'English')
+		if (Language.get() == 'English') {
 		warnText = new FlxText(0, 0, FlxG.width,
 			"Hey, watch out!\n
 			This Mod contains some flashing lights!\n
