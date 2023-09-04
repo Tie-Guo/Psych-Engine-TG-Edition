@@ -27,15 +27,13 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		if (nextCamera == null)
 			nextCamera = camLoad;
 		
-		var bo:Bool = TitleState.inGame;
-		
-		if (!bo) {
+		if (!TitleState.inGame) {
 			loadBG = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK); // Game get exit when start game
 		} else
 			loadBG = new FlxSprite().loadGraphic(Paths.image('menus/loadingScreen1'));
 		add(loadBG);
 		
-		loadTX = new FlxText(120, 200, 0, !bo ? '' : 'Loading... \nWait it...', 50);
+		loadTX = new FlxText(120, 200, 0, 'Loading... \nWait it...', 50);
 		loadTX.setFormat(Paths.font('vcr.ttf'), 50, FlxColor.WHITE);
 		add(loadTX);
 		
