@@ -103,6 +103,13 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.changeValue = 0.1;
 		option.decimals = 1;
 		addOption(option);
+		
+		var option:Option = new Option('Language',
+			'Choose your own Language.',
+			'language',
+			'string', 
+			Language.languages);
+		addOption(option);
 
 		var option:Option = new Option('Hide HUD',
 			'If checked, hides most HUD elements.',
