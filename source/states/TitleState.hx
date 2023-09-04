@@ -47,6 +47,7 @@ class TitleState extends MusicBeatState
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
 
 	public static var initialized:Bool = false;
+	public static var inGame:Bool = false;
 	var introfaded:Bool = false;
 
 	var blackScreen:FlxSprite;
@@ -82,6 +83,8 @@ class TitleState extends MusicBeatState
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
+		
+		FlxTransitionableState.skipNextTransOut = true;
 		
 		#if android
 		FlxG.android.preventDefaultKeys = [BACK];
@@ -216,6 +219,7 @@ class TitleState extends MusicBeatState
 	{
 		var imaTween = FlxTween.tween(introspr, {alpha: 0}, 0.5, {onComplete: function(twn:FlxTween) {
 			introfaded = true;
+			inGame = true;
 			startIntro();
 		}, ease: FlxEase.linear});
 	}
