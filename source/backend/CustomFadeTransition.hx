@@ -1,6 +1,7 @@
 package backend;
 
 import flixel.util.FlxGradient;
+import states.TitleState;
 
 class CustomFadeTransition extends MusicBeatSubstate {
 	public static var finishCallback:Void->Void;
@@ -19,7 +20,10 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		var height:Int = Std.int(FlxG.height / zoom);
 		var timeduration:Float = 0.3;
 		
-		loadBG = new FlxSprite().loadGraphic(Paths.image('menus/loadingScreen' + FlxG.random.int(1, 2)));
+		if (MusicBeatState.getState() != TitleState) {
+			loadBG = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
+		} else
+			loadBG = new FlxSprite().loadGraphic(Paths.image('menus/loadingScreen' + FlxG.random.int(1, 2)));
 		add(loadBG);
 		
 		loadTX = new FlxText(50, 200, 0, 'Loading... \nWait it...', 50);
