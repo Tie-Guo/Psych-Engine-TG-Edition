@@ -47,6 +47,8 @@ class TitleState extends MusicBeatState
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
 
 	public static var initialized:Bool = false;
+	public static var inGame:Bool = false;
+	var introfaded:Bool = false;
 
 	var blackScreen:FlxSprite;
 	var credGroup:FlxGroup;
@@ -82,6 +84,8 @@ class TitleState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 		
+		FlxTransitionableState.skipNextTransOut = true;
+		
 		#if android
 		FlxG.android.preventDefaultKeys = [BACK];
 		removeVirtualPad();
@@ -104,6 +108,30 @@ class TitleState extends MusicBeatState
 		FlxG.save.bind('funkin', CoolUtil.getSavePath());
 
 		ClientPrefs.loadPrefs();
+
+		#if CHECK_FOR_UPDATES
+		if(ClientPrefs.data.checkForUpdates && !closedState) {
+			trace('checking for update');
+			var http = new haxe.Http("https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/main/gitVersion.txt");
+
+			http.onData = function (data:String)
+			{
+				updateVersion = data.split('\n')[0].trim();
+				var curVersion:String = MainMenuState.psychEngineVersion.trim();
+				trace('version online: ' + updateVersion + ', your version: ' + curVersion);
+				if(updateVersion != curVersion) {
+					trace('versions arent matching!');
+					mustUpdate = true;
+				}
+			}
+
+			http.onError = function (error) {
+				trace('error: $error');
+			}
+
+			http.request();
+		}
+		#end
 
 		Highscore.load();
 
@@ -144,17 +172,27 @@ class TitleState extends MusicBeatState
 		{
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
-		
-		FlxTransitionableState.skipNextTransIn = true;
-		FlxTransitionableState.skipNextTransOut = true;
 
 		FlxG.mouse.visible = false;
-
+		#if FREEPLAY
+		MusicBeatState.switchState(new FreeplayState());
+		#elseif CHARTING
+		MusicBeatState.switchState(new ChartingState());
+		#else
 		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
 			MusicBeatState.switchState(new FlashingState());
 		} else {
-			startCutscenesIn();
+			if (initialized)
+				startCutscenesIn();
+			else
+			{
+				new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					startCutscenesIn();
+				});
+			}
 		}
+		#end
 	}
 
 	var logoBl:FlxSprite;
@@ -166,6 +204,11 @@ class TitleState extends MusicBeatState
 	
 	function startCutscenesIn()
 	{
+		if (inGame) {
+			startIntro();
+			return;
+		}
+		
 		introspr = new FlxSprite(0, 0, Paths.image('menus/titleintro'));
 		add(introspr);
 		introspr.alpha = 0;
@@ -180,6 +223,8 @@ class TitleState extends MusicBeatState
 	function startCutscenesOut()
 	{
 		var imaTween = FlxTween.tween(introspr, {alpha: 0}, 0.5, {onComplete: function(twn:FlxTween) {
+			introfaded = true;
+			inGame = true;
 			startIntro();
 		}, ease: FlxEase.linear});
 	}
@@ -192,8 +237,6 @@ class TitleState extends MusicBeatState
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 			}
 		}
-		
-		remove(introspr);
 
 		Conductor.bpm = titleJSON.bpm;
 		persistentUpdate = true;
@@ -392,7 +435,7 @@ class TitleState extends MusicBeatState
 
 		// EASTER EGG
 
-		if (initialized && !transitioning && skippedIntro)
+		if (initialized && !transitioning && skippedIntro && introfaded)
 		{
 			if (newTitle && !pressedEnter)
 			{
@@ -482,7 +525,7 @@ class TitleState extends MusicBeatState
 			#end
 		}
 
-		if (initialized && pressedEnter && !skippedIntro)
+		if (initialized && pressedEnter && !skippedIntro && introfaded)
 		{
 			skipIntro();
 		}
@@ -547,7 +590,7 @@ class TitleState extends MusicBeatState
 				gfDance.animation.play('danceLeft');
 		}
 
-		if(!closedState) {
+		if(!closedState && introfaded) {
 			sickBeats++;
 			switch (sickBeats)
 			{
@@ -623,7 +666,7 @@ class TitleState extends MusicBeatState
 	var increaseVolume:Bool = false;
 	function skipIntro():Void
 	{
-		if (!skippedIntro)
+		if (!skippedIntro && introfaded)
 		{
 			if (playJingle) //Ignore deez
 			{
