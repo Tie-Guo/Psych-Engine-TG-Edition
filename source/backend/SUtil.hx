@@ -75,6 +75,7 @@ class SUtil
 		            CoolUtil.browserLoad('https://youtu.be/AmoNoYjJgHs?si=LvgXbRRn7eJlwL0w');
 					System.exit(0);
 				}
+			}
 		#end
 	}
 
