@@ -24,7 +24,7 @@ import sys.FileSystem;
 
 class FreeplayState extends MusicBeatState
 {
-	var songs:Array<SongMetadata> = [];
+	public static var songs:Array<SongMetadata> = [];
 
 	var selector:FlxText;
 	private static var curSelected:Int = 0;
@@ -177,7 +177,7 @@ class FreeplayState extends MusicBeatState
 		searchInput.fieldBorderColor = FlxColor.TRANSPARENT;
 		searchInput.font = Language.font();
 		
-		var underline:FlxSprite = new FlxSprite(FlxG.width-425, 260).makeGraphic(400, 6, FlxColor.WITHE);
+		var underline:FlxSprite = new FlxSprite(FlxG.width-425, 260).makeGraphic(400, 6, FlxColor.WHITE);
 		underline.alpha = 0.6;
 		
 		var searchButton:FlxButton = new FlxButton(FlxG.width-205, 313, "Search Songs", function() {
@@ -237,12 +237,13 @@ class FreeplayState extends MusicBeatState
 			if (name.indexOf(searchString) != -1)
 			{
 				suitedSong.push(songs[i]);
-				FreeplaySearchState.songs = suitedSong;
-				FlxTransitionableState.skipNextTransIn = true;
-				FlxTransitionableState.skipNextTransOut = true;
-				MusicBeatState.switchState(new FreeplaySearchState());
 			}
 		}
+		
+		FreeplaySearchState.songs = suitedSong;
+		FlxTransitionableState.skipNextTransIn = true;
+		FlxTransitionableState.skipNextTransOut = true;
+		MusicBeatState.switchState(new FreeplaySearchState());
 	}
 	
 	/* var str = PlayState.SONG.song.toLowerCase();
