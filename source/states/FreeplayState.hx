@@ -67,6 +67,9 @@ class FreeplayState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
+		
+		songs = [];
+		FlxG.mouse.visible = true;
 
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
@@ -373,6 +376,7 @@ class FreeplayState extends MusicBeatState
 		if (controls.BACK)
 		{
 			persistentUpdate = false;
+			FlxG.mouse.visible = false;
 			if(colorTween != null) {
 				colorTween.cancel();
 			}
@@ -414,6 +418,7 @@ class FreeplayState extends MusicBeatState
 		else if (controls.ACCEPT)
 		{
 			persistentUpdate = false;
+			FlxG.mouse.visible = false;
 			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
 			/*#if MODS_ALLOWED

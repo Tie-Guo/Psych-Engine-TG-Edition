@@ -62,6 +62,8 @@ class FreeplaySearchState extends MusicBeatState
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
 		WeekData.reloadWeekFiles(false);
+		
+		FlxG.mouse.visible = true;
 
 		#if desktop
 		// Updating Discord Rich Presence
@@ -387,6 +389,7 @@ class FreeplaySearchState extends MusicBeatState
 		else if (controls.ACCEPT)
 		{
 			persistentUpdate = false;
+			FlxG.mouse.visible = false;
 			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
 			/*#if MODS_ALLOWED
