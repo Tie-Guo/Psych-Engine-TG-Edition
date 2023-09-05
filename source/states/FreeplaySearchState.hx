@@ -22,7 +22,7 @@ import flixel.ui.FlxButton;
 import sys.FileSystem;
 #end
 
-class FreeplayState extends MusicBeatState
+class FreeplaySearchState extends MusicBeatState
 {
 	var songs:Array<SongMetadata> = [];
 
