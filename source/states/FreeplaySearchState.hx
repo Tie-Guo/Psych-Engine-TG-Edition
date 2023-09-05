@@ -12,7 +12,11 @@ import states.editors.ChartingState;
 
 import substates.GameplayChangersSubstate;
 import substates.ResetScoreSubState;
+
+import flixel.addons.ui.FlxInputText;
 import flixel.addons.transition.FlxTransitionableState;
+import states.FreeplaySearch;
+import flixel.ui.FlxButton;
 
 #if MODS_ALLOWED
 import sys.FileSystem;
