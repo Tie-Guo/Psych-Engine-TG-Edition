@@ -76,6 +76,7 @@ class SUtil
 					System.exit(0);
 				}
 			}
+		}
 		#end
 	}
 
