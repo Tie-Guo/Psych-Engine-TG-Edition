@@ -232,13 +232,18 @@ class FreeplayState extends MusicBeatState
 	{
 		var suitedSong:Array<SongMetadata> = [];
 		var searchString = searchInput.text;
-		for (i in 0...songs.length - 1)
+		for (i in 0...songs.length)
 		{
-			var name:String = songs[i].songName;
+			var name:String = songs[i].songName.toLowerCase();
 			if (name.indexOf(searchString) != -1)
 			{
 				suitedSong.push(songs[i]);
 			}
+		}
+		
+		if (suitedSong.length < 1) {
+			FlxG.sound.play(Paths.sound('cancelMenu'));
+			return;
 		}
 		
 		FreeplaySearchState.songs = suitedSong;
