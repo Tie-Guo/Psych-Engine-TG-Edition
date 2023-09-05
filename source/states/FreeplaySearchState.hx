@@ -220,7 +220,7 @@ class FreeplaySearchState extends MusicBeatState
 		songs = suitedSong;
 		FlxTransitionableState.skipNextTransIn = true;
 		FlxTransitionableState.skipNextTransOut = true;
-		MusicBeatState.resetState(new FreeplaySearchState());
+		MusicBeatState.resetState();
 	}
 
 	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int)
