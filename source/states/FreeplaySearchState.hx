@@ -12,10 +12,7 @@ import states.editors.ChartingState;
 
 import substates.GameplayChangersSubstate;
 import substates.ResetScoreSubState;
-
-import flixel.addons.ui.FlxInputText;
 import flixel.addons.transition.FlxTransitionableState;
-import states.FreeplaySearchState;
 
 #if MODS_ALLOWED
 import sys.FileSystem;
@@ -66,30 +63,6 @@ class FreeplayState extends MusicBeatState
 		DiscordClient.changePresence("In the Menus", null);
 		#end
 
-		for (i in 0...WeekData.weeksList.length) {
-			if(weekIsLocked(WeekData.weeksList[i])) continue;
-
-			var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
-			var leSongs:Array<String> = [];
-			var leChars:Array<String> = [];
-
-			for (j in 0...leWeek.songs.length)
-			{
-				leSongs.push(leWeek.songs[j][0]);
-				leChars.push(leWeek.songs[j][1]);
-			}
-
-			WeekData.setDirectoryFromWeek(leWeek);
-			for (song in leWeek.songs)
-			{
-				var colors:Array<Int> = song[2];
-				if(colors == null || colors.length < 3)
-				{
-					colors = [146, 113, 253];
-				}
-				addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
-			}
-		}
 		Mods.loadTopMod();
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -134,6 +107,33 @@ class FreeplayState extends MusicBeatState
 		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(1, 66, 0xFF000000);
 		scoreBG.alpha = 0.6;
 		add(scoreBG);
+		
+		var searchTextBG:FlxSprite = new FlxSprite(FlxG.width-450, 200).makeGraphic(450, 166, FlxColor.BLACK);
+		searchTextBG.alpha = 0.6;
+		
+		searchInput = new FlxInputText(FlxG.width-425, 220, 400, '', 30, 0x00FFFFFF);
+		searchInput.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
+		searchInput.backgroundColor = FlxColor.TRANSPARENT;
+		searchInput.fieldBorderColor = FlxColor.TRANSPARENT;
+		searchInput.font = Language.font();
+		
+		var underline:FlxSprite = new FlxSprite(FlxG.width-425, 260).makeGraphic(400, 6, FlxColor.WITHE);
+		underline.alpha = 0.6;
+		
+		var searchButton:FlxButton = new FlxButton(FlxG.width-205, 313, "Search Songs", function() {
+			doSearch();
+		});
+		searchButton.scale.set(2.75, 2.75);
+		searchButton.alpha = 0;
+		
+		var searchText:FlxText = new FlxText(FlxG.width-290, 310, 0, 'Search Songs', 24);
+		searchText.setFormat(Language.font(), 24, FlxColor.WHITE);
+		
+		add(searchTextBG);
+		add(searchInput);
+		add(underline);
+		add(searchText);
+		add(searchButton);
 
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
 		diffText.font = scoreText.font;
@@ -166,34 +166,7 @@ class FreeplayState extends MusicBeatState
 		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
 		textBG.alpha = 0.6;
 		add(textBG);
-		
-		var searchTextBG:FlxSprite = new FlxSprite(FlxG.width-450, 200).makeGraphic(450, 166, FlxColor.BLACK);
-		searchTextBG.alpha = 0.6;
-		
-		searchInput = new FlxInputText(FlxG.width-425, 220, 400, '', 30, 0x00FFFFFF);
-		searchInput.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
-		searchInput.backgroundColor = FlxColor.TRANSPARENT;
-		searchInput.fieldBorderColor = FlxColor.TRANSPARENT;
-		searchInput.font = Language.font();
-		
-		var underline:FlxSprite = new FlxSprite(FlxG.width-425, 260).makeGraphic(400, 6, FlxColor.WITHE);
-		underline.alpha = 0.6;
-		
-		var searchButton:FlxButton = new FlxButton(FlxG.width-205, 313, "Search Songs", function() {
-			doSearch();
-		});
-		searchButton.scale.set(2.75, 2.75);
-		searchButton.alpha = 0;
-		
-		var searchText:FlxText = new FlxText(FlxG.width-290, 310, 0, 'Search Songs', 24);
-		searchText.setFormat(Language.font(), 24, FlxColor.WHITE);
-		
-		add(searchTextBG);
-		add(searchInput);
-		add(underline);
-		add(searchText);
-		add(searchButton);
-	
+
 		#if PRELOAD_ALL
 		#if android
 		var leText:String = "Press X to listen to the Song / Press C to open the Gameplay Changers Menu / Press Y to Reset your Score and Accuracy.";
@@ -214,9 +187,9 @@ class FreeplayState extends MusicBeatState
 		updateTexts();
 		
 		#if android
-				addVirtualPad(FULL, A_B_C_X_Y_Z);
-				#end
-				
+			addVirtualPad(FULL, A_B_C_X_Y_Z);
+		#end
+                
 		super.create();
 	}
 
@@ -236,18 +209,13 @@ class FreeplayState extends MusicBeatState
 			if (name.indexOf(searchString) != -1)
 			{
 				suitedSong.push(songs[i]);
-				FreeplaySearchState.songs = suitedSong;
+				songs = suitedSong;
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
-				MusicBeatState.switchState(new FreeplaySearchState());
+				MusicBeatState.resetState(new FreeplaySearchState());
 			}
 		}
 	}
-	
-	/* var str = PlayState.SONG.song.toLowerCase();
-		var searchString = searchInput.text;
-		debugPrint(str.indexOf(searchString) != -1);
-	*/
 
 	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int)
 	{
@@ -313,13 +281,13 @@ class FreeplayState extends MusicBeatState
 			{
 				curSelected = 0;
 				changeSelection();
-				holdTime = 0;	
+				holdTime = 0;
 			}
 			else if(FlxG.keys.justPressed.END)
 			{
 				curSelected = songs.length - 1;
 				changeSelection();
-				holdTime = 0;	
+				holdTime = 0;
 			}
 			if (controls.UI_UP_P)
 			{
@@ -367,7 +335,9 @@ class FreeplayState extends MusicBeatState
 				colorTween.cancel();
 			}
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			MusicBeatState.switchState(new MainMenuState());
+			FlxTransitionableState.skipNextTransIn = true;
+			FlxTransitionableState.skipNextTransOut = true;
+			MusicBeatState.switchState(new FreeplayState());
 		}
 
 		if(FlxG.keys.justPressed.CONTROL #if android || MusicBeatState._virtualpad.buttonC.justPressed #end)
@@ -431,7 +401,7 @@ class FreeplayState extends MusicBeatState
 			catch(e:Dynamic)
 			{
 				trace('ERROR! $e');
-				var errorStr:String = Mods.currentModDirectory + '/data/' + songLowercase + '/' + poop + '.json';
+                var errorStr:String = Mods.currentModDirectory + '/data/' + songLowercase + '/' + poop + '.json';
 				//var errorStr:String = e.toString();
 				/*if(errorStr.startsWith('[file_contents,assets/data/')) errorStr = 'Missing file: ' + errorStr.substring(27, errorStr.length-1); //Missing chart*/
 				missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
@@ -461,7 +431,7 @@ class FreeplayState extends MusicBeatState
 		}
 		else if(controls.RESET #if android || MusicBeatState._virtualpad.buttonY.justPressed #end)
 		{
-			#if android
+		    #if android
 			removeVirtualPad();
 			#end
 			persistentUpdate = false;
