@@ -187,7 +187,7 @@ class FreeplayState extends MusicBeatState
 		searchButton.scale.set(2.75, 2.75);
 		searchButton.alpha = 0;
 		
-		var searchText:FlxText = new FlxText(FlxG.width-290, 310, 0, 'Search Songs', 24);
+		var searchText:FlxText = new FlxText(FlxG.width-290, 310, 0, 'Search Songs' + #if android '(Touch)' #else '(S)' #end, 24);
 		searchText.setFormat(Language.font(), 24, FlxColor.WHITE);
 		
 		add(searchTextBG);
@@ -288,6 +288,8 @@ class FreeplayState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
+		if (FlxG.keys.justPressed.S) doSearch();
+		
 		if (FlxG.sound.music.volume < 0.7)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
