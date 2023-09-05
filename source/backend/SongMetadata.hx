@@ -1,3 +1,5 @@
+package backend;
+
 class SongMetadata
 {
 	public var songName:String = "";
