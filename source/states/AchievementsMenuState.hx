@@ -121,7 +121,12 @@ class AchievementsMenuState extends MusicBeatState
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
 		descBox.updateHitbox();
 		
-		nameText.text = (Achievements.isAchievementUnlocked(achieveName) ? Achievements.achievementsStuff[achievementIndex[curSelected]][0] : '?');
+		var achieveName:String = Achievements.achievementsStuff[achievementIndex[curSelected]][2];
+		var string:String = '?';
+		if (Achievements.isAchievementUnlocked(achieveName)) 
+			string = Achievements.achievementsStuff[achievementIndex[curSelected]][0];
+			
+		nameText.text = string;
 		
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 	}
