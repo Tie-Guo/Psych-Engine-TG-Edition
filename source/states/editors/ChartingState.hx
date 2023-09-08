@@ -1879,7 +1879,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 
-			if (FlxG.keys.justPressedE #if android || MusicBeatState._virtualpad.buttonG.justPressed #end)
+			if (FlxG.keys.justPressed.E #if android || MusicBeatState._virtualpad.buttonG.justPressed #end)
 			{
 				if (FlxG.sound.music.playing)
 				{
