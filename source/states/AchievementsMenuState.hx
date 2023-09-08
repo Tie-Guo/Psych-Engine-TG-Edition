@@ -115,7 +115,7 @@ class AchievementsMenuState extends MusicBeatState
 		_changeSelection();
 		
 		#if android
-		addVirtualPad(CHART_EDITOR, A_B)
+		addVirtualPad(CHART_EDITOR, A_B);
 		#end
 		super.create();
 	}
