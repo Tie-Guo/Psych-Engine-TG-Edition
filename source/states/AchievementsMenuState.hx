@@ -11,7 +11,9 @@ class AchievementsMenuState extends MusicBeatState
 	private static var curSelected:Int = 0;
 	private var achievementArray:Array<AttachedAchievement> = [];
 	private var achievementIndex:Array<Int> = [];
+	private var textArray:Array<Alphabet> = [];
 	private var descText:FlxText;
+	var descBox:FlxSprite;
 
 	override function create() {
 		#if desktop
@@ -24,9 +26,10 @@ class AchievementsMenuState extends MusicBeatState
 		menuBG.updateHitbox();
 		menuBG.screenCenter();
 		add(menuBG);
-
-		grpOptions = new FlxTypedGroup<Alphabet>();
-		add(grpOptions);
+		
+		descBox = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+		descBox.alpha = 0.6;
+		add(descBox);
 
 		Achievements.loadAchievements();
 		for (i in 0...Achievements.achievementsStuff.length) {
@@ -38,14 +41,17 @@ class AchievementsMenuState extends MusicBeatState
 
 		for (i in 0...options.length) {
 			var achieveName:String = Achievements.achievementsStuff[achievementIndex[i]][2];
-			var optionText:Alphabet = new Alphabet(280, 300, Achievements.isAchievementUnlocked(achieveName) ? Achievements.achievementsStuff[achievementIndex[i]][0] : '?', false);
+			var optionText:Alphabet = new Alphabet(280, 330, Achievements.isAchievementUnlocked(achieveName) ? Achievements.achievementsStuff[achievementIndex[i]][0] : '?', false);
 			optionText.isMenuItem = true;
-			optionText.targetY = i - curSelected;
-			optionText.snapToPosition();
-			grpOptions.add(optionText);
+			optionText.screenCenter(X);
+			optionText.visible = false;
+			textArray.push(optionText);
 
-			var icon:AttachedAchievement = new AttachedAchievement(optionText.x - 105, optionText.y, achieveName);
-			icon.sprTracker = optionText;
+			var icon:AttachedAchievement = new AttachedAchievement(105, 200, achieveName);
+			icon.scale.set(1.2, 1.2);
+			icon.updateHitbox();
+			icon.screenCenter(X);
+			icon.x += i*(63 + 180);
 			achievementArray.push(icon);
 			add(icon);
 		}
@@ -57,9 +63,9 @@ class AchievementsMenuState extends MusicBeatState
 		add(descText);
 		changeSelection();
 		
-		                #if android
-                addVirtualPad(UP_DOWN, A_B);
-                #end
+		#if android
+			addVirtualPad(LEFT_RIGHT, B);
+		#end
 
 		super.create();
 	}
@@ -67,11 +73,15 @@ class AchievementsMenuState extends MusicBeatState
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (controls.UI_UP_P) {
+		if (controls.UI_LEFT_P) {
 			changeSelection(-1);
 		}
-		if (controls.UI_DOWN_P) {
+		if (controls.UI_RIGHT_P) {
 			changeSelection(1);
+		}
+		
+		for (i in 0...achievementArray.length) {
+			achievementArray[i].x = FlxMath.lerp( (FlxG.width + 180)/2 + (i-curSelected)*(63 + 180), achievementArray[i].x, FlxMath.bound(1 - (elapsed * 9.5), 0, 1));
 		}
 
 		if (controls.BACK) {
@@ -87,25 +97,20 @@ class AchievementsMenuState extends MusicBeatState
 		if (curSelected >= options.length)
 			curSelected = 0;
 
-		var bullShit:Int = 0;
-
-		for (item in grpOptions.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
-			item.alpha = 0.6;
-			if (item.targetY == 0) {
-				item.alpha = 1;
-			}
-		}
-
 		for (i in 0...achievementArray.length) {
 			achievementArray[i].alpha = 0.6;
+			textArray[i].visible = false;
 			if(i == curSelected) {
 				achievementArray[i].alpha = 1;
+				textArray[i].visible = true;
 			}
 		}
 		descText.text = Achievements.achievementsStuff[achievementIndex[curSelected]][1];
+		
+		descBox.setPosition(descText.x - 10, descText.y - 10);
+		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
+		descBox.updateHitbox();
+		
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 	}
 	#end
