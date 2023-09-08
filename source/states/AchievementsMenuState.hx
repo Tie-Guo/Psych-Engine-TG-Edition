@@ -1,7 +1,10 @@
 package states;
 
 import flixel.FlxObject;
-import objects.Bar;
+//import objects.Bar;
+import backend.Achievements;
+import objects.AttachedAchievement;
+import objects.HealthBar;
 
 #if ACHIEVEMENTS_ALLOWED
 class AchievementsMenuState extends MusicBeatState
