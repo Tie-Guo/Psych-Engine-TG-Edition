@@ -13,12 +13,15 @@ class AchievementsMenuState extends MusicBeatState
 	private var achievementIndex:Array<Int> = [];
 	private var textArray:Array<Alphabet> = [];
 	private var descText:FlxText;
+	private var nameText:FlxText;
 	var descBox:FlxSprite;
 
 	override function create() {
 		#if desktop
 		DiscordClient.changePresence("Achievements Menu", null);
 		#end
+		
+		curSelected = 0;
 
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		menuBG.antialiasing = ClientPrefs.data.antialiasing;
@@ -41,12 +44,6 @@ class AchievementsMenuState extends MusicBeatState
 
 		for (i in 0...options.length) {
 			var achieveName:String = Achievements.achievementsStuff[achievementIndex[i]][2];
-			var optionText:Alphabet = new Alphabet(280, 330, Achievements.isAchievementUnlocked(achieveName) ? Achievements.achievementsStuff[achievementIndex[i]][0] : '?', false);
-			optionText.isMenuItem = true;
-			optionText.screenCenter(X);
-			optionText.visible = false;
-			textArray.push(optionText);
-
 			var icon:AttachedAchievement = new AttachedAchievement(105, 200, achieveName);
 			icon.scale.set(1.2, 1.2);
 			icon.updateHitbox();
@@ -55,12 +52,19 @@ class AchievementsMenuState extends MusicBeatState
 			achievementArray.push(icon);
 			add(icon);
 		}
+		
+		nameText = new FlxText(150, 520, 980, "?", 35);
+		nameText.setFormat(Paths.font("vcr.ttf"), 35, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		nameText.scrollFactor.set();
+		nameText.borderSize = 2.4;
+		add(nameText);
 
 		descText = new FlxText(150, 600, 980, "", 32);
 		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		descText.scrollFactor.set();
 		descText.borderSize = 2.4;
 		add(descText);
+		
 		changeSelection();
 		
 		#if android
@@ -81,7 +85,15 @@ class AchievementsMenuState extends MusicBeatState
 		}
 		
 		for (i in 0...achievementArray.length) {
-			achievementArray[i].x = FlxMath.lerp( (FlxG.width + 180)/2 + (i-curSelected)*(63 + 180), achievementArray[i].x, FlxMath.bound(1 - (elapsed * 9.5), 0, 1));
+			achievementArray[i].x = FlxMath.lerp( (FlxG.width - 180)/2 + (i-curSelected)*(63 + 180), achievementArray[i].x, FlxMath.bound(1 - (elapsed * 9.5), 0, 1));
+			
+			if (i == curSelected) {
+				achievementArray[i].scale.x = FlxMath.lerp(1, achievementArray[i].scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+				achievementArray[i].scale.y = FlxMath.lerp(1, achievementArray[i].scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			} else {
+				achievementArray[i].scale.x = FlxMath.lerp(1.2, achievementArray[i].scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+				achievementArray[i].scale.y = FlxMath.lerp(1.2, achievementArray[i].scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			}
 		}
 
 		if (controls.BACK) {
@@ -99,17 +111,17 @@ class AchievementsMenuState extends MusicBeatState
 
 		for (i in 0...achievementArray.length) {
 			achievementArray[i].alpha = 0.6;
-			textArray[i].visible = false;
 			if(i == curSelected) {
 				achievementArray[i].alpha = 1;
-				textArray[i].visible = true;
 			}
 		}
 		descText.text = Achievements.achievementsStuff[achievementIndex[curSelected]][1];
 		
-		descBox.setPosition(descText.x - 10, descText.y - 10);
+		descBox.setPosition(descText.x - 10, descText.y - 100);
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
 		descBox.updateHitbox();
+		
+		nameText.text = (Achievements.isAchievementUnlocked(achieveName) ? Achievements.achievementsStuff[achievementIndex[curSelected]][0] : '?');
 		
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 	}
