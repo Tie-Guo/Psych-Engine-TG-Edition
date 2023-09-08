@@ -119,7 +119,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.animation.play('idle');
 			menuItem.ID = i;
 			menuItem.screenCenter(X);
-			menuItem.x += 1000;
+			if (!inExtra) menuItem.x += 1000;
 			menuItemsExtra.add(menuItem);
 			var scr:Float = (optionShitExtra.length - 4) * 0.135;
 			if(optionShitExtra.length < 6) scr = 0;
@@ -141,6 +141,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.animation.play('idle');
 			menuItem.ID = i;
 			menuItem.screenCenter(X);
+			if (inExtra) menuItem.x -= 1000;
 			menuItems.add(menuItem);
 			var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
@@ -168,9 +169,6 @@ class MainMenuState extends MusicBeatState
 		// NG.core.calls.event.logEvent('swag').send();
 
 		changeItem();
-		inExtra = true;
-		changeItem();
-		inExtra = false;
 
 		#if ACHIEVEMENTS_ALLOWED
 		Achievements.loadAchievements();
@@ -255,7 +253,7 @@ class MainMenuState extends MusicBeatState
 		if (optionShit[curSelected] == 'extra' && !inChanging) {
 			inChanging = true;
 			FlxG.sound.play(Paths.sound('confirmMenu'));
-			doTweenG();
+			doTweenG(0.6);
 		} else {
 			selectedSomethin = true;
 			FlxG.sound.play(Paths.sound('confirmMenu'));
@@ -301,7 +299,7 @@ class MainMenuState extends MusicBeatState
 		if (daChoice == 'back' && !inChanging) {
 			inChanging = true;
 			FlxG.sound.play(Paths.sound('confirmMenu'));
-			doTweenG();
+			doTweenG(0.6);
 		} else if (daChoice == 'donate') {
 			CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
 		} else {
@@ -339,11 +337,11 @@ class MainMenuState extends MusicBeatState
 		}
 	}
 	
-	function doTweenG()
+	function doTweenG(time:Float)
 	{
 		if (inExtra) {
 			menuItemsExtra.forEach(function(spr:FlxSprite) {
-				FlxTween.tween(spr, {x: spr.x + 1000}, 0.6, {
+				FlxTween.tween(spr, {x: spr.x + 1000}, time, {
 					ease: FlxEase.backInOut, onComplete: function(twn:FlxTween)
 					{
 						inChanging = false;
@@ -352,11 +350,11 @@ class MainMenuState extends MusicBeatState
 			});
 			
 			menuItems.forEach(function(spr:FlxSprite) {
-				FlxTween.tween(spr, {x: spr.x + 1000}, 0.6, {ease: FlxEase.backInOut});
+				FlxTween.tween(spr, {x: spr.x + 1000}, time, {ease: FlxEase.backInOut});
 			});
 		} else {
 			menuItems.forEach(function(spr:FlxSprite) {
-				FlxTween.tween(spr, {x: spr.x - 1000}, 0.6, {
+				FlxTween.tween(spr, {x: spr.x - 1000}, time, {
 					ease: FlxEase.backInOut, onComplete: function(twn:FlxTween)
 					{
 						inChanging = false;
@@ -365,7 +363,7 @@ class MainMenuState extends MusicBeatState
 			});
 			
 			menuItemsExtra.forEach(function(spr:FlxSprite) {
-				FlxTween.tween(spr, {x: spr.x - 1000}, 0.6, {ease: FlxEase.backInOut});
+				FlxTween.tween(spr, {x: spr.x - 1000}, time, {ease: FlxEase.backInOut});
 			});
 		}
 		inExtra = !inExtra;
