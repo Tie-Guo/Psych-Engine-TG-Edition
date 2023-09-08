@@ -87,7 +87,7 @@ class AchievementsMenuState extends MusicBeatState
 		for (i in 0...achievementArray.length) {
 			achievementArray[i].x = FlxMath.lerp( (FlxG.width - 180)/2 + (i-curSelected)*(63 + 180), achievementArray[i].x, FlxMath.bound(1 - (elapsed * 9.5), 0, 1));
 			
-			if (i == curSelected) {
+			if (i != curSelected) {
 				achievementArray[i].scale.x = FlxMath.lerp(1, achievementArray[i].scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 				achievementArray[i].scale.y = FlxMath.lerp(1, achievementArray[i].scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 			} else {
@@ -118,7 +118,7 @@ class AchievementsMenuState extends MusicBeatState
 		descText.text = Achievements.achievementsStuff[achievementIndex[curSelected]][1];
 		
 		descBox.setPosition(descText.x - 10, descText.y - 100);
-		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
+		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25) + Std.int(nameText.height + 33));
 		descBox.updateHitbox();
 		
 		var achieveName:String = Achievements.achievementsStuff[achievementIndex[curSelected]][2];
