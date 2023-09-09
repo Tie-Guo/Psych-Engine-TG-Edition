@@ -14,55 +14,6 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  buildiOS:
-    name: TG Engine iOS
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@main
-    
-      - name: Setup Haxe
-        uses: krdlab/setup-haxe@v1.2.0
-        with:
-          haxe-version: 4.2.5
-    
-      - name: Install Haxelib
-        run: |
-          haxelib setup ~/haxelib
-          haxelib install hxcpp > /dev/null
-          haxelib install lime 7.9.0
-          haxelib install openfl 9.1.0
-          haxelib --never install flixel 4.11.0
-          haxelib run lime setup flixel
-          haxelib install flixel-tools
-          haxelib install flixel-ui
-          haxelib install tjson
-          haxelib install hxjsonast
-          haxelib install hscript
-          haxelib git hxCodec https://github.com/SPLCoding/hxCodec-but-it-works-xd.git
-          haxelib git flixel-addons https://github.com/ninjamuffin99/flixel-addons
-          haxelib git extension-ios https://github.com/MaysLastPlay77/extension-ios
-          haxelib install hxcpp-debug-server
-          haxelib list
-          
-      - name: Setup Lime
-        run: |
-          haxelib run lime setup -alias -y
-          haxelib set lime 7.9.0
-          haxelib set openfl 9.1.0
-          haxelib set flixel 4.11.0
-    
-      - name: Build iOS
-        run: haxelib run lime build ios -debug
-    
-      - name: Create IPA
-        run: haxelib run lime ios createipa
-      
-      - name: Upload Artifact
-        uses: actions/upload-artifact@main
-        with:
-          name: Android
-          path: export/release/ios/bin/app/build/outputs/ipa/debug
   buildiOS2:
     name: buildiOS
     runs-on: macos-latest
@@ -122,7 +73,7 @@ jobs:
           haxelib list
           
       - name: Build iOS
-        run: haxelib run lime build ios -debug
+        run: haxelib run lime build ios -debug -Dexcluded_archs=armv7
     
       - name: Create IPA
         run: haxelib run lime ios createipa
