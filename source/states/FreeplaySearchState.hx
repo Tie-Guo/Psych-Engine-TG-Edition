@@ -241,9 +241,10 @@ class FreeplaySearchState extends MusicBeatState
 	{
 		var suitedSong:Array<SongMetadata> = [];
 		var searchString = searchInput.text.toLowerCase();
-		for (i in 0...songs.length)
+		var fsongs = FreeplayState.songs;
+		for (i in 0...fsongs.length)
 		{
-			var name:String = songs[i].songName.toLowerCase();
+			var name:String = fsongs[i].songName.toLowerCase();
 			if (name.indexOf(searchString) != -1)
 			{
 				suitedSong.push(songs[i]);
@@ -302,6 +303,7 @@ class FreeplaySearchState extends MusicBeatState
     			if (showCaseBGTween != null) showCaseBGTween.cancel();
     			showCaseBGTween = FlxTween.color(reduceDataBG, 0.5, 0xFFFFFFFF, 0xFF000000, {ease: FlxEase.sineInOut});
     			showSearch = !showSearch;
+    			FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
     		}
     	}
     	

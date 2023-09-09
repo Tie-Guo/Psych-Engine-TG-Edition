@@ -332,6 +332,7 @@ class FreeplayState extends MusicBeatState
     			if (showCaseBGTween != null) showCaseBGTween.cancel();
     			showCaseBGTween = FlxTween.color(reduceDataBG, 0.5, 0xFFFFFFFF, 0xFF000000, {ease: FlxEase.sineInOut});
     			showSearch = !showSearch;
+    			FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
     		}
     	}
     	
