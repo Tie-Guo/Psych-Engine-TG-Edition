@@ -177,7 +177,7 @@ class FreeplayState extends MusicBeatState
 
 		var swag:Alphabet = new Alphabet(1, 0, "swag");
 
-		textBG = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
+		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
 		textBG.alpha = 0.6;
 		add(textBG);
 		
@@ -190,7 +190,7 @@ class FreeplayState extends MusicBeatState
 		searchInput.fieldBorderColor = FlxColor.TRANSPARENT;
 		searchInput.font = Language.font();
 		
-		vunderline = new FlxSprite(FlxG.width-425, 260).makeGraphic(400, 6, FlxColor.WHITE);
+		underline = new FlxSprite(FlxG.width-425, 260).makeGraphic(400, 6, FlxColor.WHITE);
 		underline.alpha = 0.6;
 		
 		searchButton = new FlxButton(FlxG.width-150, 313, "Search Songs", function() {

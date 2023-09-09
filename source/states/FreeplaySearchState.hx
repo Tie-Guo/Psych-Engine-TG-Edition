@@ -52,7 +52,6 @@ class FreeplaySearchState extends MusicBeatState
 
 	var missingTextBG:FlxSprite;
 	var missingText:FlxText;
-	var searchInput:FlxInputText;
 	
 	var showSearch:Bool = true;
 	var showCaseBGTween:FlxTween;
@@ -134,7 +133,7 @@ class FreeplaySearchState extends MusicBeatState
 		searchInput.fieldBorderColor = FlxColor.TRANSPARENT;
 		searchInput.font = Language.font();
 		
-		vunderline = new FlxSprite(FlxG.width-425, 260).makeGraphic(400, 6, FlxColor.WHITE);
+		underline = new FlxSprite(FlxG.width-425, 260).makeGraphic(400, 6, FlxColor.WHITE);
 		underline.alpha = 0.6;
 		
 		searchButton = new FlxButton(FlxG.width-150, 313, "Search Songs", function() {
