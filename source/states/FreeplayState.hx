@@ -52,7 +52,16 @@ class FreeplayState extends MusicBeatState
 
 	var missingTextBG:FlxSprite;
 	var missingText:FlxText;
+	
+	var showSearch:Bool = true;
+	var showCaseBGTween:FlxTween;
+	var reduceDataBG:FlxSprite;
+	var reduceDataBGText:FlxText;
+	var searchTextBG:FlxSprite;
 	var searchInput:FlxInputText;
+	var searchText:FlxText;
+	var underline:FlxSprite;
+	var searchButton:FlxButton;
 
 	override function create()
 	{
@@ -168,11 +177,11 @@ class FreeplayState extends MusicBeatState
 
 		var swag:Alphabet = new Alphabet(1, 0, "swag");
 
-		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
+		textBG = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
 		textBG.alpha = 0.6;
 		add(textBG);
 		
-		var searchTextBG:FlxSprite = new FlxSprite(FlxG.width-450, 200).makeGraphic(450, 166, FlxColor.BLACK);
+		searchTextBG = new FlxSprite(FlxG.width-450, 200).makeGraphic(450, 166, FlxColor.BLACK);
 		searchTextBG.alpha = 0.6;
 		
 		searchInput = new FlxInputText(FlxG.width-425, 220, 400, '', 30, 0x00FFFFFF);
@@ -181,17 +190,39 @@ class FreeplayState extends MusicBeatState
 		searchInput.fieldBorderColor = FlxColor.TRANSPARENT;
 		searchInput.font = Language.font();
 		
-		var underline:FlxSprite = new FlxSprite(FlxG.width-425, 260).makeGraphic(400, 6, FlxColor.WHITE);
+		vunderline = new FlxSprite(FlxG.width-425, 260).makeGraphic(400, 6, FlxColor.WHITE);
 		underline.alpha = 0.6;
 		
-		var searchButton:FlxButton = new FlxButton(FlxG.width-205, 313, "Search Songs", function() {
+		searchButton = new FlxButton(FlxG.width-150, 313, "Search Songs", function() {
 			doSearch();
 		});
 		searchButton.scale.set(2.75, 2.75);
 		searchButton.alpha = 0;
 		
-		var searchText:FlxText = new FlxText(FlxG.width-290, 310, 0, 'Search Songs' + #if android '(Touch)' #else '(S)' #end, 24);
-		searchText.setFormat(Language.font(), 24, FlxColor.WHITE);
+		searchText = new FlxText(FlxG.width-220, 310, 300, 'Search Songs' + #if android '(Touch)' #else '(S)' #end, 24);
+		searchText.setFormat(Language.font(), 24, FlxColor.WHITE, RIGHT);
+		
+		reduceDataBG = new FlxSprite(FlxG.width - 75, 366).makeGraphic(75 , 75, 0xFFFFFFFF);
+		reduceDataBG.alpha = 0.6;
+		reduceDataBG.color = 0xFF000000;
+		add(reduceDataBG);
+		
+		reduceDataBGText = new FlxText(FlxG.width - 50, 340, 0, '>', 40);
+    	reduceDataBGText.setFormat(Language.font(), 40, FlxColor.WHITE);
+    	add(reduceDataBGText);
+		
+		var ypos:Int = -30;
+		searchTextBG.y += ypos;
+		searchInput.y += ypos;
+		underline.y += ypos;
+		searchText.y += ypos;
+		searchButton.y += ypos;
+		reduceDataBG.y += ypos;
+		
+		var xpos:Int = 20;
+		searchTextBG.x += xpos;
+		searchInput.x += xpos;
+		underline.x += xpos;
 		
 		add(searchTextBG);
 		add(searchInput);
@@ -219,8 +250,8 @@ class FreeplayState extends MusicBeatState
 		updateTexts();
 		
 		#if android
-				addVirtualPad(FULL, A_B_C_X_Y_Z);
-				#end
+			addVirtualPad(FULL, A_B_C_X_Y_Z);
+		#end
 				
 		super.create();
 	}
@@ -234,7 +265,7 @@ class FreeplayState extends MusicBeatState
 	function doSearch()
 	{
 		var suitedSong:Array<SongMetadata> = [];
-		var searchString = searchInput.text;
+		var searchString = searchInput.text.toLowerCase();
 		for (i in 0...songs.length)
 		{
 			var name:String = songs[i].songName.toLowerCase();
@@ -292,6 +323,23 @@ class FreeplayState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		if (FlxG.keys.justPressed.S) doSearch();
+		
+		if (FlxG.mouse.justPressed)
+    	{
+    		if (FlxG.mouse.overlaps(reduceDataBG))
+    		{
+    			reduceDataBG.color = 0xFFFFFFFF;
+    			if (showCaseBGTween != null) showCaseBGTween.cancel();
+    			showCaseBGTween = FlxTween.color(reduceDataBG, 0.5, 0xFFFFFFFF, 0xFF000000, {ease: FlxEase.sineInOut});
+    			showSearch = !showSearch;
+    		}
+    	}
+    	
+    	searchTextBG.x = FlxMath.lerp(showSearch ? FlxG.width-430 : FlxG.width+100, searchTextBG.x, FlxMath.bound(1 - (elapsed * 9.5), 0, 1));
+    	searchInput.x = FlxMath.lerp(showSearch ? FlxG.width-405 : FlxG.width+100, searchInput.x, FlxMath.bound(1 - (elapsed * 9.5), 0, 1));
+    	underline.x = FlxMath.lerp(showSearch ? FlxG.width-405 : FlxG.width+100, underline.x, FlxMath.bound(1 - (elapsed * 9.5), 0, 1));
+    	searchButton.x = FlxMath.lerp(showSearch ? FlxG.width-130 : FlxG.width+100, searchButton.x, FlxMath.bound(1 - (elapsed * 9.5), 0, 1));
+    	searchText.x = FlxMath.lerp(showSearch ? FlxG.width-300 : FlxG.width+100, searchText.x, FlxMath.bound(1 - (elapsed * 9.5), 0, 1));
 		
 		if (FlxG.sound.music.volume < 0.7)
 		{
@@ -375,6 +423,7 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
+			if (showCaseBGTween != null) showCaseBGTween.cancel();
 			persistentUpdate = false;
 			FlxG.mouse.visible = false;
 			if(colorTween != null) {
@@ -386,6 +435,7 @@ class FreeplayState extends MusicBeatState
 
 		if(FlxG.keys.justPressed.CONTROL #if android || MusicBeatState._virtualpad.buttonC.justPressed #end)
 		{
+			if (showCaseBGTween != null) showCaseBGTween.cancel();
 			persistentUpdate = false;
 			openSubState(new GameplayChangersSubstate());
 		}
@@ -417,6 +467,7 @@ class FreeplayState extends MusicBeatState
 
 		else if (controls.ACCEPT)
 		{
+			if (showCaseBGTween != null) showCaseBGTween.cancel();
 			persistentUpdate = false;
 			FlxG.mouse.visible = false;
 			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
