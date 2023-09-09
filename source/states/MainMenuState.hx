@@ -100,6 +100,21 @@ class MainMenuState extends MusicBeatState
 		
 		menuItemsExtra = new FlxTypedGroup<FlxSprite>();
 		add(menuItemsExtra);
+		
+		var array:Array<String> = [];
+		if(Mods.mergeAllTextsNamed('images/mainmenu/list_normal.txt', 'shared').length > 0)
+			array = Mods.mergeAllTextsNamed('images/mainmenu/list_normal.txt', 'shared');
+		else
+			array = CoolUtil.coolTextFile(Paths.getPreloadPath('shared/images/mainmenu/list_normal.txt'));
+		
+		if (array.length > 0) optionShit = array;
+		
+		if(Mods.mergeAllTextsNamed('images/mainmenu/list_extra.txt', 'shared').length > 0)
+			array = Mods.mergeAllTextsNamed('images/mainmenu/list_extra.txt', 'shared');
+		else
+			array = CoolUtil.coolTextFile(Paths.getPreloadPath('shared/images/mainmenu/list_extra.txt'));
+		
+		if (array.length > 0) optionShitExtra = array;
 
 		var scale:Float = 1;
 		/*if(optionShit.length > 6) {
