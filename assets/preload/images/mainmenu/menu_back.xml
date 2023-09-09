@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Free texture packer v0.6.7 http://free-tex-packer.com
+-->
+<TextureAtlas imagePath="menu_back.png" width="568" height="407">
+  <SubTexture name="back basic0000" x="0" y="0"  width="284.2" height="135.79999999999998" frameX="-10.5" frameY="20" frameWidth="315" frameHeight="167.29999999999998"/>
+  <SubTexture name="back basic0001" x="284.2" y="0"  width="284.2" height="135.79999999999998" frameX="-10.5" frameY="20" frameWidth="315" frameHeight="167.29999999999998"/>
+  <SubTexture name="back basic0002" x="0" y="135.79999999999998"  width="283.5" height="135.79999999999998" frameX="-10.5" frameY="20" frameWidth="315" frameHeight="167.29999999999998"/>
+  <SubTexture name="back white0000" x="283.5" y="135.79999999999998"  width="283.5" height="135.79999999999998" frameX="-10.5" frameY="20" frameWidth="315" frameHeight="167.29999999999998"/>
+  <SubTexture name="back white0001" x="0" y="271.59999999999997"  width="283.5" height="135.79999999999998" frameX="-10.5" frameY="20" frameWidth="315" frameHeight="167.29999999999998"/>
+  <SubTexture name="back white0002" x="283.5" y="271.59999999999997"  width="282.79999999999995" height="135.79999999999998" frameX="-10.5" frameY="20" frameWidth="315" frameHeight="167.29999999999998"/>
+</TextureAtlas>

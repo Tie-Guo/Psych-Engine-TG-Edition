@@ -1,0 +1,4 @@
+story_mode
+freeplay
+options
+extra
