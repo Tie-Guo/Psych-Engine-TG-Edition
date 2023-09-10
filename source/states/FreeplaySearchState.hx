@@ -146,7 +146,6 @@ class FreeplaySearchState extends MusicBeatState
 		searchText.setFormat(Language.font(), 24, FlxColor.WHITE, RIGHT);
 		
 		reduceDataBG = new FlxSprite(FlxG.width - 75, 366).makeGraphic(75 , 75, 0xFFFFFFFF);
-		reduceDataBG.alpha = 0.6;
 		reduceDataBG.color = 0xFF000000;
 		add(reduceDataBG);
 		

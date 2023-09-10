@@ -248,8 +248,7 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.ACCEPT)
 			{
-				if (!inExtra) openSelected();
-				else openSelectedExtra();
+				openSelected();
 			}
 			#if (desktop || android)
 			else if (controls.justPressed('debug_1') #if android || MusicBeatState._virtualpad.buttonE.justPressed #end)
@@ -265,10 +264,20 @@ class MainMenuState extends MusicBeatState
 	
 	function openSelected()
 	{
-		if (optionShit[curSelected] == 'extra' && !inChanging) {
+		var daChoice:String = '';
+		if (inExtra) daChoice = optionShitExtra[curSelectedExtra];
+		else daChoice = optionShit[curSelected];
+		
+		if (daChoice == 'extra' && !inChanging) {
 			inChanging = true;
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			doTweenG(0.6);
+		} else if (daChoice == 'back' && !inChanging) {
+			inChanging = true;
+			FlxG.sound.play(Paths.sound('confirmMenu'));
+			doTweenG(0.6);
+		} else if (daChoice == 'donate') {
+			CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
 		} else {
 			selectedSomethin = true;
 			FlxG.sound.play(Paths.sound('confirmMenu'));
@@ -301,42 +310,6 @@ class MainMenuState extends MusicBeatState
 									PlayState.SONG.arrowSkin = null;
 									PlayState.SONG.splashSkin = null;
 								}
-							}
-					});
-				}
-			});
-		}
-	}
-	
-	function openSelectedExtra()
-	{
-		var daChoice:String = optionShitExtra[curSelectedExtra];
-		if (daChoice == 'back' && !inChanging) {
-			inChanging = true;
-			FlxG.sound.play(Paths.sound('confirmMenu'));
-			doTweenG(0.6);
-		} else if (daChoice == 'donate') {
-			CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
-		} else {
-			selectedSomethin = true;
-			FlxG.sound.play(Paths.sound('confirmMenu'));
-
-			if(ClientPrefs.data.flashing) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
-
-			menuItemsExtra.forEach(function(spr:FlxSprite) {
-				if (curSelectedExtra != spr.ID) {
-					FlxTween.tween(spr, {alpha: 0}, 0.4, {
-						ease: FlxEase.quadOut,
-						onComplete: function(twn:FlxTween)
-						{
-							spr.kill();
-						}
-					});
-				} else {
-					FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
-					{
-						switch (daChoice) {
-							
 							#if MODS_ALLOWED
 							case 'mods':
 								MusicBeatState.switchState(new ModsMenuState());
@@ -345,7 +318,7 @@ class MainMenuState extends MusicBeatState
 								MusicBeatState.switchState(new AchievementsMenuState());
 							case 'credits':
 								MusicBeatState.switchState(new CreditsState());
-						}
+							}
 					});
 				}
 			});
