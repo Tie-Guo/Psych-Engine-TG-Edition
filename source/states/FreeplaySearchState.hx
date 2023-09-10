@@ -241,13 +241,13 @@ class FreeplaySearchState extends MusicBeatState
 	{
 		var suitedSong:Array<SongMetadata> = [];
 		var searchString = searchInput.text.toLowerCase();
-		var fsongs = FreeplayState.songs;
+		var fsongs:Array<SongMetadata> = FreeplayState.songs;
 		for (i in 0...fsongs.length)
 		{
 			var name:String = fsongs[i].songName.toLowerCase();
 			if (name.indexOf(searchString) != -1)
 			{
-				suitedSong.push(songs[i]);
+				suitedSong.push(fsongs[i]);
 			}
 		}
 		
