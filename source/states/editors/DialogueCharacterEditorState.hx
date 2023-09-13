@@ -788,7 +788,8 @@ class DialogueCharacterEditorState extends MusicBeatState
 			var characterName:String = splittedImage[0].toLowerCase().replace(' ', '');
 
 			#if android
-			SUtil.saveContent(characterName, ".json", data);
+			SUtil.saveContent(characterName, ".json", data, 'Dialogue Characters');
+			// ['Charts', 'Characters', 'Credits', 'Menu Characters', 'Weeks', 'Dialogues', 'Dialogue Characters'];
 			#else
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);

@@ -3212,7 +3212,8 @@ class ChartingState extends MusicBeatState
 		if ((data != null) && (data.length > 0))
 		{
 			#if android
-			SUtil.saveContent("events", ".json", data.trim());
+			SUtil.saveContent("events", ".json", data.trim(), 'Charts');
+			// ['Charts', 'Characters', 'Credits', 'Menu Characters', 'Weeks', 'Dialogues', 'Dialogue Characters'];
 			#else
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);

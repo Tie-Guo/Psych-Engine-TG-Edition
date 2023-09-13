@@ -540,7 +540,8 @@ class WeekEditorState extends MusicBeatState
 		if (data.length > 0)
 		{
 			#if android
-			SUtil.saveContent(weekFileName, ".json", data);
+			SUtil.saveContent(weekFileName, ".json", data, 'Weeks');
+			// ['Charts', 'Characters', 'Credits', 'Menu Characters', 'Weeks', 'Dialogues', 'Dialogue Characters'];
 			#else
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
