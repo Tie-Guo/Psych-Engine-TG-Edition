@@ -33,6 +33,7 @@ import lime.utils.Assets;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.events.KeyboardEvent;
 import tjson.TJSON as Json;
+import openfl.geom.Rectangle;
 import openfl.display.BitmapData;
 import haxe.io.Bytes;
 
@@ -1843,7 +1844,7 @@ class PlayState extends MusicBeatState
     {
         screenshot.draw(FlxG.camera.buffer);
         var pixels:Bytes = screenshot.getPixels();
-        File.saveBytes("screenshot.png", pixels.encode());
+        File.saveBytes(SUtil.getPath() + "screenshot.png", pixels.encode());
     }
 
 	function openPauseMenu()
