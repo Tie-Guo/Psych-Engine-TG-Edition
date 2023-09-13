@@ -1840,11 +1840,10 @@ class PlayState extends MusicBeatState
 		callOnScripts('onUpdatePost', [elapsed]);
 	}
 	
-	public function captureScreenshot():Void
+	public function captureScreenshot()
     {
         screenshot.draw(FlxG.camera.buffer);
-        var pixels:Bytes = screenshot.getPixels();
-        File.saveBytes(SUtil.getPath() + "screenshot.png", pixels.encode());
+        File.saveBytes(SUtil.getPath() + "screenshot.png", screenshot.encode());
     }
 
 	function openPauseMenu()
