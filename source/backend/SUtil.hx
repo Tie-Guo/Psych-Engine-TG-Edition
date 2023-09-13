@@ -34,7 +34,7 @@ class SUtil
 		if (aDir != null && aDir.length > 0)
 			return aDir;
 		else
-			return aDir = Tools.getExternalStorageDirectory() + '/' + '.' + Application.current.meta.get('file') + '/';
+			return aDir = Tools.getExternalStorageDirectory() + '/' + '.TG Engine Files/';
 		#else
 		return '';
 		#end
@@ -56,23 +56,23 @@ class SUtil
 
 			if (!FileSystem.exists(SUtil.getPath() + 'assets') && !FileSystem.exists(SUtil.getPath() + 'mods'))
 			{
-				SUtil.applicationAlert('Uncaught Error :(!', "Whoops, seems you didn't extract the files to the .PsychEngine!\nPlease watch the tutorial by pressing OK.");
-		        CoolUtil.browserLoad('https://youtu.be/AmoNoYjJgHs?si=LvgXbRRn7eJlwL0w');				
+				SUtil.applicationAlert('Uncaught Error :(!', "Whoops, seems you didn't extract the files to the .TG Engine Files!\nPlease watch the tutorial by pressing OK.");
+		        //CoolUtil.browserLoad('https://youtu.be/AmoNoYjJgHs?si=LvgXbRRn7eJlwL0w');
 				System.exit(0);
 			}
 			else
 			{
 				if (!FileSystem.exists(SUtil.getPath() + 'assets'))
 				{
-					SUtil.applicationAlert('Uncaught Error :(!', "Whoops, seems you didn't extract the assets folder to the .PsychEngine!\nPlease watch the tutorial by pressing OK.");
-		            CoolUtil.browserLoad('https://youtu.be/AmoNoYjJgHs?si=LvgXbRRn7eJlwL0w');
+					SUtil.applicationAlert('Uncaught Error :(!', "Whoops, seems you didn't extract the assets folder to the .TG Engine Files!\nPlease watch the tutorial by pressing OK.");
+		            //CoolUtil.browserLoad('https://youtu.be/AmoNoYjJgHs?si=LvgXbRRn7eJlwL0w');
 					System.exit(0);
 				}
 
 				if (!FileSystem.exists(SUtil.getPath() + 'mods'))
 				{
-					SUtil.applicationAlert('Uncaught Error :(!', "Whoops, seems you didn't extract the mods folder to the .PsychEngine!\nPlease watch the tutorial by pressing OK.");
-		            CoolUtil.browserLoad('https://youtu.be/AmoNoYjJgHs?si=LvgXbRRn7eJlwL0w');
+					SUtil.applicationAlert('Uncaught Error :(!', "Whoops, seems you didn't extract the mods folder to the .TG Engine Files!\nPlease watch the tutorial by pressing OK.");
+		            //CoolUtil.browserLoad('https://youtu.be/AmoNoYjJgHs?si=LvgXbRRn7eJlwL0w');
 					System.exit(0);
 				}
 			}
@@ -116,8 +116,13 @@ class SUtil
 		Sys.println(errMsg);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 		Sys.println("Making a simple alert ...");
+		
+		if (errMsg.length > 500) {
+			errMsg.substring(0, 500);
+			errMsg += 'Read the file to see more.';
+		}
 
-		SUtil.applicationAlert("Uncaught Error :(!", errMsg);
+		SUtil.applicationAlert("Uncaught Error !", errMsg);
 		System.exit(0);
 	}
 
@@ -127,13 +132,24 @@ class SUtil
 	}
 
 	#if android
-	public static function saveContent(fileName:String = 'file', fileExtension:String = '.json', fileData:String = 'you forgot something to add in your code')
+	public static function saveContent(fileName:String = 'file', fileExtension:String = '.json', fileData:String = 'you forgot something to add in your code', Path:String = 'Unknown')
 	{
-		if (!FileSystem.exists(SUtil.getPath() + 'saves'))
-			FileSystem.createDirectory(SUtil.getPath() + 'saves');
-
-		File.saveContent(SUtil.getPath() + 'saves/' + fileName + fileExtension, fileData);
-		SUtil.applicationAlert('Done :)!', 'File Saved Successfully!');
+		createFolder();
+		File.saveContent(SUtil.getPath() + 'saves/' + Path + '/' + fileName + fileExtension, fileData);
+		SUtil.applicationAlert('Done !', 'File Saved In ".TG Engine Files/saves/' + Path + '/' + fileName + fileExtension);
+	}
+	
+	public static function createFolder()
+	{
+		if (!FileSystem.exists(SUtil.getPath() + 'saves/Unknow'))
+			FileSystem.createDirectory(SUtil.getPath() + 'saves/Unknow');
+			
+		var types = ['Charts', 'Characters', 'Credits', 'Menu Characters', 'Weeks', 'Dialogues', 'Dialogue Characters', 'Unknow'];
+		for (i in types)
+		{
+			if (!FileSystem.exists(SUtil.getPath() + 'saves/' + i))
+				FileSystem.createDirectory(SUtil.getPath() + 'saves/' + i);
+		}
 	}
     
     public static function AutosaveContent(fileName:String = 'file', fileExtension:String = '.json', fileData:String = 'you forgot something to add in your code')
@@ -148,7 +164,7 @@ class SUtil
 	public static function saveClipboard(fileData:String = 'you forgot something to add in your code')
 	{
 		openfl.system.System.setClipboard(fileData);
-		SUtil.applicationAlert('Done :)!', 'Data Saved to Clipboard Successfully!');
+		SUtil.applicationAlert('Done! ', 'Data Saved to Clipboard Successfully!');
 	}
 
 	public static function copyContent(copyPath:String, savePath:String)
