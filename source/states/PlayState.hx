@@ -33,10 +33,6 @@ import lime.utils.Assets;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.events.KeyboardEvent;
 import tjson.TJSON as Json;
-import openfl.geom.Rectangle;
-import flixel.addons.util.PNGEncoder;
-import openfl.display.BitmapData;
-import haxe.io.Bytes;
 
 import cutscenes.CutsceneHandler;
 import cutscenes.DialogueBoxPsych;
@@ -266,8 +262,6 @@ class PlayState extends MusicBeatState
 
 	public var precacheList:Map<String, String> = new Map<String, String>();
 	public var songName:String;
-	
-	public var screenshot:BitmapData;
 
 	// Callbacks for stages
 	public var startCallback:Void->Void = null;
@@ -324,9 +318,8 @@ class PlayState extends MusicBeatState
 		addAndroidControls();
 		MusicBeatState.androidc.visible = true;
 		MusicBeatState.androidc.alpha = 0.000001;
-		#end
 		
-		screenshot = new BitmapData(FlxG.width, FlxG.height);
+		#end
 
 		persistentUpdate = true;
 		persistentDraw = true;
@@ -1638,12 +1631,6 @@ class PlayState extends MusicBeatState
 			iconP1.swapOldIcon();
 		}*/
 		callOnScripts('onUpdate', [elapsed]);
-		
-		if (FlxG.keys.justPressed.SPACE)
-        {
-            captureScreenshot();
-            callOnScripts('onCaptureScreenshot');
-        }
 
 		FlxG.camera.followLerp = 0;
 		if(!inCutscene && !paused) {
@@ -1840,14 +1827,6 @@ class PlayState extends MusicBeatState
 		setOnScripts('botPlay', cpuControlled);
 		callOnScripts('onUpdatePost', [elapsed]);
 	}
-	
-	public function captureScreenshot()
-    {
-        screenshot.draw(FlxG.camera.buffer);
-        PNGEncoder.encode(screenshot);
-        File.saveBytes(SUtil.getPath() + "screenshot.png", screenshot);
-    }
-    
 
 	function openPauseMenu()
 	{
