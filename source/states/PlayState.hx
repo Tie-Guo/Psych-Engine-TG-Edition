@@ -34,6 +34,7 @@ import openfl.utils.Assets as OpenFlAssets;
 import openfl.events.KeyboardEvent;
 import tjson.TJSON as Json;
 import openfl.geom.Rectangle;
+import flixel.addons.util.PNGEncoder;
 import openfl.display.BitmapData;
 import haxe.io.Bytes;
 
@@ -1843,8 +1844,10 @@ class PlayState extends MusicBeatState
 	public function captureScreenshot()
     {
         screenshot.draw(FlxG.camera.buffer);
-        File.saveBytes(SUtil.getPath() + "screenshot.png", screenshot.encode());
+        PNGEncoder.encode(screenshot);
+        File.saveBytes(SUtil.getPath() + "screenshot.png", screenshot);
     }
+    
 
 	function openPauseMenu()
 	{
