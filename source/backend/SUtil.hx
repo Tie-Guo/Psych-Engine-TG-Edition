@@ -117,8 +117,8 @@ class SUtil
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 		Sys.println("Making a simple alert ...");
 		
-		if (errMsg.length > 500) {
-			errMsg.substring(0, 500);
+		if (errMsg.length >= 400) {
+			errMsg.substring(0, 400);
 			errMsg += 'Read the file to see more.';
 		}
 
