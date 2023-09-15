@@ -52,7 +52,7 @@ class FlxNewHitbox extends FlxSpriteGroup
 		        add(buttonRight = createHint((FlxG.width / 2) + (FlxG.width / 4), (FlxG.height / 5) * 1, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFF0000));
 		        
                 add(buttonSpace = createHint(0, 0, FlxG.width/2, Std.int(FlxG.height / 5), 0xFFFF00));		    
-		   	    add(buttonShift = createHint(FlxG.width/2, 0, FlxG.width/2, Std.int(FlxG.height / 5), 0xFF0049));		    
+                add(buttonShift = createHint(FlxG.width/2, 0, FlxG.width/2, Std.int(FlxG.height / 5), buttonSpace));		   
 		    }
 		    
 		    else{
@@ -61,8 +61,8 @@ class FlxNewHitbox extends FlxSpriteGroup
 		        add(buttonUp = createHint(FlxG.width / 5 * 3, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1), 0x00FF00));
 		        add(buttonRight = createHint(FlxG.width / 5 * 4 , 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1), 0xFF0000));
 		        
-                add(buttonSpace = createHint(FlxG.width / 5 * 2, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 0.5), 0xFFFF00));		    
-		        add(buttonShift = createHint(FlxG.width / 5 * 2, FlxG.height/2, Std.int(FlxG.width / 5), Std.int(FlxG.height * 0.5), 0xFF0049));		    
+                add(buttonSpace = createHint(FlxG.width / 5 * 2, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1)/2, 0xFFFF00));		    
+		    	add(buttonShift = createHint(FlxG.width / 5 * 2, FlxG.height/2, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1)/2, 0xFF0049));		    
 		    }
 		}
 		
