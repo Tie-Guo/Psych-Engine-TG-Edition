@@ -42,8 +42,8 @@ class FlxNewHitbox extends FlxSpriteGroup
 		        add(buttonUp = createHint(FlxG.width / 2, 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0x00FF00));
 		        add(buttonRight = createHint((FlxG.width / 2) + (FlxG.width / 4), 0, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFF0000));
 		        
-                add(buttonSpace = createHint(0, (FlxG.height / 5) * 4, FlxG.width/2, Std.int(FlxG.height / 5), 0xFFFF00));
-		        add(buttonShift = createHint(FlxG.width/2, (FlxG.height / 5) * 4, FlxG.width/2, Std.int(FlxG.height / 5), 0xFF0049));
+                add(buttonSpace = createHint(0, (FlxG.height / 5) * 4, Std.int(FlxG.width/2), Std.int(FlxG.height / 5), 0xFFFF00));
+		        add(buttonShift = createHint(FlxG.width/2, (FlxG.height / 5) * 4, Std.int(FlxG.width/2), Std.int(FlxG.height / 5), 0xFF0049));
 		    }
 		    else if (ClientPrefs.data.hitboxLocation == 'Top'){
 		        add(buttonLeft = createHint(0, (FlxG.height / 5) * 1, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFF00FF));
@@ -51,8 +51,8 @@ class FlxNewHitbox extends FlxSpriteGroup
 		        add(buttonUp = createHint(FlxG.width / 2, (FlxG.height / 5) * 1, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0x00FF00));
 		        add(buttonRight = createHint((FlxG.width / 2) + (FlxG.width / 4), (FlxG.height / 5) * 1, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFF0000));
 		        
-                add(buttonSpace = createHint(0, 0, FlxG.width/2, Std.int(FlxG.height / 5), 0xFFFF00));		    
-                add(buttonShift = createHint(FlxG.width/2, 0, FlxG.width/2, Std.int(FlxG.height / 5), buttonSpace));		   
+                add(buttonSpace = createHint(0, 0, Std.int(FlxG.width/2), Std.int(FlxG.height / 5), 0xFFFF00));		    
+                add(buttonShift = createHint(FlxG.width/2, 0, Std.int(FlxG.width/2), Std.int(FlxG.height / 5), buttonSpace));		   
 		    }
 		    
 		    else{
@@ -85,10 +85,8 @@ class FlxNewHitbox extends FlxSpriteGroup
 		buttonSpace = null;
 	}
 
-	private function createHintGraphic(Width:Float, Height:Float, Color:Int = 0xFFFFFF):BitmapData
+	private function createHintGraphic(Width:Int, Height:Int, Color:Int = 0xFFFFFF):BitmapData
 	{
-		Width = Std.int(Width);
-		Height = Std.int(Height);
 		var shape:Shape = new Shape();
 		shape.graphics.beginFill(Color);
 		shape.graphics.lineStyle(10, Color, 1);
