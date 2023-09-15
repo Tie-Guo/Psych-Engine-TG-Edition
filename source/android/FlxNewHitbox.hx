@@ -52,7 +52,7 @@ class FlxNewHitbox extends FlxSpriteGroup
 		        add(buttonRight = createHint((FlxG.width / 2) + (FlxG.width / 4), (FlxG.height / 5) * 1, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFF0000));
 		        
                 add(buttonSpace = createHint(0, 0, Std.int(FlxG.width/2), Std.int(FlxG.height / 5), 0xFFFF00));		    
-                add(buttonShift = createHint(FlxG.width/2, 0, Std.int(FlxG.width/2), Std.int(FlxG.height / 5), buttonSpace));		   
+                add(buttonShift = createHint(FlxG.width/2, 0, Std.int(FlxG.width/2), Std.int(FlxG.height / 5), 0xFF0049));		   
 		    }
 		    
 		    else{
