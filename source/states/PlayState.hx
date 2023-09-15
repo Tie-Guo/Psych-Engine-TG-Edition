@@ -32,6 +32,7 @@ import flixel.animation.FlxAnimationController;
 import lime.utils.Assets;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.events.KeyboardEvent;
+import flixel.ui.FlxBar;
 import tjson.TJSON as Json;
 
 import cutscenes.CutsceneHandler;
@@ -181,7 +182,8 @@ class PlayState extends MusicBeatState
 	public var combo:Int = 0;
 
 	public var healthBar:HealthBar;
-	public var timeBar:HealthBar;
+	public var timeBar:FlxBar
+	public var gradientTimeBar:Bool = true;
 	var songPercent:Float = 0;
 
 	public var ratingsData:Array<Rating> = Rating.loadDefault();
@@ -266,6 +268,18 @@ class PlayState extends MusicBeatState
 	// Callbacks for stages
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
+	
+	var firstNOTETime:Float = 0;
+    var lastNOTETime:Float = 0;
+    
+    //Skip Intro/Outro
+    public var allowSkipIntro:Bool = false;
+    public var skipedIntro:Bool = false;
+    public var allowSkipOutro:Bool = false;
+    public var canSkipIntro:Bool = false;
+    public var canSkipOutro:Bool = false;
+    
+    public var SkipText:FlxText;
 
 	override public function create()
 	{
@@ -485,13 +499,23 @@ class PlayState extends MusicBeatState
 		if(ClientPrefs.data.downScroll) timeTxt.y = FlxG.height - 44;
 		if(ClientPrefs.data.timeBarType == 'Song Name') timeTxt.text = SONG.song;
 
-		timeBar = new HealthBar(0, timeTxt.y + (timeTxt.height / 4), 'timeBar', function() return songPercent, 0, 1);
+		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
+			'songPercent', 0, 1);
 		timeBar.scrollFactor.set();
-		timeBar.screenCenter(X);
+		timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF);
+		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
 		add(timeBar);
 		add(timeTxt);
+		
+		if (gradientTimeBar) {
+			var wawa = [];
+        	for (i in dad.healthColorArray) wawa.push(StringTools.hex(i, 2));
+        	var wawa2 = [];
+        	for (i in boyfriend.healthColorArray) wawa2.push(StringTools.hex(i, 2));
+        	timeBar.createGradientBar([0x0], [Std.parseInt('0xFF' + wawa2.join('')), Std.parseInt('0xFF' + wawa.join(''))]);
+        }
 
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		add(strumLineNotes);
@@ -581,6 +605,30 @@ class PlayState extends MusicBeatState
 		timeTxt.cameras = [camHUD];
 
 		startingSong = true;
+		
+		if (unspawnNotes.length > 0) {
+        	if (unspawnNotes[0].strumTime >= 3000)
+        	{
+        		firstNOTETime = unspawnNotes[0].strumTime;
+        		allowSkipIntro = true;
+        	} else allowSkipIntro = false;
+        	if (unspawnNotes[unspawnNotes.length-1].strumTime <= (FlxG.sound.music.length - 3000))
+        	{
+        		lastNOTETime = unspawnNotes[unspawnNotes.length-1].strumTime;
+        		allowSkipOutro = true;
+        	} else allowSkipOutro = false;
+        } else {
+        	allowSkipIntro = false;
+        	allowSkipOutro = false;
+        }
+        
+        if (!allowSkipOutro) lastNOTETime = FlxG.sound.music.length + 5000;
+        
+        SkipText = new FlxText(0, 0, 0, 'Skip Intro', 40);
+        SkipText.setFormat(Paths.font("vcr.ttf"), 40, FlxColor.WHITE);
+        add(SkipText);
+        SkipText.cameras = [camOther];
+        SkipText.screenCenter();
 		
 		#if LUA_ALLOWED
 		for (notetype in noteTypes)
@@ -1160,20 +1208,23 @@ class PlayState extends MusicBeatState
 		if(totalPlayed != 0)
 		{
 			var percent:Float = CoolUtil.floorDecimal(ratingPercent * 100, 2);
-			str += ' ($percent%) - $ratingFC';
+			str += ' - $ratingFC';
 		}
 
-		scoreTxt.text = 'Score: ' + songScore
-		+ ' | Misses: ' + songMisses
-		+ ' | Rating: ' + str;
+		scoreTxt.text = 'Score: ' + songScore;
+		
+		if (songMisses > 0)
+			scoreTxt.text += ' | Misses: ' + songMisses;
+			
+		scoreTxt.text += ' | Rating: ' + str + ' | Accuracy: ' + percent + '%';
 
 		if(ClientPrefs.data.scoreZoom && !miss && !cpuControlled)
 		{
 			if(scoreTxtTween != null) {
 				scoreTxtTween.cancel();
 			}
-			scoreTxt.scale.x = 1.075;
-			scoreTxt.scale.y = 1.075;
+			scoreTxt.scale.x = 1.05;
+			scoreTxt.scale.y = 1.05;
 			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2, {
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
@@ -1821,7 +1872,37 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
-
+		
+		if (allowSkipIntro && (Conductor.songPosition >= 0) && (Conductor.songPosition <= firstNOTETime - 1000) ) {
+    		canSkipIntro = true;
+    		SkipText.text = 'Skip Intro';
+    		SkipText.visible = true;
+    	}
+    	
+    	if (allowSkipOutro && (Conductor.songPosition >= lastNOTETime + 1000) && (Conductor.songPosition <= FlxG.sound.music.length) ) {
+    		canSkipOutro = true;
+    		SkipText.text = 'Skip To End';
+    		SkipText.visible = true;
+    	}
+    	
+    	if ( ((Conductor.songPosition >= firstNOTETime - 1000) && (Conductor.songPosition <= lastNOTETime + 1000)) || endingSong || startingSong) {
+    		SkipText.visible = false;
+    		canSkipIntro = false;
+    		canSkipOutro = false;
+    	}
+    
+    	if (!startingSong && FlxG.mouse.justPressed && 
+    	FlxG.mouse.getScreenPosition(camOther).x >= 550 && FlxG.mouse.getScreenPosition(camOther).x <= 750 && FlxG.mouse.getScreenPosition(camOther).y > 335 && FlxG.mouse.getScreenPosition(camOther).y < 385) {
+    		if (canSkipIntro && allowSkipIntro && !skipedIntro){
+    			setSongTime(firstNOTETime - 1000);
+    			skipedIntro = true;
+    		}
+    		
+    		if (canSkipOutro && allowSkipOutro){
+    			setSongTime(FlxG.sound.music.length - 50);
+    		}
+    	}
+    
 		setOnScripts('cameraX', camFollow.x);
 		setOnScripts('cameraY', camFollow.y);
 		setOnScripts('botPlay', cpuControlled);
@@ -2145,6 +2226,13 @@ class PlayState extends MusicBeatState
 						}
 				}
 				reloadHealthBarColors();
+				if (gradientTimeBar) {
+        			var wawa = [];
+                	for (i in dad.healthColorArray) wawa.push(StringTools.hex(i, 2));
+                	var wawa2 = [];
+                	for (i in boyfriend.healthColorArray) wawa2.push(StringTools.hex(i, 2));
+                	timeBar.createGradientBar([0x0], [Std.parseInt('0xFF' + wawa2.join('')), Std.parseInt('0xFF' + wawa.join(''))]);
+                }
 
 			case 'Change Scroll Speed':
 				if (songSpeedType != "constant")
