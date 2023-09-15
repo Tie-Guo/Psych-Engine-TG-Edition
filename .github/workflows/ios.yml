@@ -1,0 +1,85 @@
+name: iOS Build (?)
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  buildiOS2:
+    name: buildiOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.2.5
+        
+      - name: Set up Xcode
+        uses: actions/setup-xcode@v2
+        with:
+          xcode-version: 12.5 # 使用合适的Xcode版本
+        
+      - name: Install dependencies
+        run: |
+          sudo xcode-select -r
+          gem install cocoapods --no-document
+          sudo gem install xcpretty
+
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install hxcpp 4.2.1 > /dev/null
+          haxelib install lime 7.9.0
+          haxelib install openfl 9.1.0
+          haxelib --never install flixel 5.2.2
+          haxelib run lime setup flixel
+          haxelib install flixel-tools 1.5.1
+          haxelib install flixel-ui
+          haxelib install flixel-addons 3.0.2
+          haxelib install tjson
+          haxelib install hxjsonast
+          haxelib install SScript 4.0.1
+          haxelib git hxCodec https://github.com/SPLCoding/hxCodec-but-it-works-xd.git
+          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib git linc_luajit https://github.com/Sirox228/linc_luajit
+          haxelib git extension-androidtools https://github.com/MaysLastPlay77/extension-androidtools
+          haxelib install hxcpp-debug-server
+          haxelib list
+
+      - name: Create Version Tag
+        run: echo "${{github.run_id}}" > VERSION
+
+      - name: Configure Android
+        run: |
+          haxelib run lime setup -alias -y
+          haxelib set lime 7.9.0
+          haxelib set openfl 9.1.0
+          haxelib set flixel 5.2.2
+          haxelib set flixel-addons 3.0.2
+          haxelib set hxcpp 4.2.1
+          haxelib set SScript 4.0.1
+          haxelib list
+          
+      - name: Build iOS app
+          run: lime build ios -Diphoneos
+    
+      - name: Create IPA
+        run: haxelib run lime ios createipa
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: iOS
+          path: export/release/ios/bin/app/build/outputs/ipa/debug
