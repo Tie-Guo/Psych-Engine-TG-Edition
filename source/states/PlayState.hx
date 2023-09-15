@@ -1202,11 +1202,11 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false)
 	{
-		var str:String = ratingName
-		var percent = '100';
+		var str:String = ratingName;
+		var percent:Float = '100';
 		if(totalPlayed != 0)
 		{
-			var percent:Float = CoolUtil.floorDecimal(ratingPercent * 100, 2);
+			percent = CoolUtil.floorDecimal(ratingPercent * 100, 2);
 			str += ' - $ratingFC';
 		}
 
