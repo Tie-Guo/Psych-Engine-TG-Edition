@@ -85,8 +85,10 @@ class FlxNewHitbox extends FlxSpriteGroup
 		buttonSpace = null;
 	}
 
-	private function createHintGraphic(Width:Int, Height:Int, Color:Int = 0xFFFFFF):BitmapData
+	private function createHintGraphic(Width:Float, Height:Float, Color:Int = 0xFFFFFF):BitmapData
 	{
+		Width = Std.int(Width);
+		Height = Std.int(Height);
 		var shape:Shape = new Shape();
 		shape.graphics.beginFill(Color);
 		shape.graphics.lineStyle(10, Color, 1);
