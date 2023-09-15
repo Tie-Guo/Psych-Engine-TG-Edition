@@ -78,8 +78,8 @@ class SaveVariables {
 	
 	
 	public var hitboxmode:String = 'New';  //it be deleted
-	public var hitboxExtend:Bool = true;
-	public var hitboxLocation:String = 'Bottom';
+	public var hitboxExtend:String = 'Space';
+	public var hitboxLocation:String = 'Middle';
 	public var hitboxalpha:Float = 0.2;
 	public var VirtualPadAlpha:Float = 0.75;
     public var language:String = 'English';
