@@ -14,7 +14,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  buildiOS2:
+  buildiOS:
     name: buildiOS
     runs-on: macos-latest
     steps:
@@ -29,7 +29,7 @@ jobs:
       - name: Set up Xcode
         uses: actions/setup-xcode@v2
         with:
-          xcode-version: 12.5 # 使用合适的Xcode版本
+          xcode-version: 12.5
         
       - name: Install dependencies
         run: |
@@ -72,8 +72,8 @@ jobs:
           haxelib set SScript 4.0.1
           haxelib list
           
-      - name: Build iOS app
-          run: lime build ios -Diphoneos
+      - name: Build iOS
+        run: lime build ios -Diphoneos
     
       - name: Create IPA
         run: haxelib run lime ios createipa
