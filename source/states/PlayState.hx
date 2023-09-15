@@ -507,14 +507,6 @@ class PlayState extends MusicBeatState
 		add(timeBar);
 		add(timeTxt);
 		
-		if (gradientTimeBar) {
-			var wawa = [];
-        	for (i in dad.healthColorArray) wawa.push(StringTools.hex(i, 2));
-        	var wawa2 = [];
-        	for (i in boyfriend.healthColorArray) wawa2.push(StringTools.hex(i, 2));
-        	timeBar.createGradientBar([0x0], [Std.parseInt('0xFF' + wawa2.join('')), Std.parseInt('0xFF' + wawa.join(''))]);
-        }
-
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		add(strumLineNotes);
 		add(grpNoteSplashes);
@@ -1203,7 +1195,7 @@ class PlayState extends MusicBeatState
 	public function updateScore(miss:Bool = false)
 	{
 		var str:String = ratingName;
-		var percent:Float = '100';
+		var percent:Float = 100;
 		if(totalPlayed != 0)
 		{
 			percent = CoolUtil.floorDecimal(ratingPercent * 100, 2);
@@ -2225,13 +2217,6 @@ class PlayState extends MusicBeatState
 						}
 				}
 				reloadHealthBarColors();
-				if (gradientTimeBar) {
-        			var wawa = [];
-                	for (i in dad.healthColorArray) wawa.push(StringTools.hex(i, 2));
-                	var wawa2 = [];
-                	for (i in boyfriend.healthColorArray) wawa2.push(StringTools.hex(i, 2));
-                	timeBar.createGradientBar([0x0], [Std.parseInt('0xFF' + wawa2.join('')), Std.parseInt('0xFF' + wawa.join(''))]);
-                }
 
 			case 'Change Scroll Speed':
 				if (songSpeedType != "constant")
