@@ -60,10 +60,7 @@ jobs:
           haxelib set hxcpp 4.2.1
           haxelib set SScript 4.0.1
           haxelib list
-          
-      - name: Install dependencies
-        run: pod install
-      
+        
       - name: Build app
         run: xcodebuild -workspace MyApp.xcworkspace -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 12' build test
         
