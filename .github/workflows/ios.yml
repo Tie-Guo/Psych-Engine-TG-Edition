@@ -25,17 +25,6 @@ jobs:
         uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.2.5
-        
-      - name: Set up Xcode
-        uses: actions/setup-xcode@v2
-        with:
-          xcode-version: 12.5
-        
-      - name: Install dependencies
-        run: |
-          sudo xcode-select -r
-          gem install cocoapods --no-document
-          sudo gem install xcpretty
 
       - name: Install Haxelib
         run: |
