@@ -39,10 +39,11 @@ class HitboxSettingsSubState extends BaseOptionsMenu
 		title = 'Hitbox Settings';
 		rpcTitle = 'Hitbox Settings Menu'; //hi, you can ask what is that, i will answer it's all what you needed lol.
 
-		var option:Option = new Option('Space Extend',
-			"Allow Extend Space Control --Made by NF|Beihu",
+		var option:Option = new Option('Shift & Space Extend',
+			"Add Space and Shift Button to Hitbox \nFor lua function only \nMade by NF|Beihu & TieGuo",
 			'hitboxExtend',
-			'bool');
+			'string'
+			['OFF', 'Shift', 'Space', 'Shi & Spa']);
 		  addOption(option);
 		  
 		var option:Option = new Option('Space Location:',
