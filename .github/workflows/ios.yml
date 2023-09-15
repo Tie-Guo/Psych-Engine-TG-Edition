@@ -19,7 +19,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v2
 
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
@@ -61,9 +61,15 @@ jobs:
           haxelib set SScript 4.0.1
           haxelib list
           
-      - name: Build iOS
-        run: lime build ios -Diphoneos
-    
+      - name: Install dependencies
+        run: pod install
+      
+      - name: Build app
+        run: xcodebuild -workspace MyApp.xcworkspace -scheme MyApp -destination 'platform=iOS Simulator,name=iPhone 12' build test
+        
+      - name: Archive app
+        run: xcodebuild -workspace MyApp.xcworkspace -scheme MyApp archive -archivePath MyApp.xcarchive
+       
       - name: Create IPA
         run: haxelib run lime ios createipa
 
