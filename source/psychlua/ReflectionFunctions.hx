@@ -32,13 +32,13 @@ class ReflectionFunctions
 		});
 		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String, ?allowMaps:Bool = false) {
 			var myClass:Dynamic = Type.resolveClass(classVar);
-			if(myClass == null)
+			if(Reflect.isNull(myClass))
 			{
 				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
 				return null;
 			}
 			
-				#if android
+			#if android
 			if (classVar == 'flixel.FlxG' && (variable.toLowerCase().indexOf('keys') != -1))
 			{
 				var key:String;
