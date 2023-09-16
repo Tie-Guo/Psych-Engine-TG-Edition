@@ -135,7 +135,7 @@ class ExtraFunctions
 				case 'down': return PlayState.instance.controls.NOTE_DOWN_P;
 				case 'up': return PlayState.instance.controls.NOTE_UP_P;
 				case 'right': return PlayState.instance.controls.NOTE_RIGHT_P;
-				case 'space': return (PlayState.instance.controls.SPACE_P || FlxG.keys.justPressed.SPACE || LuaUtils.checkMobileExtraButton('space', 'justPressed'));//an extra key for convinience
+				case 'space': return (PlayState.instance.controls.SPACE_P || FlxG.keys.justPressed.SPACE #if android || LuaUtils.checkMobileExtraButton('space', 'justPressed') #end);//an extra key for convinience
 				default: return PlayState.instance.controls.justPressed(name);
 			}
 			return false;
@@ -147,7 +147,7 @@ class ExtraFunctions
 				case 'down': return PlayState.instance.controls.NOTE_DOWN;
 				case 'up': return PlayState.instance.controls.NOTE_UP;
 				case 'right': return PlayState.instance.controls.NOTE_RIGHT;
-				case 'space': return (PlayState.instance.controls.SPACE || FlxG.keys.pressed.SPACE || LuaUtils.checkMobileExtraButton('space', 'pressed'));//an extra key for convinience
+				case 'space': return (PlayState.instance.controls.SPACE || FlxG.keys.pressed.SPACE #if android || LuaUtils.checkMobileExtraButton('space', 'pressed') #end);//an extra key for convinience
 				default: return PlayState.instance.controls.pressed(name);
 			}
 			return false;
@@ -159,7 +159,7 @@ class ExtraFunctions
 				case 'down': return PlayState.instance.controls.NOTE_DOWN_R;
 				case 'up': return PlayState.instance.controls.NOTE_UP_R;
 				case 'right': return PlayState.instance.controls.NOTE_RIGHT_R;
-				case 'space': return (PlayState.instance.controls.SPACE_R || FlxG.keys.justReleased.SPACE || LuaUtils.checkMobileExtraButton('space', 'justReleased'));//an extra key for convinience
+				case 'space': return (PlayState.instance.controls.SPACE_R || FlxG.keys.justReleased.SPACE #if android || LuaUtils.checkMobileExtraButton('space', 'justReleased') #end);//an extra key for convinience
 				default: return PlayState.instance.controls.justReleased(name);
 			}
 			return false;
