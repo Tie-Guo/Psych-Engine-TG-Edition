@@ -287,7 +287,6 @@ class Controls
         		result = (MusicBeatState.androidc.newhbox.buttonRight.justPressed == true);
         		if(result) {controllerMode = true; return true;}
     		    }
-    		    }
     		}//MusicBeatState.checkHitbox
     		else{
     		    if (MusicBeatState.checkDUO){
