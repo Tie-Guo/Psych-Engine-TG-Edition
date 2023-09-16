@@ -39,10 +39,11 @@ class ReflectionFunctions
 			}
 			
 			#if android
-			if (variable == 'keys.justPressed.SPACE')
-				return LuaUtils.getVarInArray(myClass, variable, allowMaps);
-			else if (variable == 'keys.pressed.SPACE')
-				return LuaUtils.getVarInArray(myClass, variable, allowMaps);
+			if (classVar == 'flixel.FlxG' && variable.indexOf('keys.') != -1) {
+				if (LuaUtils.getVarInArray(myClass, variable, allowMaps, true))
+					return true;
+				
+			}
 			#end
 
 			var split:Array<String> = variable.split('.');

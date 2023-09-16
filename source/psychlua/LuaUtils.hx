@@ -99,10 +99,10 @@ class LuaUtils
 		Reflect.setProperty(instance, variable, value);
 		return value;
 	}
-	public static function getVarInArray(instance:Dynamic, variable:String, allowMaps:Bool = false):Any
+	public static function getVarInArray(instance:Dynamic, variable:String, allowMaps:Bool = false, checkMobile:Bool = false):Any
 	{	
 		#if android
-		if ( (variable.indexOf('keys.') != -1) )
+		if ( (variable.indexOf('keys.') != -1) && checkMobile)
     	{
     		var key:Dynamic = 'unknow';
     		var type:Dynamic = 'unknow';
@@ -119,8 +119,8 @@ class LuaUtils
     		else if ( (variable.toLowerCase().indexOf('released') != -1))
     			type = 'justReleased';
     		var result = checkMobileExtraButton(key, type);
-    		if (result == true)
-    			return result;
+    		
+    		return result;
     	}
 		#end
     
