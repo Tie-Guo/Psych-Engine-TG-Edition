@@ -124,6 +124,7 @@ class LuaUtils
 				return result;
 		}
 		#end
+// 666
     
 		var splitProps:Array<String> = variable.split('[');
 		if(splitProps.length > 1)
