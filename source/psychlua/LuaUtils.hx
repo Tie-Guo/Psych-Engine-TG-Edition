@@ -34,7 +34,7 @@ class LuaUtils
 		};
 	}
 	
-	public static function (button:String = 'space', type:String = 'justPressed')
+	public static function checkMobileExtraButton(button:String = 'space', type:String = 'justPressed')
 	{
 		#if android
 		var check:Bool = false;
