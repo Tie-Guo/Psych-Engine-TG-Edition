@@ -31,6 +31,31 @@ class ReflectionFunctions
 			return true;
 		});
 		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String, ?allowMaps:Bool = false) {
+			#if android
+			if (classVar == 'flixel.FlxG' && variable.toLowerCase().indexOf('keys')) {
+				var key:String;
+				var type:String;
+				
+				if (variable.toLowerCase().indexOf('.space'))
+					key = 'space';
+				else if (variable.toLowerCase().indexOf('.shift'))
+					key = 'shift';
+					
+				if (variable.toLowerCase().indexOf('.justpressed.'))
+					type = 'justPressed';
+				else if (variable.toLowerCase().indexOf('.pressed.'))
+					type = 'pressed';
+				else if (variable.toLowerCase().indexOf('.released.'))
+					type = 'justReleased';
+				
+				if (key != null && type != null) {
+					if (LuaUtils.checkMobileExtraButton(key, type))
+						return true;
+				}
+			}
+			#end
+			
+			
 			var myClass:Dynamic = Type.resolveClass(classVar);
 			if(myClass == null)
 			{

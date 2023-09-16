@@ -33,6 +33,31 @@ class LuaUtils
 			ease: getTweenEaseByString(options.ease)
 		};
 	}
+	
+	public static function (button:String = 'space', type:String = 'justPressed')
+	{
+		#if android
+		var check:Bool = false;
+		if (button == 'space') {
+			if (type == 'justPressed')
+				check = MusicBeatState.androidc.newhbox.buttonSpace.justPressed;
+			else if (type == 'pressed')
+				check = MusicBeatState.androidc.newhbox.buttonSpace.pressed;
+			else if (type == 'justReleased')
+				check = MusicBeatState.androidc.newhbox.buttonSpace.justReleased;
+		} else if (button == 'shift') {
+			if (type == 'justPressed')
+				check = MusicBeatState.androidc.newhbox.buttonShift.justPressed;
+			else if (type == 'pressed')
+				check = MusicBeatState.androidc.newhbox.buttonShift.pressed;
+			else if (type == 'justReleased')
+				check = MusicBeatState.androidc.newhbox.buttonShift.justReleased;
+		}
+		return check;
+		#else
+		return;
+		#end
+	}
 
 	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic, allowMaps:Bool = false):Any
 	{

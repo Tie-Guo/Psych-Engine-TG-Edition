@@ -22,14 +22,50 @@ class ExtraFunctions
 		// Keyboard & Gamepads
 		Lua_helper.add_callback(lua, "keyboardJustPressed", function(name:String)
 		{
+			#if android
+			var key:String;
+			
+			if (name.toLowerCase().indexOf('space'))
+				key = 'space';
+			else if (name.toLowerCase().indexOf('shift'))
+				key = 'shift';
+			
+			if (key != null && LuaUtils.checkMobileExtraButton(key, 'justPressed'))
+				return true;
+			#end
+			
 			return Reflect.getProperty(FlxG.keys.justPressed, name);
 		});
 		Lua_helper.add_callback(lua, "keyboardPressed", function(name:String)
 		{
+			#if android
+			var key:String;
+			
+			if (name.toLowerCase().indexOf('space'))
+				key = 'space';
+			else if (name.toLowerCase().indexOf('shift'))
+				key = 'shift';
+			
+			if (key != null && LuaUtils.checkMobileExtraButton(key, 'pressed'))
+				return true;
+			#end
+			
 			return Reflect.getProperty(FlxG.keys.pressed, name);
 		});
 		Lua_helper.add_callback(lua, "keyboardReleased", function(name:String)
 		{
+			#if android
+			var key:String;
+			
+			if (name.toLowerCase().indexOf('space'))
+				key = 'space';
+			else if (name.toLowerCase().indexOf('shift'))
+				key = 'shift';
+			
+			if (key != null && LuaUtils.checkMobileExtraButton(key, 'justReleased'))
+				return true;
+			#end
+			
 			return Reflect.getProperty(FlxG.keys.justReleased, name);
 		});
 
@@ -99,7 +135,7 @@ class ExtraFunctions
 				case 'down': return PlayState.instance.controls.NOTE_DOWN_P;
 				case 'up': return PlayState.instance.controls.NOTE_UP_P;
 				case 'right': return PlayState.instance.controls.NOTE_RIGHT_P;
-				case 'space': return (PlayState.instance.controls.SPACE_P || FlxG.keys.justPressed.SPACE);//an extra key for convinience
+				case 'space': return (PlayState.instance.controls.SPACE_P || FlxG.keys.justPressed.SPACE || LuaUtils.checkMobileExtraButton('space', 'justPressed'));//an extra key for convinience
 				default: return PlayState.instance.controls.justPressed(name);
 			}
 			return false;
@@ -111,7 +147,7 @@ class ExtraFunctions
 				case 'down': return PlayState.instance.controls.NOTE_DOWN;
 				case 'up': return PlayState.instance.controls.NOTE_UP;
 				case 'right': return PlayState.instance.controls.NOTE_RIGHT;
-				case 'space': return (PlayState.instance.controls.SPACE || FlxG.keys.pressed.SPACE);//an extra key for convinience
+				case 'space': return (PlayState.instance.controls.SPACE || FlxG.keys.pressed.SPACE || LuaUtils.checkMobileExtraButton('space', 'pressed'));//an extra key for convinience
 				default: return PlayState.instance.controls.pressed(name);
 			}
 			return false;
@@ -123,7 +159,7 @@ class ExtraFunctions
 				case 'down': return PlayState.instance.controls.NOTE_DOWN_R;
 				case 'up': return PlayState.instance.controls.NOTE_UP_R;
 				case 'right': return PlayState.instance.controls.NOTE_RIGHT_R;
-				case 'space': return (PlayState.instance.controls.SPACE_R || FlxG.keys.justReleased.SPACE);//an extra key for convinience
+				case 'space': return (PlayState.instance.controls.SPACE_R || FlxG.keys.justReleased.SPACE || LuaUtils.checkMobileExtraButton('space', 'justReleased'));//an extra key for convinience
 				default: return PlayState.instance.controls.justReleased(name);
 			}
 			return false;
