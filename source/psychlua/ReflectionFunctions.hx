@@ -33,8 +33,8 @@ class ReflectionFunctions
 		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String, ?allowMaps:Bool = false) {
 			#if android
 			if (classVar == 'flixel.FlxG' && (variable.toLowerCase().indexOf('keys') != -1)) {
-				var key:String;
-				var type:String;
+				var key:String = 'null';
+				var type:String = 'null';
 				
 				if (variable.toLowerCase().indexOf('.space') != -1)
 					key = 'space';
@@ -48,7 +48,7 @@ class ReflectionFunctions
 				else if (variable.toLowerCase().indexOf('.released.') != -1)
 					type = 'justReleased';
 				
-				if (key != null && type != null) {
+				if (key != 'null' && type != 'null') {
 					if (LuaUtils.checkMobileExtraButton(key, type))
 						return true;
 				}

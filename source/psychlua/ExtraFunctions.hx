@@ -23,14 +23,14 @@ class ExtraFunctions
 		Lua_helper.add_callback(lua, "keyboardJustPressed", function(name:String)
 		{
 			#if android
-			var key:String;
+			var key:String = 'null';
 			
 			if (name.toLowerCase().indexOf('space') != -1)
 				key = 'space';
 			else if (name.toLowerCase().indexOf('shift') != -1)
 				key = 'shift';
 			
-			if (key != null && LuaUtils.checkMobileExtraButton(key, 'justPressed'))
+			if (key != 'null' && LuaUtils.checkMobileExtraButton(key, 'justPressed'))
 				return true;
 			#end
 			
@@ -39,14 +39,14 @@ class ExtraFunctions
 		Lua_helper.add_callback(lua, "keyboardPressed", function(name:String)
 		{
 			#if android
-			var key:String;
+			var key:String = 'null';
 			
 			if (name.toLowerCase().indexOf('space') != -1)
 				key = 'space';
 			else if (name.toLowerCase().indexOf('shift') != -1)
 				key = 'shift';
 			
-			if (key != null && LuaUtils.checkMobileExtraButton(key, 'pressed'))
+			if (key != 'null' && LuaUtils.checkMobileExtraButton(key, 'pressed'))
 				return true;
 			#end
 			
@@ -55,14 +55,14 @@ class ExtraFunctions
 		Lua_helper.add_callback(lua, "keyboardReleased", function(name:String)
 		{
 			#if android
-			var key:String;
+			var key:String = 'null';
 			
 			if (name.toLowerCase().indexOf('space') != -1)
 				key = 'space';
 			else if (name.toLowerCase().indexOf('shift') != -1)
 				key = 'shift';
 			
-			if (key != null && LuaUtils.checkMobileExtraButton(key, 'justReleased'))
+			if (key != 'null' && LuaUtils.checkMobileExtraButton(key, 'justReleased'))
 				return true;
 			#end
 			
