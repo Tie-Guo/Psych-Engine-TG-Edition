@@ -287,9 +287,6 @@ class Controls
         		result = (MusicBeatState.androidc.newhbox.buttonRight.justPressed == true);
         		if(result) {controllerMode = true; return true;}
     		    }
-    		    if (key == 'space' && ClientPrefs.data.hitboxExtend){
-    		    result = (MusicBeatState.androidc.newhbox.buttonSpace.justPressed == true);
-        		if(result) {controllerMode = true; return true;}
     		    }
     		}//MusicBeatState.checkHitbox
     		else{
