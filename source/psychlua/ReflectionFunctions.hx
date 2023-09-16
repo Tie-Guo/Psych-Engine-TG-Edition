@@ -231,7 +231,7 @@ class ReflectionFunctions
 			if (LuaUtils.checkMobileExtraButton(key, type))
 				return true;
 			else
-				return false
+				return false;
 		}
 		#end
 	}
