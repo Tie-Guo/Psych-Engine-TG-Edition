@@ -102,26 +102,26 @@ class LuaUtils
 	public static function getVarInArray(instance:Dynamic, variable:String, allowMaps:Bool = false):Any
 	{
 		#if android
-		if ( (variable.toLowerCase().indexOf('keys.justPressed') != -1) || (variable.toLowerCase().indexOf('keys.pressed') != -1) || (variable.toLowerCase().indexOf('keys.justReleased') != -1) || (variable.toLowerCase().indexOf('keys.released') != -1))
+		if ( (variable.indexOf('keys.justPressed') != -1) || (variable.indexOf('keys.pressed') != -1) || (variable.indexOf('keys.justReleased') != -1) || (variable.indexOf('keys.released') != -1))
 		{
 			var key:String = 'unknow';
 			var type:String = 'unknow';
 			
-			if (variable.toLowerCase().indexOf('.space') != -1)
+			if (variable.indexOf('SPACE') != -1)
 				key = 'space';
-			else if (variable.toLowerCase().indexOf('.shift') != -1)
+			else if (variable.indexOf('SHIFT') != -1)
 				key = 'shift';
 				
-			if (variable.toLowerCase().indexOf('.justpressed.') != -1)
+			if (variable.indexOf('justPressed') != -1)
 				type = 'justPressed';
-			else if (variable.toLowerCase().indexOf('.pressed.') != -1)
+			else if (variable.indexOf('pressed') != -1)
 				type = 'pressed';
-			else if (variable.toLowerCase().indexOf('released.') != -1)
+			else if ( (variable.indexOf('released') != -1) || (variable.indexOf('justReleased') != -1))
 				type = 'justReleased';
 			
 			var result = checkMobileExtraButton(key, type);
 			if (result)
-			return result;
+				return result;
 		}
 		#end
 			
