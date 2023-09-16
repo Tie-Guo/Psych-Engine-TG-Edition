@@ -104,8 +104,8 @@ class LuaUtils
 		#if android
 		if ( (variable.toLowerCase().indexOf('keys.justPressed') != -1) || (variable.toLowerCase().indexOf('keys.pressed') != -1) || (variable.toLowerCase().indexOf('keys.justReleased') != -1) || (variable.toLowerCase().indexOf('keys.released') != -1))
 		{
-			var key:Dynamic;
-			var type:Dynamic;
+			var key:String = = 'unknow';
+			var type:String = 'unknow';
 			
 			if (variable.toLowerCase().indexOf('.space') != -1)
 				key = 'space';
@@ -119,10 +119,9 @@ class LuaUtils
 			else if (variable.toLowerCase().indexOf('released.') != -1)
 				type = 'justReleased';
 			
-			if (key != null && type != null) {
-				if (LuaUtils.checkMobileExtraButton(key, type))
-					return LuaUtils.checkMobileExtraButton(key, type);
-			}
+			var result = checkMobileExtraButton(key, type);
+			if (result)
+			return result;
 		}
 		#end
 			
