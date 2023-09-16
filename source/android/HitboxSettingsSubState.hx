@@ -36,18 +36,18 @@ class HitboxSettingsSubState extends BaseOptionsMenu
 {
 	public function new()
 	{
-		title = 'Hitbox Settings';
-		rpcTitle = 'Hitbox Settings Menu'; //hi, you can ask what is that, i will answer it's all what you needed lol.
+		title = 'Android Control Settings';
+		rpcTitle = 'Android Control Settings Menu'; //hi, you can ask what is that, i will answer it's all what you needed lol.
 
 		var option:Option = new Option('Shift & Space Extend:',
-			"Add Space and Shift Button to Hitbox \nFor lua function only \nMade by NF|Beihu & TieGuo",
+			"Add Space and Shift Button for Mobile \nFor lua function only \nMade by NF|Beihu & TieGuo",
 			'hitboxExtend',
 			'string',
 			['OFF', 'Shift', 'Space', 'Shi & Spa']);
 		  addOption(option);
 		  
-		var option:Option = new Option('Space Location:',
-			"Choose Space Control Location",
+		var option:Option = new Option('Space Position:',
+			"Choose Shift or Space Control Position",
 			'hitboxLocation',
 			'string',
 			['Bottom', 'Middle', 'Top']);
@@ -69,7 +69,7 @@ class HitboxSettingsSubState extends BaseOptionsMenu
 			'VirtualPadAlpha',
 			'float');
 		option.scrollSpeed = 1.6;
-		option.minValue = 0.1;
+		option.minValue = 0.0;
 		option.maxValue = 1;
 		option.changeValue = 0.01;
 		option.decimals = 2;
@@ -78,11 +78,9 @@ class HitboxSettingsSubState extends BaseOptionsMenu
 		super();
 	}
 	
-	var OGpadAlpha:Float = ClientPrefs.data.VirtualPadAlpha;
 	function onChangePadAlpha()
 	{
-	ClientPrefs.saveSettings();
-	MusicBeatState._virtualpad.alpha = ClientPrefs.data.VirtualPadAlpha / OGpadAlpha;
+		MusicBeatState._virtualpad.alpha = ClientPrefs.data.VirtualPadAlpha;
 	}
 
 /*
