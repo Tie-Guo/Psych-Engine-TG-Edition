@@ -102,29 +102,27 @@ class LuaUtils
 	public static function getVarInArray(instance:Dynamic, variable:String, allowMaps:Bool = false):Any
 	{	
 		#if android
-		if (variable.startsWith('keys.') && variable.endsWith('ed'))
-		{
-			var key:Dynamic = 'unknow';
-			var type:Dynamic = 'unknow';
-			
-			if (variable.endsWith('SPACE'))
-				key = 'space';
-			else if (variable.endsWith('SHIFT'))
-				key = 'shift';
-				
-			if (variable.indexOf('justPressed') != -1)
-				type = 'justPressed';
-			else if (variable.indexOf('pressed') != -1)
-				type = 'pressed';
-			else if ( (variable.toLowerCase().indexOf('released') != -1))
-				type = 'justReleased';
-			
-			var result = checkMobileExtraButton(key, type);
-			if (result == true)
-				return result;
-		}
+		if ( (variable.indexOf('keys.') != -1) )
+    	{
+    		var key:Dynamic = 'unknow';
+    		var type:Dynamic = 'unknow';
+    		
+    		if (variable.indexOf('SPACE') != -1)
+    			key = 'space';
+    		else if (variable.indexOf('SHIFT') != -1)
+    			key = 'shift';
+    			
+    		if (variable.indexOf('justPressed') != -1)
+    			type = 'justPressed';
+    		else if (variable.indexOf('pressed') != -1)
+    			type = 'pressed';
+    		else if ( (variable.toLowerCase().indexOf('released') != -1))
+    			type = 'justReleased';
+    		var result = checkMobileExtraButton(key, type);
+    		if (result == true)
+    			return result;
+    	}
 		#end
-// 666
     
 		var splitProps:Array<String> = variable.split('[');
 		if(splitProps.length > 1)
