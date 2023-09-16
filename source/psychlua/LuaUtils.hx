@@ -104,7 +104,7 @@ class LuaUtils
 		#if android
 		if ( (variable.toLowerCase().indexOf('keys.justPressed') != -1) || (variable.toLowerCase().indexOf('keys.pressed') != -1) || (variable.toLowerCase().indexOf('keys.justReleased') != -1) || (variable.toLowerCase().indexOf('keys.released') != -1))
 		{
-			var key:String = = 'unknow';
+			var key:String = 'unknow';
 			var type:String = 'unknow';
 			
 			if (variable.toLowerCase().indexOf('.space') != -1)
