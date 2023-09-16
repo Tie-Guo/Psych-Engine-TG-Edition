@@ -37,6 +37,30 @@ class ReflectionFunctions
 				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
 				return null;
 			}
+			
+			#if android
+    		if (variable.startsWith('keys.') && variable.endsWith('ed'))
+    		{
+    			var key:Dynamic = 'unknow';
+    			var type:Dynamic = 'unknow';
+    			
+    			if (variable.endsWith('SPACE'))
+    				key = 'space';
+    			else if (variable.endsWith('SHIFT'))
+    				key = 'shift';
+    				
+    			if (variable.indexOf('justPressed') != -1)
+    				type = 'justPressed';
+    			else if (variable.indexOf('pressed') != -1)
+    				type = 'pressed';
+    			else if ( (variable.toLowerCase().indexOf('released') != -1))
+    				type = 'justReleased';
+    			
+    			var result = LuaUtils.checkMobileExtraButton(key, type);
+    			if (result == true)
+    				return result;
+    		}
+    		#end
 
 			var split:Array<String> = variable.split('.');
 			if(split.length > 1) {
