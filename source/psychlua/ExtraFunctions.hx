@@ -25,9 +25,9 @@ class ExtraFunctions
 			#if android
 			var key:String;
 			
-			if (name.toLowerCase().indexOf('space'))
+			if (name.toLowerCase().indexOf('space') != -1)
 				key = 'space';
-			else if (name.toLowerCase().indexOf('shift'))
+			else if (name.toLowerCase().indexOf('shift') != -1)
 				key = 'shift';
 			
 			if (key != null && LuaUtils.checkMobileExtraButton(key, 'justPressed'))
@@ -41,9 +41,9 @@ class ExtraFunctions
 			#if android
 			var key:String;
 			
-			if (name.toLowerCase().indexOf('space'))
+			if (name.toLowerCase().indexOf('space') != -1)
 				key = 'space';
-			else if (name.toLowerCase().indexOf('shift'))
+			else if (name.toLowerCase().indexOf('shift') != -1)
 				key = 'shift';
 			
 			if (key != null && LuaUtils.checkMobileExtraButton(key, 'pressed'))
@@ -57,9 +57,9 @@ class ExtraFunctions
 			#if android
 			var key:String;
 			
-			if (name.toLowerCase().indexOf('space'))
+			if (name.toLowerCase().indexOf('space') != -1)
 				key = 'space';
-			else if (name.toLowerCase().indexOf('shift'))
+			else if (name.toLowerCase().indexOf('shift') != -1)
 				key = 'shift';
 			
 			if (key != null && LuaUtils.checkMobileExtraButton(key, 'justReleased'))

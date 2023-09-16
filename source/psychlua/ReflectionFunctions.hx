@@ -32,20 +32,20 @@ class ReflectionFunctions
 		});
 		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String, ?allowMaps:Bool = false) {
 			#if android
-			if (classVar == 'flixel.FlxG' && variable.toLowerCase().indexOf('keys')) {
+			if (classVar == 'flixel.FlxG' && (variable.toLowerCase().indexOf('keys') != -1)) {
 				var key:String;
 				var type:String;
 				
-				if (variable.toLowerCase().indexOf('.space'))
+				if (variable.toLowerCase().indexOf('.space') != -1)
 					key = 'space';
-				else if (variable.toLowerCase().indexOf('.shift'))
+				else if (variable.toLowerCase().indexOf('.shift') != -1)
 					key = 'shift';
 					
-				if (variable.toLowerCase().indexOf('.justpressed.'))
+				if (variable.toLowerCase().indexOf('.justpressed.') != -1)
 					type = 'justPressed';
-				else if (variable.toLowerCase().indexOf('.pressed.'))
+				else if (variable.toLowerCase().indexOf('.pressed.') != -1)
 					type = 'pressed';
-				else if (variable.toLowerCase().indexOf('.released.'))
+				else if (variable.toLowerCase().indexOf('.released.') != -1)
 					type = 'justReleased';
 				
 				if (key != null && type != null) {
