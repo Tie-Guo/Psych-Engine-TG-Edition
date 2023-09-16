@@ -1882,8 +1882,9 @@ class PlayState extends MusicBeatState
     		canSkipOutro = false;
     	}
     
-    	if (!startingSong && FlxG.mouse.justPressed && 
-    	FlxG.mouse.getScreenPosition(camOther).x >= 550 && FlxG.mouse.getScreenPosition(camOther).x <= 750 && FlxG.mouse.getScreenPosition(camOther).y > 335 && FlxG.mouse.getScreenPosition(camOther).y < 385) {
+    	if (!startingSong &&
+    	((FlxG.mouse.justPressed && FlxG.mouse.getScreenPosition(camOther).x >= 550 && FlxG.mouse.getScreenPosition(camOther).x <= 750 && FlxG.mouse.getScreenPosition(camOther).y > 335 && FlxG.mouse.getScreenPosition(camOther).y < 385)
+    	|| FlxG.keys.justPressed.S) ) {
     		if (canSkipIntro && allowSkipIntro && !skipedIntro){
     			setSongTime(firstNOTETime - 1000);
     			skipedIntro = true;
