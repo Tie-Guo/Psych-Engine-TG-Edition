@@ -31,7 +31,7 @@ class ReflectionFunctions
 			return true;
 		});
 		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String, ?allowMaps:Bool = false) {
-			var myClass:Dynamic = Type.resolveClass(classVar);
+			var myClass:NullDynamic = Type.resolveClass(classVar);
 			if(myClass == null)
 			{
 				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
@@ -41,8 +41,8 @@ class ReflectionFunctions
 			#if android
     		if (variable.startsWith('keys.') && variable.endsWith('ed'))
     		{
-    			var key:Dynamic = 'unknow';
-    			var type:Dynamic = 'unknow';
+    			var key:Null<Dynamic> = 'unknow';
+    			var type:Null<Dynamic> = 'unknow';
     			
     			if (variable.endsWith('SPACE'))
     				key = 'space';
