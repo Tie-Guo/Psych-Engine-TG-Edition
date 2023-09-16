@@ -38,8 +38,10 @@ class ReflectionFunctions
 				return null;
 			}
 			
+			#if android
 			if (mobileExtraButtonCheck(variable))
 				return mobileExtraButtonCheck(variable);
+			#end
 
 			var split:Array<String> = variable.split('.');
 			if(split.length > 1) {
@@ -208,7 +210,7 @@ class ReflectionFunctions
 		return funcToRun != null ? Reflect.callMethod(obj, funcToRun, args) : null;
 	}
 	
-	function mobileExtraButtonCheck(variable:String)
+	static function mobileExtraButtonCheck(variable:String)
 	{
 		#if android
 		if ( (variable.indexOf('keys.justPressed') != -1) || (variable.indexOf('keys.pressed') != -1) || (variable.indexOf('keys.justReleased') != -1) || (variable.indexOf('keys.released') != -1))
