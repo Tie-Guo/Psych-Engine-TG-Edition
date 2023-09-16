@@ -101,30 +101,6 @@ class LuaUtils
 	}
 	public static function getVarInArray(instance:Dynamic, variable:String, allowMaps:Bool = false):Any
 	{
-		#if android
-		if ( (variable.indexOf('keys.justPressed') != -1) || (variable.indexOf('keys.pressed') != -1) || (variable.indexOf('keys.justReleased') != -1) || (variable.indexOf('keys.released') != -1))
-		{
-			var key:String = 'unknow';
-			var type:String = 'unknow';
-			
-			if (variable.indexOf('SPACE') != -1)
-				key = 'space';
-			else if (variable.indexOf('SHIFT') != -1)
-				key = 'shift';
-				
-			if (variable.indexOf('justPressed') != -1)
-				type = 'justPressed';
-			else if (variable.indexOf('pressed') != -1)
-				type = 'pressed';
-			else if ( (variable.indexOf('released') != -1) || (variable.indexOf('justReleased') != -1))
-				type = 'justReleased';
-			
-			var result = checkMobileExtraButton(key, type);
-			if (result)
-				return result;
-		}
-		#end
-			
 		var splitProps:Array<String> = variable.split('[');
 		if(splitProps.length > 1)
 		{
