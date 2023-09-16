@@ -349,10 +349,6 @@ class Controls
         		result = (MusicBeatSubstate.androidc.newhbox.buttonRight.justPressed == true);
         		if(result) {controllerMode = true; return true;}
     		    }
-    		    if (key == 'space' && ClientPrefs.data.hitboxExtend){
-    		    result = (MusicBeatSubstate.androidc.newhbox.buttonSpace.justPressed == true);
-        		if(result) {controllerMode = true; return true;}
-    		    }
     		}//MusicBeatSubstate.checkHitbox
     		else{
     		    if (MusicBeatSubstate.checkDUO){
@@ -482,10 +478,6 @@ class Controls
         		result = (MusicBeatState.androidc.newhbox.buttonRight.pressed == true);
         		if(result) {controllerMode = true; return true;}
     		    }
-    		    if (key == 'space' && ClientPrefs.data.hitboxExtend){
-    		    result = (MusicBeatState.androidc.newhbox.buttonSpace.pressed == true);
-        		if(result) {controllerMode = true; return true;}
-    		    }
     		}//MusicBeatState.checkHitbox
     		else{
     		    if (MusicBeatState.checkDUO){
@@ -542,10 +534,6 @@ class Controls
         		}
         		if (key == 'note_right'){
         		result = (MusicBeatSubstate.androidc.newhbox.buttonRight.pressed == true);
-        		if(result) {controllerMode = true; return true;}
-    		    }
-    		    if (key == 'space' && ClientPrefs.data.hitboxExtend){
-    		    result = (MusicBeatSubstate.androidc.newhbox.buttonSpace.pressed == true);
         		if(result) {controllerMode = true; return true;}
     		    }
     		}//MusicBeatSubstate.checkHitbox
@@ -677,10 +665,6 @@ class Controls
         		result = (MusicBeatState.androidc.newhbox.buttonRight.justReleased == true);
         		if(result) {controllerMode = true; return true;}
     		    }
-    		    if (key == 'space' && ClientPrefs.data.hitboxExtend){
-    		    result = (MusicBeatState.androidc.newhbox.buttonSpace.justReleased == true);
-        		if(result) {controllerMode = true; return true;}
-    		    }
     		}//MusicBeatState.checkHitbox
     		else{
     		    if (MusicBeatState.checkDUO){
@@ -737,10 +721,6 @@ class Controls
         		}
         		if (key == 'note_right'){
         		result = (MusicBeatSubstate.androidc.newhbox.buttonRight.justReleased == true);
-        		if(result) {controllerMode = true; return true;}
-    		    }
-    		    if (key == 'space' && ClientPrefs.data.hitboxExtend){
-    		    result = (MusicBeatSubstate.androidc.newhbox.buttonSpace.justReleased == true);
         		if(result) {controllerMode = true; return true;}
     		    }
     		}//MusicBeatSubstate.checkHitbox
