@@ -37,11 +37,6 @@ class ReflectionFunctions
 				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
 				return null;
 			}
-			
-			#if android
-			if (mobileExtraButtonCheck(variable))
-				return mobileExtraButtonCheck(variable);
-			#end
 
 			var split:Array<String> = variable.split('.');
 			if(split.length > 1) {
@@ -208,33 +203,5 @@ class ReflectionFunctions
 		funcToRun = cast obj;
 		//trace('end: $obj');
 		return funcToRun != null ? Reflect.callMethod(obj, funcToRun, args) : null;
-	}
-	
-	static function mobileExtraButtonCheck(variable:String)
-	{
-		#if android
-		if ( (variable.indexOf('keys.justPressed') != -1) || (variable.indexOf('keys.pressed') != -1) || (variable.indexOf('keys.justReleased') != -1) || (variable.indexOf('keys.released') != -1))
-		{
-			var key:String = 'unknow';
-			var type:String = 'unknow';
-			
-			if (variable.indexOf('SPACE') != -1)
-				key = 'space';
-			else if (variable.indexOf('SHIFT') != -1)
-				key = 'shift';
-				
-			if (variable.indexOf('justPressed') != -1)
-				type = 'justPressed';
-			else if (variable.indexOf('pressed') != -1)
-				type = 'pressed';
-			else if ( (variable.indexOf('released') != -1) || (variable.indexOf('justReleased') != -1))
-				type = 'justReleased';
-			
-			if (LuaUtils.checkMobileExtraButton(key, type))
-				return true;
-			else
-				return false;
-		}
-		#end
 	}
 }

@@ -101,6 +101,8 @@ class LuaUtils
 	}
 	public static function getVarInArray(instance:Dynamic, variable:String, allowMaps:Bool = false):Any
 	{
+		PlayState.instance.addTextToDebug(variable, CoolUtil.colorFromString('FFFFFF')));
+		
 		var splitProps:Array<String> = variable.split('[');
 		if(splitProps.length > 1)
 		{
