@@ -295,7 +295,6 @@ class MainMenuState extends MusicBeatState
 					});
 				} else {
 					FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker) {
-						var daChoice:String = optionShit[curSelected];
 
 						switch (daChoice) {
 							case 'story_mode':
