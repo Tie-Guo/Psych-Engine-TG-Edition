@@ -88,8 +88,13 @@ class AchievementsMenuState extends MusicBeatState
 			achievementArray[i].x = FlxMath.lerp( (FlxG.width - 180)/2 + (i-curSelected)*(63 + 180), achievementArray[i].x, FlxMath.bound(1 - (elapsed * 9.5), 0, 1));
 			
 			if (i != curSelected) {
-				achievementArray[i].scale.x = FlxMath.lerp(1, achievementArray[i].scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
-				achievementArray[i].scale.y = FlxMath.lerp(1, achievementArray[i].scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+				if (i <= curSelected - 2 || i >= curSelected + 2) {
+					achievementArray[i].scale.x = FlxMath.lerp(0.8, achievementArray[i].scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+					achievementArray[i].scale.y = FlxMath.lerp(0.8, achievementArray[i].scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+				} else {
+					achievementArray[i].scale.x = FlxMath.lerp(1, achievementArray[i].scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+					achievementArray[i].scale.y = FlxMath.lerp(1, achievementArray[i].scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+				}
 			} else {
 				achievementArray[i].scale.x = FlxMath.lerp(1.2, achievementArray[i].scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 				achievementArray[i].scale.y = FlxMath.lerp(1.2, achievementArray[i].scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
