@@ -118,9 +118,27 @@ class LuaUtils
     			type = 'pressed';
     		else if ( (variable.toLowerCase().indexOf('released') != -1))
     			type = 'justReleased';
-    		var result = checkMobileExtraButton(key, type);
     		
-    		return result;
+    		if (checkMobileExtraButton(key, type))
+    			return checkMobileExtraButton(key, type);
+    		
+    		var check:Bool = false;
+    		if (key == 'space') {
+    			if (type == 'justPressed')
+    				check = FlxG.keys.justPressed.SPACE;
+    			else if (type == 'pressed')
+    				check = FlxG.keys.pressed.SPACE;
+    			else if (type == 'justReleased')
+    				check = FlxG.keys.justReleased.SPACE;
+    		} else if (key == 'shift') {
+    			if (type == 'justPressed')
+    				check = FlxG.keys.justPressed.SHIFT;
+    			else if (type == 'pressed')
+    				check = FlxG.keys.pressed.SHIFT;
+    			else if (type == 'justReleased')
+    				check = FlxG.keys.justReleased.SHIFT;
+    		}
+    		return check;
     	}
 		#end
     
