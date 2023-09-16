@@ -60,7 +60,7 @@ class ReflectionFunctions
 			if(myClass == null)
 			{
 				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
-				return null;
+				return;
 			}
 
 			var split:Array<String> = variable.split('.');
