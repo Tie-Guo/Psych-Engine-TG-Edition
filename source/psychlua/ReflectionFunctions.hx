@@ -31,7 +31,7 @@ class ReflectionFunctions
 			return true;
 		});
 		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String, ?allowMaps:Bool = false) {
-			var myClass:NullDynamic = Type.resolveClass(classVar);
+			var myClass:Dynamic = Type.resolveClass(classVar);
 			if(myClass == null)
 			{
 				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
@@ -39,28 +39,11 @@ class ReflectionFunctions
 			}
 			
 			#if android
-    		if (variable.startsWith('keys.') && variable.endsWith('ed'))
-    		{
-    			var key:Null<Dynamic> = 'unknow';
-    			var type:Null<Dynamic> = 'unknow';
-    			
-    			if (variable.endsWith('SPACE'))
-    				key = 'space';
-    			else if (variable.endsWith('SHIFT'))
-    				key = 'shift';
-    				
-    			if (variable.indexOf('justPressed') != -1)
-    				type = 'justPressed';
-    			else if (variable.indexOf('pressed') != -1)
-    				type = 'pressed';
-    			else if ( (variable.toLowerCase().indexOf('released') != -1))
-    				type = 'justReleased';
-    			
-    			var result = LuaUtils.checkMobileExtraButton(key, type);
-    			if (result == true)
-    				return result;
-    		}
-    		#end
+			if (variable == 'keys.justPressed.SPACE')
+				return LuaUtils.getVarInArray(myClass, variable, allowMaps);
+			else if (variable == 'keys.pressed.SPACE')
+				return LuaUtils.getVarInArray(myClass, variable, allowMaps);
+			#end
 
 			var split:Array<String> = variable.split('.');
 			if(split.length > 1) {

@@ -38,14 +38,14 @@ class LuaUtils
 	{
 		#if android
 		var check:Bool = false;
-		if (button == 'space') {
+		if (button == 'space' && MusicBeatState.androidc.newhbox.buttonSpace != null) {
 			if (type == 'justPressed')
 				check = MusicBeatState.androidc.newhbox.buttonSpace.justPressed;
 			else if (type == 'pressed')
 				check = MusicBeatState.androidc.newhbox.buttonSpace.pressed;
 			else if (type == 'justReleased')
 				check = MusicBeatState.androidc.newhbox.buttonSpace.justReleased;
-		} else if (button == 'shift') {
+		} else if (button == 'shift' && MusicBeatState.androidc.newhbox.buttonShift != null) {
 			if (type == 'justPressed')
 				check = MusicBeatState.androidc.newhbox.buttonShift.justPressed;
 			else if (type == 'pressed')
@@ -100,7 +100,31 @@ class LuaUtils
 		return value;
 	}
 	public static function getVarInArray(instance:Dynamic, variable:String, allowMaps:Bool = false):Any
-	{		
+	{	
+		#if android
+		if (variable.startsWith('keys.') && variable.endsWith('ed'))
+		{
+			var key:Dynamic = 'unknow';
+			var type:Dynamic = 'unknow';
+			
+			if (variable.endsWith('SPACE'))
+				key = 'space';
+			else if (variable.endsWith('SHIFT'))
+				key = 'shift';
+				
+			if (variable.indexOf('justPressed') != -1)
+				type = 'justPressed';
+			else if (variable.indexOf('pressed') != -1)
+				type = 'pressed';
+			else if ( (variable.toLowerCase().indexOf('released') != -1))
+				type = 'justReleased';
+			
+			var result = checkMobileExtraButton(key, type);
+			if (result == true)
+				return result;
+		}
+		#end
+    
 		var splitProps:Array<String> = variable.split('[');
 		if(splitProps.length > 1)
 		{
