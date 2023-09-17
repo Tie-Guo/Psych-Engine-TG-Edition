@@ -37,7 +37,7 @@ class LuaUtils
 	public static function checkMobileExtraButton(button:String = 'space', type:String = 'justPressed')
 	{
 		#if android
-		var check:Dynamic = false;
+		var check:Bool = false;
 		if (button == 'space' && MusicBeatState.androidc.newhbox.buttonSpace != null) {
 			if (type == 'justPressed')
 				check = MusicBeatState.androidc.newhbox.buttonSpace.justPressed;
@@ -66,7 +66,7 @@ class LuaUtils
 		#end
 	}
 	
-	public static function checkFlxGMobile(variable:String)
+	public static function checkFlxGMobile(variable:String):Bool
 	{
 		#if android
 		if ((variable.indexOf('keys.') != -1))
@@ -88,6 +88,7 @@ class LuaUtils
     		
     		return checkMobileExtraButton(key, type);
     	}
+    	return '?';
 		#end
 	}
 
