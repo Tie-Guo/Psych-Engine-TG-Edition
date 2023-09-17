@@ -30,7 +30,7 @@ class OptionsState extends MusicBeatState
 			    #if android
 				removeVirtualPad();
 				#end
-				MusicBeatState.switchState(newv options.mobile.ExtraPadCustom());
+				MusicBeatState.switchState(new options.mobile.ExtraPadCustom());
 		}
 	}
 
