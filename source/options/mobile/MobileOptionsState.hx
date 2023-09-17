@@ -4,7 +4,7 @@ import states.MainMenuState;
 import backend.StageData;
 import flixel.addons.transition.FlxTransitionableState;
 
-class OptionsState extends MusicBeatState
+class MobileOptionsState extends MusicBeatState
 {
 	var options:String = ['Choose Controls Type', 'Controls Setting', 'Custom Extra Pad'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
@@ -20,7 +20,7 @@ class OptionsState extends MusicBeatState
 			    #if android
 				removeVirtualPad();
 				#end
-				MusicBeatState.switchState(new options.mobile.MobileOptionsState());
+				MusicBeatState.switchState(new options.mobile.AndroidControlsMenu());
 			case 'Controls Setting':
 			    #if android
 				removeVirtualPad();
