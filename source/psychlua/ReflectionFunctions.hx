@@ -40,8 +40,8 @@ class ReflectionFunctions
 			
 			#if android
 			if (classVar == 'flixel.FlxG' && variable.indexOf('keys.') != -1) {
-				if (LuaUtils.getVarInArray(myClass, variable, allowMaps, true))
-					return LuaUtils.getVarInArray(myClass, variable, allowMaps, true);
+				if (LuaUtils.checkFlxGMobile(variable))
+					return LuaUtils.checkFlxGMobile(variable);
 			}
 			#end
 

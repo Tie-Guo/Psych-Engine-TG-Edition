@@ -37,7 +37,7 @@ class LuaUtils
 	public static function checkMobileExtraButton(button:String = 'space', type:String = 'justPressed')
 	{
 		#if android
-		var check:Bool = false;
+		var check:Dynamic = false;
 		if (button == 'space' && MusicBeatState.androidc.newhbox.buttonSpace != null) {
 			if (type == 'justPressed')
 				check = MusicBeatState.androidc.newhbox.buttonSpace.justPressed;
@@ -53,9 +53,41 @@ class LuaUtils
 			else if (type == 'justReleased')
 				check = MusicBeatState.androidc.newhbox.buttonShift.justReleased;
 		}
+		
+		if (MusicBeatState.androidc.newhbox.buttonShift == null && button == 'shift')
+			check = false;
+			
+		if (MusicBeatState.androidc.newhbox.buttonSpace == null && button == 'space')
+			check = false;
+			
 		return check;
 		#else
 		return;
+		#end
+	}
+	
+	public static function checkFlxGMobile(variable:Dynamic)
+	{
+		#if android
+		if ( (variable.indexOf('keys.') != -1))
+    	{
+    		var key:Dynamic = 'unknow';
+    		var type:Dynamic = 'unknow';
+    		
+    		if (variable.indexOf('SPACE') != -1)
+    			key = 'space';
+    		else if (variable.indexOf('SHIFT') != -1)
+    			key = 'shift';
+    			
+    		if (variable.indexOf('justPressed') != -1)
+    			type = 'justPressed';
+    		else if (variable.indexOf('pressed') != -1)
+    			type = 'pressed';
+    		else if ( (variable.toLowerCase().indexOf('released') != -1))
+    			type = 'justReleased';
+    		
+    		return checkMobileExtraButton(key, type);
+    	}
 		#end
 	}
 
@@ -101,47 +133,6 @@ class LuaUtils
 	}
 	public static function getVarInArray(instance:Dynamic, variable:String, allowMaps:Bool = false, checkMobile:Bool = false):Any
 	{	
-		#if android
-		if ( (variable.indexOf('keys.') != -1) && checkMobile)
-    	{
-    		var key:Dynamic = 'unknow';
-    		var type:Dynamic = 'unknow';
-    		
-    		if (variable.indexOf('SPACE') != -1)
-    			key = 'space';
-    		else if (variable.indexOf('SHIFT') != -1)
-    			key = 'shift';
-    			
-    		if (variable.indexOf('justPressed') != -1)
-    			type = 'justPressed';
-    		else if (variable.indexOf('pressed') != -1)
-    			type = 'pressed';
-    		else if ( (variable.toLowerCase().indexOf('released') != -1))
-    			type = 'justReleased';
-    		
-    		if (checkMobileExtraButton(key, type))
-    			return checkMobileExtraButton(key, type);
-    		
-    		var check:Bool = false;
-    		if (key == 'space') {
-    			if (type == 'justPressed')
-    				check = FlxG.keys.justPressed.SPACE;
-    			else if (type == 'pressed')
-    				check = FlxG.keys.pressed.SPACE;
-    			else if (type == 'justReleased')
-    				check = FlxG.keys.justReleased.SPACE;
-    		} else if (key == 'shift') {
-    			if (type == 'justPressed')
-    				check = FlxG.keys.justPressed.SHIFT;
-    			else if (type == 'pressed')
-    				check = FlxG.keys.pressed.SHIFT;
-    			else if (type == 'justReleased')
-    				check = FlxG.keys.justReleased.SHIFT;
-    		}
-    		return check;
-    	}
-		#end
-    
 		var splitProps:Array<String> = variable.split('[');
 		if(splitProps.length > 1)
 		{
