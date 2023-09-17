@@ -73,11 +73,11 @@ class ExtraPadCustom extends MusicBeatState
 
 		resetButton = new FlxButton(exitButton.x, exitButton.y + 100, 'Reset', function()
 		{
-			vpad.buttonSpace.x = FlxG.width - 86 * 3;
-			vpad.buttonShift.x = FlxG.width - 128 * 3;
+			vpad.buttonSpace.x = 0;
+			vpad.buttonShift.x = FlxG.width - 127;
 					
-			vpad.buttonSpace.y = FlxG.height - 66 - 116 * 3;
-			vpad.buttonShift.y = FlxG.height - 66 - 81 * 3;
+			vpad.buttonSpace.y = FlxG.height - 127;
+			vpad.buttonShift.y = FlxG.height - 127;
 		});
 		resetButton.setGraphicSize(Std.int(resetButton.width) * 3);
 		resetButton.label.setFormat(Paths.font('vcr.ttf'), 21, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
