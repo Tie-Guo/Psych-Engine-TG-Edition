@@ -6,7 +6,7 @@ import flixel.addons.transition.FlxTransitionableState;
 
 class MobileOptionsState extends MusicBeatState
 {
-	var options:String = ['Choose Controls Type', 'Controls Setting', 'Custom Extra Pad'];
+	var options:Array<String> = ['Choose Controls Type', 'Controls Setting', 'Custom Extra Pad'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
