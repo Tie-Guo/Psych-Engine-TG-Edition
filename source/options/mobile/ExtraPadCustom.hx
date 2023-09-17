@@ -8,6 +8,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
 import android.FlxVirtualPad;
+import android.PsychAlphabet;
 
 using StringTools;
 
@@ -48,7 +49,7 @@ class AndroidControlsMenu extends MusicBeatState
 		vpad = new FlxVirtualPad(EXTRA, NONE, 0.75, ClientPrefs.data.antialiasing);
 		vpad.alpha = 0;
 		add(vpad);
-		loadcustom()
+		loadcustom();
 
 		inputvari = new PsychAlphabet(0, 50, 'Custom Extra Button', false, false, 0.05, 0.8);
 		inputvari.screenCenter(X);
@@ -70,8 +71,6 @@ class AndroidControlsMenu extends MusicBeatState
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new options.mobile.MobileOptionsState());
-		}
-
 		});
 		exitButton.setGraphicSize(Std.int(exitButton.width) * 3);
 		exitButton.label.setFormat(Paths.font('vcr.ttf'), 21, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
@@ -91,7 +90,7 @@ class AndroidControlsMenu extends MusicBeatState
 					vpad.buttonShift.y = FlxG.height - 66 - 81 * 3;
 				}
 			}
-		}
+		});
 		resetButton.setGraphicSize(Std.int(resetButton.width) * 3);
 		resetButton.label.setFormat(Paths.font('vcr.ttf'), 21, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
 		resetButton.color = FlxColor.RED;
