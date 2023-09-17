@@ -12,7 +12,7 @@ import android.PsychAlphabet;
 
 using StringTools;
 
-class AndroidControlsMenu extends MusicBeatState
+class ExtraPadCustom extends MusicBeatState
 {
 	var vpad:FlxVirtualPad;
 	//var hbox:FlxHitbox;
