@@ -91,6 +91,7 @@ class LuaUtils
     	}
     	return false;
 		#end
+		return false;
 	}
 
 	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic, allowMaps:Bool = false):Any
