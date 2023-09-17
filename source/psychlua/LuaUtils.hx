@@ -39,26 +39,20 @@ class LuaUtils
 		#if android
 		var check:Bool = false;
 		
-		if (MusicBeatState.androidc.newhbox.buttonShift == null && button == 'shift')
-			return false;
-			
-		if (MusicBeatState.androidc.newhbox.buttonSpace == null && button == 'space')
-			return false;
-
-		if (button == 'space' && MusicBeatState.androidc.newhbox.buttonSpace != null) {
+		if (button == 'space' && MusicBeatState.androidc.newhbox.buttonSpace != null && MusicBeatState.extraPad.buttonSpace != null) {
 			if (type == 'justPressed')
-				check = MusicBeatState.androidc.newhbox.buttonSpace.justPressed;
+				check = MusicBeatState.androidc.newhbox.buttonSpace.justPressed || MusicBeatState.extraPad.buttonSpace.justPressed;
 			else if (type == 'pressed')
-				check = MusicBeatState.androidc.newhbox.buttonSpace.pressed;
+				check = MusicBeatState.androidc.newhbox.buttonSpace.pressed || MusicBeatState.extraPad.buttonSpace.pressed;
 			else if (type == 'justReleased')
-				check = MusicBeatState.androidc.newhbox.buttonSpace.justReleased;
-		} else if (button == 'shift' && MusicBeatState.androidc.newhbox.buttonShift != null) {
+				check = MusicBeatState.androidc.newhbox.buttonSpace.justReleased || MusicBeatState.extraPad.buttonSpace.justReleased;
+		} else if (button == 'shift' && MusicBeatState.androidc.newhbox.buttonShift != null && MusicBeatState.extraPad.buttonShift != null) {
 			if (type == 'justPressed')
-				check = MusicBeatState.androidc.newhbox.buttonShift.justPressed;
+				check = MusicBeatState.androidc.newhbox.buttonShift.justPressed || MusicBeatState.extraPad.buttonShift.justPressed;
 			else if (type == 'pressed')
-				check = MusicBeatState.androidc.newhbox.buttonShift.pressed;
+				check = MusicBeatState.androidc.newhbox.buttonShift.pressed || MusicBeatState.extraPad.buttonShift.pressed;
 			else if (type == 'justReleased')
-				check = MusicBeatState.androidc.newhbox.buttonShift.justReleased;
+				check = MusicBeatState.androidc.newhbox.buttonShift.justReleased || MusicBeatState.extraPad.buttonShift.justReleased;
 		}
 
 		return check;
