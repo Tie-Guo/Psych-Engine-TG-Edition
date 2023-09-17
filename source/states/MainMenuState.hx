@@ -283,8 +283,14 @@ class MainMenuState extends MusicBeatState
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 
 			if(ClientPrefs.data.flashing) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
-
-			menuItems.forEach(function(spr:FlxSprite) {
+			
+			var menuItemss = new FlxTypedGroup<FlxSprite>();
+			add(menuItemss);
+			
+			if (inExtra) menuItemss = menuItemsExtra;
+			else menuItemss = menuItems;
+			
+			menuItemss.forEach(function(spr:FlxSprite) {
 				if (curSelected != spr.ID) {
 					FlxTween.tween(spr, {alpha: 0}, 0.4, {
 						ease: FlxEase.quadOut,
