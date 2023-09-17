@@ -112,7 +112,8 @@ class MobileOptionsState extends MusicBeatState
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			
+			FlxTransitionableState.skipNextTransIn = true;
+			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new options.OptionsState());
 		}
 		else if (controls.ACCEPT) openSelectedSubstate(options[curSelected]);

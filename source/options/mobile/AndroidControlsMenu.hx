@@ -68,8 +68,8 @@ class AndroidControlsMenu extends MusicBeatState
 		add(newhbox);
 
 		inputvari = new PsychAlphabet(0, 20, controlitems[curSelected], false, false, 0.05, 0.8);
-		inputvari.screenCenter(X);
-		inputvari.x += 55;
+		inputvari.screenCenter(XY);
+		inputvari.alpha = 0.5;
 		add(inputvari);
 
 		var ui_tex = Paths.getSparrowAtlas('androidcontrols/menu/arrows');
@@ -79,6 +79,7 @@ class AndroidControlsMenu extends MusicBeatState
 		leftArrow.animation.addByPrefix('idle', "arrow left");
 		leftArrow.animation.addByPrefix('press', "arrow push left");
 		leftArrow.animation.play('idle');
+		leftArrow.alpha = 0.5;
 		add(leftArrow);
 
 		rightArrow = new FlxSprite(inputvari.x + inputvari.width + 10, leftArrow.y);
@@ -86,6 +87,7 @@ class AndroidControlsMenu extends MusicBeatState
 		rightArrow.animation.addByPrefix('idle', 'arrow right');
 		rightArrow.animation.addByPrefix('press', "arrow push right", 24, false);
 		rightArrow.animation.play('idle');
+		rightArrow.alpha = 0.5;
 		add(rightArrow);
 
 		upPozition = new FlxText(10, FlxG.height - 104, 0,"Button Up X:" + vpad.buttonUp.x +" Y:" + vpad.buttonUp.y, 16);
@@ -157,9 +159,9 @@ class AndroidControlsMenu extends MusicBeatState
 	{
 		super.update(elapsed);
 
+		inputvari.screenCenter(XY);
 		leftArrow.x = inputvari.x - 60;
 		rightArrow.x = inputvari.x + inputvari.width + 10;
-		inputvari.screenCenter(X);
 		
 		for (touch in FlxG.touches.list){		
 			if(touch.overlaps(leftArrow) && touch.justPressed)

@@ -19,7 +19,6 @@ class ExtraPadCustom extends MusicBeatState
 	//var hbox:FlxHitbox;
 	var spacePozition:FlxText;
 	var shiftPozition:FlxText;
-	var inputvari:PsychAlphabet;
 	var leftArrow:FlxSprite;
 	var rightArrow:FlxSprite;
 	var bindButton:FlxButton;
@@ -47,14 +46,8 @@ class ExtraPadCustom extends MusicBeatState
 		add(titleText);
 
 		vpad = new FlxVirtualPad(EXTRA, NONE, 0.75, ClientPrefs.data.antialiasing);
-		vpad.alpha = 0;
 		add(vpad);
 		loadcustom();
-
-		inputvari = new PsychAlphabet(0, 25, 'Custom Extra Button', false, false, 0.05, 0.8);
-		inputvari.screenCenter(X);
-		inputvari.x += 55;
-		add(inputvari);
 
 		spacePozition = new FlxText(10, FlxG.height - 104, 0,"Button Up X:" + vpad.buttonUp.x +" Y:" + vpad.buttonUp.y, 16);
 		spacePozition.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -89,13 +82,16 @@ class ExtraPadCustom extends MusicBeatState
 		resetButton.setGraphicSize(Std.int(resetButton.width) * 3);
 		resetButton.label.setFormat(Paths.font('vcr.ttf'), 21, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
 		resetButton.color = FlxColor.RED;
-		resetButton.visible = false;
 		add(resetButton);
 	}
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		
+		for (touch in FlxG.touches.list){
+			trackbutton(touch);
+		}
 	}
 
 	function trackbutton(touch:flixel.input.touch.FlxTouch)
@@ -142,7 +138,7 @@ class ExtraPadCustom extends MusicBeatState
 	}
 
 	function loadcustom():Void{
-		vpad = config.loadcustom(vpad);	
+		vpad = config.loadcustom(vpad);
 	}
 }
 
