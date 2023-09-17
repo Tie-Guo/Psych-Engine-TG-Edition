@@ -44,7 +44,7 @@ class LuaUtils
 		else
 			keysType = 'hitbox';
 			
-		if ( (MusicBeatState.androidc.newhbox.buttonSpace == null) && (MusicBeatState.androidc.newhbox.buttonShift == null) && (MusicBeatState.extraPad.buttonSpace == null) && (MusicBeatState.extraPad.buttonShift == null) )
+		if ( (MusicBeatState.androidc.newhbox == null) && (MusicBeatState.extraPad == null) )
 			return false;
 			
 		if (button == 'space' && (MusicBeatState.androidc.newhbox.buttonSpace == null) && (MusicBeatState.extraPad.buttonSpace == null))
