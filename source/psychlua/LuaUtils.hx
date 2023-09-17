@@ -38,22 +38,29 @@ class LuaUtils
 	{
 		#if android
 		var check:Bool = false;
-		var keysType:String = 'pad';
-		if ( (MusicBeatState.androidc.newhbox == null) )
-			keysType = 'pad';
-		else
-			keysType = 'hitbox';
-			
-		if ( (MusicBeatState.androidc.newhbox == null) && (MusicBeatState.extraPad == null) )
-			return false;
-			
-		if (button == 'space' && (MusicBeatState.androidc.newhbox.buttonSpace == null) && (MusicBeatState.extraPad.buttonSpace == null))
-			return false;
-			
-		if (button == 'shift' && (MusicBeatState.androidc.newhbox.buttonShift == null) && (MusicBeatState.extraPad.buttonShift == null))
-			return false;
-		
-		if (keysType == 'pad') {
+    	var keysType:String = 'pad';
+    	if ( (MusicBeatState.androidc.newhbox == null) )
+    		keysType = 'pad';
+    	else
+    		keysType = 'hitbox';
+    		
+    	if (button == 'space') {
+    		if (type == 'justPressed')
+    			if (FlxG.keys.justPressed.SPACE) return true;
+    		else if (type == 'pressed')
+    			if (FlxG.keys.pressed.SPACE) return true;
+    		else if (type == 'justReleased')
+    			if (FlxG.keys.justReleased.SPACE) return true;
+    	} else if (button == 'shift' && MusicBeatState.extraPad.buttonShift != null ) {
+    		 (type == 'justPressed')
+    			if (FlxG.keys.justPressed.SHIFT) return true;
+    		else if (type == 'pressed')
+    			if (FlxG.keys.pressed.SHIFT) return true;
+    		else if (type == 'justReleased')
+    			if (FlxG.keys.justReleased.SHIFT) return true;
+    	}
+    	
+    	if (keysType == 'pad' && MusicBeatState.extraPad.buttonSpace != null ) {
     		if (button == 'space') {
     			if (type == 'justPressed')
     				check = MusicBeatState.extraPad.buttonSpace.justPressed;
@@ -61,7 +68,7 @@ class LuaUtils
     				check = MusicBeatState.extraPad.buttonSpace.pressed;
     			else if (type == 'justReleased')
     				check = MusicBeatState.extraPad.buttonSpace.justReleased;
-    		} else if (button == 'shift') {
+    		} else if (button == 'shift' && MusicBeatState.extraPad.buttonShift != null ) {
     			if (type == 'justPressed')
     				check = MusicBeatState.extraPad.buttonShift.justPressed;
     			else if (type == 'pressed')
@@ -69,15 +76,15 @@ class LuaUtils
     			else if (type == 'justReleased')
     				check = MusicBeatState.extraPad.buttonShift.justReleased;
     		}
-		} else if (keysType == 'hitbox') {
-    		if (button == 'space') {
+    	} else if (keysType == 'hitbox') {
+    		if (button == 'space' && MusicBeatState.androidc.newhbox.buttonSpace != null ) {
     			if (type == 'justPressed')
     				check = MusicBeatState.androidc.newhbox.buttonSpace.justPressed;
     			else if (type == 'pressed')
     				check = MusicBeatState.androidc.newhbox.buttonSpace.pressed;
     			else if (type == 'justReleased')
     				check = MusicBeatState.androidc.newhbox.buttonSpace.justReleased;
-    		} else if (button == 'shift') {
+    		} else if (button == 'shift' && MusicBeatState.androidc.newhbox.buttonShift != null ) {
     			if (type == 'justPressed')
     				check = MusicBeatState.androidc.newhbox.buttonShift.justPressed;
     			else if (type == 'pressed')
@@ -86,8 +93,8 @@ class LuaUtils
     				check = MusicBeatState.androidc.newhbox.buttonShift.justReleased;
     		}
     	}
-
-		return check;
+    
+    	return check;
 		#else
 		return;
 		#end
