@@ -133,8 +133,8 @@ class FlxVirtualPad extends FlxSpriteGroup {
 				dPad.add(add(buttonRight2 = createButton(FlxG.width - 44 * 3, FlxG.height - 66 - 81 * 3, 44 * 3, 127, "right", 0xFF0000)));
 				dPad.add(add(buttonDown2 = createButton(FlxG.width - 86 * 3, FlxG.height - 66 - 45 * 3, 44 * 3, 127, "down", 0x00FFFF)));
 			case EXTRA:
-				dPad.add(add(buttonSpace = createButton(0, FlxG.height - 127, 44 * 3, 127, "g", 0x00FF00)));
-				dPad.add(add(buttonShift = createButton(FlxG.width - 127, FlxG.height - 127, 44 * 3, 127, "s", 0xFF00FF)));
+				dPad.add(add(buttonSpace = createButton(0, FlxG.height - 127, 44 * 3, 127, "g", 0xFF8866)));
+				dPad.add(add(buttonShift = createButton(FlxG.width - 127, FlxG.height - 127, 44 * 3, 127, "s", 0xFF0000)));
 			case CHART_EDITOR:
 			    //orgAlpha = 0.75;
 				dPad.add(add(buttonUp = createButton(0, FlxG.height - 85 * 3, 44 * 3, 127, "up", 0x00FF00)));
