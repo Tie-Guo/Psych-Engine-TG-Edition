@@ -44,6 +44,7 @@ class MusicBeatState extends FlxUIState
 	public static var _virtualpad:FlxVirtualPad;
 	public static var androidc:AndroidControls;
 	public static var extraPad:FlxVirtualPad;
+	public static var config:Config;
 	//var trackedinputsUI:Array<FlxActionInput> = [];
 	//var trackedinputsNOTES:Array<FlxActionInput> = [];
 	#end
@@ -122,8 +123,18 @@ class MusicBeatState extends FlxUIState
 	public function addExtraButton()
 	{
 		if (ClientPrefs.data.hitboxExtend != 'OFF') {
+			config = new Config();
+			
 			extraPad = new FlxVirtualPad(EXTRA, NONE, 0.75, ClientPrefs.data.antialiasing);
 			add(extraPad);
+			
+			if (ClientPrefs.data.hitboxExtend == 'Shi & Spa') {
+				extraPad = config.loadcustom(extraPad);
+			} else if (ClientPrefs.data.hitboxExtend == 'Space') {
+				extraPad = config.loadSpace(extraPad);
+			} else if (ClientPrefs.data.hitboxExtend == 'Shift') {
+				extraPad = config.loadShift(extraPad);
+			}
 		
 			var camcontrolExtra = new flixel.FlxCamera();
 			FlxG.cameras.add(camcontrolExtra, false);
