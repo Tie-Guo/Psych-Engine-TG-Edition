@@ -52,12 +52,20 @@ class ExtraPadCustom extends MusicBeatState
 		spacePozition = new FlxText(10, FlxG.height - 104, 0,"Button Up X:" + vpad.buttonUp.x +" Y:" + vpad.buttonUp.y, 16);
 		spacePozition.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		spacePozition.borderSize = 2.4;
-		add(spacePozition);
+		
 
 		shiftPozition = new FlxText(10, FlxG.height - 84, 0,"Button Down X:" + vpad.buttonDown.x +" Y:" + vpad.buttonDown.y, 16);
 		shiftPozition.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		shiftPozition.borderSize = 2.4;
-		add(shiftPozition);
+		
+		if (ClientPrefs.data.hitboxExtend == 'Shi & Spa') {
+			add(shiftPozition);
+			add(spacePozition);
+		} else if (ClientPrefs.data.hitboxExtend == 'Space') {
+			add(spacePozition);
+		} else if (ClientPrefs.data.hitboxExtend == 'Shift') {
+			add(shiftPozition);
+		}
 		
 		var exitButton:FlxButton = new FlxButton(FlxG.width - 200, 50, 'Exit', function()
 		{
@@ -73,11 +81,15 @@ class ExtraPadCustom extends MusicBeatState
 
 		resetButton = new FlxButton(exitButton.x, exitButton.y + 100, 'Reset', function()
 		{
+			if (vpad.buttonSpace != null) {
 			vpad.buttonSpace.x = 0;
-			vpad.buttonShift.x = FlxG.width - 127;
-					
 			vpad.buttonSpace.y = FlxG.height - 127;
+			}
+			
+			if (vpad.buttonShift != null) {
+			vpad.buttonShift.x = FlxG.width - 127;
 			vpad.buttonShift.y = FlxG.height - 127;
+			}
 		});
 		resetButton.setGraphicSize(Std.int(resetButton.width) * 3);
 		resetButton.label.setFormat(Paths.font('vcr.ttf'), 21, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
@@ -109,11 +121,11 @@ class ExtraPadCustom extends MusicBeatState
 		}
 		else 
 		{
-			if (vpad.buttonSpace.justPressed) {
+			if (vpad.buttonSpace.justPressed && (vpad.buttonSpace != null)) {
 				movebutton(touch, vpad.buttonSpace);
 			}
 			
-			if (vpad.buttonShift.justPressed) {
+			if (vpad.buttonShift.justPressed && (vpad.buttonShift != null)) {
 				movebutton(touch, vpad.buttonShift);
 			}
 		}
@@ -127,18 +139,31 @@ class ExtraPadCustom extends MusicBeatState
 	}
 
 	function setbuttontexts() {
-		spacePozition.text = "Button Space X:" + vpad.buttonSpace.x +" Y:" + vpad.buttonSpace.y;
-		shiftPozition.text = "Button Shift X:" + vpad.buttonShift.x +" Y:" + vpad.buttonShift.y;
+		if (spacePozition != null)
+			spacePozition.text = "Button Space X:" + vpad.buttonSpace.x +" Y:" + vpad.buttonSpace.y;
+		
+		if (shiftPozition != null)
+			shiftPozition.text = "Button Shift X:" + vpad.buttonShift.x +" Y:" + vpad.buttonShift.y;
 	}
 
 	function save() {
-		config.savecustom(vpad);
-		config.saveShift(vpad);
-		config.saveSpace(vpad);
+		if (ClientPrefs.data.hitboxExtend == 'Shi & Spa') {
+			config.savecustom(vpad);
+		} else if (ClientPrefs.data.hitboxExtend == 'Space') {
+			config.saveSpace(vpad);
+		} else if (ClientPrefs.data.hitboxExtend == 'Shift') {
+			config.saveShift(vpad);
+		}
 	}
 
 	function loadcustom():Void{
-		vpad = config.loadcustom(vpad);
+		if (ClientPrefs.data.hitboxExtend == 'Shi & Spa') {
+			vpad = config.loadcustom(vpad);
+		} else if (ClientPrefs.data.hitboxExtend == 'Space') {
+			vpad = config.loadSpace(vpad);
+		} else if (ClientPrefs.data.hitboxExtend == 'Shift') {
+			vpad = config.loadShift(vpad);
+		}
 	}
 }
 
