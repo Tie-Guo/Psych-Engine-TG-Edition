@@ -1,6 +1,7 @@
 package options.mobile;
 
 import flixel.util.FlxColor;
+import flixel.util.FlxSave;
 import flixel.math.FlxPoint;
 import android.flixel.FlxButton;
 import flixel.text.FlxText;
@@ -16,7 +17,6 @@ class ExtraPadCustom extends MusicBeatState
 {
 	var vpad:FlxVirtualPad;
 	//var hbox:FlxHitbox;
-	var newhbox:FlxNewHitbox;
 	var spacePozition:FlxText;
 	var shiftPozition:FlxText;
 	var inputvari:PsychAlphabet;
