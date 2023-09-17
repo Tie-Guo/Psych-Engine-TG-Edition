@@ -17,6 +17,7 @@ import android.FlxNewHitbox;
 import android.FlxVirtualPad;
 import flixel.ui.FlxButton;
 import android.flixel.FlxButton as FlxNewButton;
+import options.mobile.ExtraPadCustom.Config;
 #end
 
 class MusicBeatState extends FlxUIState
@@ -42,6 +43,7 @@ class MusicBeatState extends FlxUIState
 	#if android
 	public static var _virtualpad:FlxVirtualPad;
 	public static var androidc:AndroidControls;
+	public static var extraPad:FlxVirtualPad;
 	//var trackedinputsUI:Array<FlxActionInput> = [];
 	//var trackedinputsNOTES:Array<FlxActionInput> = [];
 	#end
@@ -86,11 +88,13 @@ class MusicBeatState extends FlxUIState
 				checkHitbox = false;
 				checkDUO = false;
 				Controls.CheckKeyboard = false;
+				addExtraButton();
 			case DUO:
 				//controls.setVirtualPadNOTES(androidc.vpad, DUO, NONE);
 				checkHitbox = false;
 				checkDUO = true;
 				Controls.CheckKeyboard = false;
+				addExtraButton();
 			case HITBOX:
 				//controls.setNewHitBox(androidc.newhbox);
 				checkHitbox = true;
@@ -113,6 +117,19 @@ class MusicBeatState extends FlxUIState
 
 		add(androidc);
 		Controls.CheckControl = true;
+	}
+	
+	public function addExtraButton()
+	{
+		if (ClientPrefs.data.hitboxExtend != 'OFF') {
+			extraPad = new FlxVirtualPad(EXTRA, NONE, 0.75, ClientPrefs.data.antialiasing);
+			add(extraPad);
+		
+			var camcontrolExtra = new flixel.FlxCamera();
+			FlxG.cameras.add(camcontrolExtra, false);
+			camcontrolExtra.bgColor.alpha = 0;
+			extraPad.cameras = [camcontrolExtra];
+		}
 	}
 	#end
 
