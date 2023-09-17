@@ -46,6 +46,9 @@ class FlxVirtualPad extends FlxSpriteGroup {
 	public var buttonCEUp_M:FlxButton;
 	public var buttonCEDown_M:FlxButton;
 	
+	public var buttonSpace:FlxButton;
+	public var buttonShift:FlxButton;
+	
 	public var dPad:FlxSpriteGroup;
 	public var actions:FlxSpriteGroup;
 
@@ -95,6 +98,9 @@ class FlxVirtualPad extends FlxSpriteGroup {
 		
 		buttonCEUp_M = new FlxButton(0, 0);
 		buttonCEDown_M = new FlxButton(0, 0);
+		
+		buttonSpace = new FlxButton(0, 0);
+		buttonShift = new FlxButton(0, 0);
 		
 		switch (DPad){
 			case UP_DOWN:
@@ -311,6 +317,9 @@ class FlxVirtualPad extends FlxSpriteGroup {
 		
 		buttonCEUp_M = null;
 		buttonCEDown_M = null;
+		
+		buttonSpace = null;
+		buttonShift = null;
 	}
 }
 
@@ -320,6 +329,7 @@ enum FlxDPadMode {
 	UP_LEFT_RIGHT;
 	FULL;
 	RIGHT_FULL;
+	EXTRA;
 	DUO;
 	CHART_EDITOR;
 	MenuCharacterEditor;
