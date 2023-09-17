@@ -51,8 +51,9 @@ class ExtraPadCustom extends MusicBeatState
 		add(vpad);
 		loadcustom();
 
-		inputvari = new PsychAlphabet(0, 50, 'Custom Extra Button', false, false, 0.05, 0.8);
+		inputvari = new PsychAlphabet(0, 25, 'Custom Extra Button', false, false, 0.05, 0.8);
 		inputvari.screenCenter(X);
+		inputvari.x += 55;
 		add(inputvari);
 
 		spacePozition = new FlxText(10, FlxG.height - 104, 0,"Button Up X:" + vpad.buttonUp.x +" Y:" + vpad.buttonUp.y, 16);
