@@ -291,7 +291,10 @@ class MainMenuState extends MusicBeatState
 			else menuItemss = menuItems;
 			
 			menuItemss.forEach(function(spr:FlxSprite) {
-				if (curSelected != spr.ID) {
+				var curS:Int = 0;
+				if (inExtra) curS = curSelectedExtra;
+				else curS = curSelected;
+				if (curS != spr.ID) {
 					FlxTween.tween(spr, {alpha: 0}, 0.4, {
 						ease: FlxEase.quadOut,
 						onComplete: function(twn:FlxTween)
