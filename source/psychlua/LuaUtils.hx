@@ -66,10 +66,10 @@ class LuaUtils
 		#end
 	}
 	
-	public static function checkFlxGMobile(variable:Dynamic)
+	public static function checkFlxGMobile(variable:String)
 	{
 		#if android
-		if ( (variable.indexOf('keys.') != -1))
+		if ((variable.indexOf('keys.') != -1))
     	{
     		var key:Dynamic = 'unknow';
     		var type:Dynamic = 'unknow';
