@@ -20,6 +20,8 @@ class MobileOptionsState extends MusicBeatState
 			    #if android
 				removeVirtualPad();
 				#end
+				FlxTransitionableState.skipNextTransIn = true;
+				FlxTransitionableState.skipNextTransOut = true;
 				MusicBeatState.switchState(new options.mobile.AndroidControlsMenu());
 			case 'Controls Setting':
 			    #if android
@@ -30,6 +32,8 @@ class MobileOptionsState extends MusicBeatState
 			    #if android
 				removeVirtualPad();
 				#end
+				FlxTransitionableState.skipNextTransIn = true;
+				FlxTransitionableState.skipNextTransOut = true;
 				MusicBeatState.switchState(new options.mobile.ExtraPadCustom());
 		}
 	}
