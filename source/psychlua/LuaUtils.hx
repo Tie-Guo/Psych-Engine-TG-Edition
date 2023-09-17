@@ -51,7 +51,7 @@ class LuaUtils
     			if (FlxG.keys.pressed.SPACE) return true;
     		else if (type == 'justReleased')
     			if (FlxG.keys.justReleased.SPACE) return true;
-    	} else if (button == 'shift' && MusicBeatState.extraPad.buttonShift != null ) {
+    	} else if (button == 'shift') {
     		if (type == 'justPressed')
     			if (FlxG.keys.justPressed.SHIFT) return true;
     		else if (type == 'pressed')
