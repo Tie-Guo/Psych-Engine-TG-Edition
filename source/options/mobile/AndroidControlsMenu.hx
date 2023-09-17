@@ -67,8 +67,9 @@ class AndroidControlsMenu extends MusicBeatState
 		newhbox.visible = false;
 		add(newhbox);
 
-		inputvari = new PsychAlphabet(0, 50, controlitems[curSelected], false, false, 0.05, 0.8);
+		inputvari = new PsychAlphabet(0, 20, controlitems[curSelected], false, false, 0.05, 0.8);
 		inputvari.screenCenter(X);
+		inputvari.x += 55;
 		add(inputvari);
 
 		var ui_tex = Paths.getSparrowAtlas('androidcontrols/menu/arrows');
