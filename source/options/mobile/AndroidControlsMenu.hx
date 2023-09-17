@@ -118,8 +118,6 @@ class AndroidControlsMenu extends MusicBeatState
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new options.mobile.MobileOptionsState());
-		}
-
 		});
 		exitButton.setGraphicSize(Std.int(exitButton.width) * 3);
 		exitButton.label.setFormat(Paths.font('vcr.ttf'), 21, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
