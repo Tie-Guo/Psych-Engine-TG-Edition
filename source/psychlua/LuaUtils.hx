@@ -38,6 +38,13 @@ class LuaUtils
 	{
 		#if android
 		var check:Bool = false;
+		
+		if (MusicBeatState.androidc.newhbox.buttonShift == null && button == 'shift')
+			return false;
+			
+		if (MusicBeatState.androidc.newhbox.buttonSpace == null && button == 'space')
+			return false;
+
 		if (button == 'space' && MusicBeatState.androidc.newhbox.buttonSpace != null) {
 			if (type == 'justPressed')
 				check = MusicBeatState.androidc.newhbox.buttonSpace.justPressed;
@@ -53,13 +60,7 @@ class LuaUtils
 			else if (type == 'justReleased')
 				check = MusicBeatState.androidc.newhbox.buttonShift.justReleased;
 		}
-		
-		if (MusicBeatState.androidc.newhbox.buttonShift == null && button == 'shift')
-			check = false;
-			
-		if (MusicBeatState.androidc.newhbox.buttonSpace == null && button == 'space')
-			check = false;
-			
+
 		return check;
 		#else
 		return;
@@ -88,7 +89,7 @@ class LuaUtils
     		
     		return checkMobileExtraButton(key, type);
     	}
-    	return '?';
+    	return false;
 		#end
 	}
 
