@@ -39,7 +39,7 @@ class LuaUtils
 		#if android
 		var check:Bool = false;
 		var keysType:String = 'pad';
-		if ( (MusicBeatState.androidc.newhbox.buttonSpace == null) && (MusicBeatState.androidc.newhbox.buttonShift == null) )
+		if ( (MusicBeatState.androidc.newhbox == null) )
 			keysType = 'pad';
 		else
 			keysType = 'hitbox';

@@ -39,7 +39,7 @@ class ReflectionFunctions
 			}
 			
 			#if android
-			if (classVar == 'flixel.FlxG' && variable.indexOf('keys.') != -1) {
+			if (classVar == 'flixel.FlxG' && (variable.indexOf('keys.') != -1) && (ClientPrefs.data.hitboxExtend != 'OFF')) {
 				if (LuaUtils.checkFlxGMobile(variable))
 					return LuaUtils.checkFlxGMobile(variable);
 			}
