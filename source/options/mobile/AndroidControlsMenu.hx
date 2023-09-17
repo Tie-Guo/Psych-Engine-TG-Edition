@@ -141,7 +141,7 @@ class AndroidControlsMenu extends MusicBeatState
 					vpad.buttonDown.y = FlxG.height - 66 - 45 * 3;
 				}
 			}
-		}
+		});
 		resetButton.setGraphicSize(Std.int(resetButton.width) * 3);
 		resetButton.label.setFormat(Paths.font('vcr.ttf'), 21, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
 		resetButton.color = FlxColor.RED;
