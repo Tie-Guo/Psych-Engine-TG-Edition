@@ -25,10 +25,13 @@ class AndroidControlsMenu extends MusicBeatState
 	var resetButton:FlxButton;
 	var buttonistouched:Bool = false;
 	var bindbutton:FlxButton;
+	var config:Config;
 
 	override public function create():Void
 	{
 		super.create();
+		
+		config = new Config();
 		
 		var bg:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
@@ -141,11 +144,13 @@ class AndroidControlsMenu extends MusicBeatState
 	}
 
 	function save() {
-		Config.savecustom(vpad);
+		config.savecustom(vpad);
+		config.saveShift(vpad);
+		config.saveSpace(vpad);
 	}
 
 	function loadcustom():Void{
-		vpad = Config.loadcustom(vpad);	
+		vpad = config.loadcustom(vpad);	
 	}
 }
 
@@ -157,6 +162,52 @@ class Config {
 		save.bind("saved-controlsExtra");
 	}
 
+	public function saveShift(_pad:FlxVirtualPad) 
+	{
+		if (save.data.buttonShift == null)
+		{
+			save.data.buttonShift = new Array();
+			save.data.buttonShift.push(FlxPoint.get(_pad.buttonShift.x, _pad.buttonShift.y));
+		} else {
+			save.data.buttonShift[0] = FlxPoint.get(_pad.buttonShift.x, _pad.buttonShift.y);
+		}
+		save.flush();
+	}
+	
+	public function saveSpace(_pad:FlxVirtualPad) 
+	{
+		if (save.data.buttonSpace == null)
+		{
+			save.data.buttonSpace = new Array();
+			save.data.buttonSpace.push(FlxPoint.get(_pad.buttonSpace.x, _pad.buttonSpace.y));
+		} else {
+			save.data.buttonSpace[0] = FlxPoint.get(_pad.buttonSpace.x, _pad.buttonSpace.y);
+		}
+		save.flush();
+	}
+
+	public function loadShift(_pad:FlxVirtualPad):FlxVirtualPad 
+	{
+		if (save.data.buttonShift == null) 
+			return _pad;
+		else {
+			_pad.buttonShift.x = save.data.buttonShift[0].x;
+			_pad.buttonShift.y = save.data.buttonShift[0].y;
+		}
+		return _pad;
+	}
+	
+	public function loadSpace(_pad:FlxVirtualPad):FlxVirtualPad 
+	{
+		if (save.data.buttonSpace == null) 
+			return _pad;
+		else {
+			_pad.buttonSpace.x = save.data.buttonSpace[0].x;
+			_pad.buttonSpace.y = save.data.buttonSpace[0].y;
+		}
+		return _pad;
+	}
+	
 	public function savecustom(_pad:FlxVirtualPad) {
 		if (save.data.buttons == null)
 		{
