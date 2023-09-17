@@ -27,6 +27,8 @@ class AndroidControlsMenu extends MusicBeatState
 	var inputvari:PsychAlphabet;
 	var leftArrow:FlxSprite;
 	var rightArrow:FlxSprite;
+	var bindButton:FlxButton;
+	var resetButton:FlxButton;
 	var controlitems:Array<String> = ['Pad-Right','Pad-Left','Pad-Custom','Duo','Hitbox','Keyboard'];
 	var curSelected:Int = 4;
 	var buttonistouched:Bool = false;
@@ -46,7 +48,7 @@ class AndroidControlsMenu extends MusicBeatState
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 
-		var titleText:Alphabet = new Alphabet(75, 60, "Android Controls", true);
+		var titleText:Alphabet = new Alphabet(75, 60, "Mobile Controls", true);
 		titleText.scaleX = 0.6;
 		titleText.scaleY = 0.6;
 		titleText.alpha = 0.4;
@@ -109,6 +111,44 @@ class AndroidControlsMenu extends MusicBeatState
 		tipText.borderSize = 2;
 		tipText.scrollFactor.set();
 		add(tipText);
+		
+		var exitButton:FlxButton = new FlxButton(FlxG.width - 200, 50, 'Exit', function()
+		{
+			save();
+			FlxTransitionableState.skipNextTransIn = true;
+			FlxTransitionableState.skipNextTransOut = true;
+			MusicBeatState.switchState(new options.mobile.MobileOptionsState());
+		}
+
+		});
+		exitButton.setGraphicSize(Std.int(exitButton.width) * 3);
+		exitButton.label.setFormat(Paths.font('vcr.ttf'), 21, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
+		exitButton.color = FlxColor.LIME;
+		add(exitButton);
+
+		resetButton = new FlxButton(exitButton.x, exitButton.y + 100, 'Reset', function()
+		{
+			if (resetButton.visible)
+			{
+				if (controlitems[Math.floor(curSelected)] == 'Pad-Custom')
+				{
+					vpad.buttonUp.x = FlxG.width - 86 * 3;
+					vpad.buttonLeft.x = FlxG.width - 128 * 3;
+					vpad.buttonRight.x = FlxG.width - 44 * 3;
+					vpad.buttonDown.x = FlxG.width - 86 * 3;
+					
+					vpad.buttonUp.y = FlxG.height - 66 - 116 * 3;
+					vpad.buttonLeft.y = FlxG.height - 66 - 81 * 3;
+					vpad.buttonRight.y = FlxG.height - 66 - 81 * 3;
+					vpad.buttonDown.y = FlxG.height - 66 - 45 * 3;
+				}
+			}
+		}
+		resetButton.setGraphicSize(Std.int(resetButton.width) * 3);
+		resetButton.label.setFormat(Paths.font('vcr.ttf'), 21, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, true);
+		resetButton.color = FlxColor.RED;
+		resetButton.visible = false;
+		add(resetButton);
 
 		changeSelection();
 	}
@@ -132,16 +172,6 @@ class AndroidControlsMenu extends MusicBeatState
 			}
 			trackbutton(touch);
 		}
-		
-		#if android
-		if (FlxG.android.justReleased.BACK)
-		{
-			save();
-			FlxTransitionableState.skipNextTransIn = true;
-			FlxTransitionableState.skipNextTransOut = true;
-			MusicBeatState.switchState(new options.OptionsState());
-		}
-		#end
 	}
 
 	function changeSelection(change:Int = 0)
@@ -156,7 +186,7 @@ class AndroidControlsMenu extends MusicBeatState
 		inputvari.changeText(controlitems[curSelected]);
 
 		var daChoice:String = controlitems[Math.floor(curSelected)];
-
+		resetButton.visible = false;
 		switch (daChoice)
 		{
 				case 'Pad-Right':
@@ -171,6 +201,7 @@ class AndroidControlsMenu extends MusicBeatState
 					remove(vpad);
 					vpad = new FlxVirtualPad(RIGHT_FULL, NONE, 0.75, ClientPrefs.data.antialiasing);
 					add(vpad);
+					resetButton.visible = true;
 					loadcustom();
 				case 'Duo':
 					remove(vpad);
