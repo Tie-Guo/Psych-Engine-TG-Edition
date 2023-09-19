@@ -46,13 +46,21 @@ class CreditsState extends MusicBeatState
 		var beihuLink:String = 'https://b23.tv/LVj0JVk';
 		var yanqiangLink:String = 'https://b23.tv/FBxHIwT';
 		var Xx_angelkawaii_XLink:String = 'https://space.bilibili.com/1991407094';
+		var TieGuoLink:String = 'https://b23.tv/SkzOyPq';
+		var YanMeyLink:String = 'https://b23.tv/wvQ6YFM';
 		
-		beihuLink = 'https://youtube.com/@beihu235';
-		Xx_angelkawaii_XLink = 'https://www.youtube.com/@angelkawaii9826';
+		if (Language.get() != 'Chinese') {
+			beihuLink = 'https://youtube.com/@beihu235';
+			Xx_angelkawaii_XLink = 'https://www.youtube.com/@angelkawaii9826';
+			TieGuoLink = 'https://www.youtube.com/@tieguo233';
+		}
 								
 		var defaultList:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
-		    ['Psych Engine Android Team'],
-		    ['beihu',		'beihu',		'Main Android Porter\nport owner',							beihuLink,	'FFC0CB'],
+			['Psych Engine TG Edition'],
+			['TieGuo',		'TieGuo',		'Main Programmer',							TieGuoLink,	'FFC0CB'],
+			['YanMey',		'YanMey',		'Engine Icon Artist',							YanMeyLink,	'FFC0CB'],
+			['Psych Engine Android Team'],
+			['beihu',		'beihu',		'Main Android Porter\nport owner',							beihuLink,	'FFC0CB'],
 			['yanqiang',     'yanqiang',	    'Android Porter\nBug fix',							yanqiangLink,	'7192FD'],
 			['Xx_angelkawaii_X',     'Xx_angelkawaii_X',	    'Bug fix',							Xx_angelkawaii_XLink,	'FFA2DE'],		    
 			[''],
