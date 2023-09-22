@@ -16,8 +16,6 @@ import substates.ResetScoreSubState;
 
 import flixel.addons.ui.FlxInputText;
 import flixel.addons.transition.FlxTransitionableState;
-import states.FreeplaySearchState;
-import flixel.ui.FlxButton;
 
 #if MODS_ALLOWED
 import sys.FileSystem;
@@ -111,7 +109,7 @@ class FreeplayState extends MusicBeatState
     	bars.screenCenter();
     	
     	bg.color = songs[curSelected].color;
-    	changeSection(0);
+    	changeSelection(0);
     	add(bars);
 
 		#if android
@@ -196,7 +194,7 @@ class FreeplayState extends MusicBeatState
     			changingXTween.cancel;
     		}
     		
-    		changeSection(0);
+    		changeSelection(0);
     	}
 
 		super.update(elapsed);
@@ -215,7 +213,7 @@ class FreeplayState extends MusicBeatState
 	
 	}
 
-	function changeSelection(change:Int = 0, playSound:Bool = true)
+	function changeSelection(value:Int = 0, playSound:Bool = true)
 	{
 		curSelected += value;
     	if (curSelected > (songs.length - 1))
