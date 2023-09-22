@@ -36,9 +36,16 @@ class FreeplayState extends MusicBeatState
     var curSelectedels:Float = 0;
     var intendedColor:Int;
     
+    var illustration:FlxSprite;
+	var illustrationBG:FlxSprite;
+	var illustrationOverlap:FlxSprite;
+    
     var changingYTween:FlxTween;
     var changingXTween:FlxTween;
     var colorTween:FlxTween;
+    var angleTween:FlxTween;
+	var angleTweenBG:FlxTween;
+	var angleTweenOverlap:FlxTween;
     
 	override function create()
 	{
@@ -62,6 +69,24 @@ class FreeplayState extends MusicBeatState
     	add(bg);
     	intendedColor = bg.color;
     	bg.screenCenter();
+    	
+    	illustrationBG = new FlxSprite(780+20, 100+20).makeGraphic(425, 425, FlxColor.GRAY);
+    	illustrationBG.antialiasing = ClientPrefs.data.antialiasing;
+    	illustrationBG.updateHitbox();
+    	add(illustrationBG);
+    	
+    	illustration = new FlxSprite(780, 100).loadGraphic(Paths.image('unknownMod'));
+    	illustration.antialiasing = ClientPrefs.data.antialiasing;
+    	illustration.scale.x = 425/illustration.width;
+    	illustration.scale.y = 425/illustration.height;
+    	illustration.updateHitbox();
+    	add(illustration);
+    	
+    	illustrationOverlap = new FlxSprite(780, 100).makeGraphic(425, 425, FlxColor.WHITE);
+    	illustrationOverlap.antialiasing = ClientPrefs.data.antialiasing;
+    	illustrationOverlap.updateHitbox();
+    	add(illustrationOverlap);
+    	illustrationOverlap.alpha = 0;
     	
     	for (i in 0...WeekData.weeksList.length) {
     		if(weekIsLocked(WeekData.weeksList[i])) continue;
@@ -155,6 +180,15 @@ class FreeplayState extends MusicBeatState
 
 		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%)'; */
 		
+		if (controls.UI_UP_P && !touchMoving)
+		{
+			changeSelection(-1);
+		}
+		if (controls.UI_DOWN_P && !touchMoving)
+		{
+			changeSelection(1);
+		}
+		
 		if (curSelectedels > (songs.length - 1))
     		curSelectedels = songs.length - 1;
     	else if (curSelectedels < 0)
@@ -190,10 +224,13 @@ class FreeplayState extends MusicBeatState
     	
     	if (FlxG.mouse.justReleased)
     	{
-    		for (i in 0...songs.length)
-    			songtextsLastY[i] = songtextsGroup[i].y;
+    		if (Math.round(curSelectedels) != curSelected) {
+    			curSelected = Math.round(curSelectedels);
+    			changeSelection(0);
+    		}
     		
-    		curSelected = Math.round(curSelectedels);
+    		moveByCurSelected();
+    		
     		touchMoving = false;
     		
     		if (changingYTween != null && changingXTween != null)
@@ -203,17 +240,16 @@ class FreeplayState extends MusicBeatState
     		}
     		
     		if (FlxG.mouse.y > lastMouseY - 10 && FlxG.mouse.y < lastMouseY + 10)
-			{
-				for (i in 0...songs.length) {
-					if (FlxG.mouse.overlaps(songtextsGroup[i]))
-					{
-						curSelected = i;
-						break;
-					}
-				}
-			}
-    		
-    		changeSelection(0);
+    		{
+    			for (i in 0...songs.length) {
+    				if (FlxG.mouse.overlaps(songtextsGroup[i]))
+    				{
+    					curSelected = i;
+    					moveByCurSelected();
+    					break;
+    				}
+    			}
+    		}
     	}
     	
     	for (i in 0...songs.length) {
@@ -257,6 +293,8 @@ class FreeplayState extends MusicBeatState
     	iconsArray[curSelected].alpha = 1;
     	songtextsGroup[curSelected].alpha = 1;
     	
+    	resetIllustration();
+    	
     	var newColor:Int = songs[curSelected].color;
     	if(newColor != intendedColor) {
     		if(colorTween != null) {
@@ -271,6 +309,40 @@ class FreeplayState extends MusicBeatState
     	}
 	}
 	
+    function resetIllustration()
+    {
+    	Mods.currentModDirectory = songs[curSelected].folder;
+    	
+    	var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
+    	if (Paths.image('illustrations/' + songLowercase) != null) {
+    		illustration.loadGraphic(Paths.image('illustrations/' + songLowercase));
+    		illustration.scale.x = 425/illustration.width;
+    		illustration.scale.y = 425/illustration.height;
+    		illustration.updateHitbox();
+    	} else {
+    		illustration.loadGraphic(Paths.image('illustrations/default'));
+    		illustration.scale.x = 425/illustration.width;
+    		illustration.scale.y = 425/illustration.height;
+    		illustration.updateHitbox();
+    	}
+    	
+    	illustration.angle = 0;
+    	illustrationBG.angle = 0;
+    	illustrationOverlap.angle = 0;
+    	
+    	if (angleTween != null)
+    		angleTween.cancel;
+    	
+    	angleTween = FlxTween.tween(illustration, {angle: -5}, 0.25, {ease: FlxEase.quadOut});
+    	angleTweenBG = FlxTween.tween(illustrationBG, {angle: -5}, 0.25, {ease: FlxEase.quadOut});
+    	angleTweenOverlap = FlxTween.tween(illustrationOverlap, {angle: -5}, 0.25, {ease: FlxEase.quadOut});
+    	
+    	illustrationOverlap.alpha = 0.75;
+    	FlxTween.tween(illustrationOverlap, {alpha: 0}, 0.25, {ease: FlxEase.quadOut});
+    }
+    
+    
+	
 	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int)
 	{
 		songs.push(new SongMetadata(songName, weekNum, songCharacter, color));
@@ -283,7 +355,9 @@ class FreeplayState extends MusicBeatState
 	
 	function moveByCurSelected(songnum, curSelected)
 	{
-		changingXTween = FlxTween.tween(songtextsGroup[songnum], {x: (songnum <= curSelected) ? baseX - (curSelected-songnum)*25 : baseX - (songnum-curSelected)*25}, 0.4, {ease: FlxEase.quadOut});
-		changingYTween = FlxTween.tween(songtextsGroup[songnum], {y: 320+(songnum-curSelected)*115}, 0.4, {ease: FlxEase.quadOut});
+		for (songnum in 0...songs.length) {
+			changingXTween = FlxTween.tween(songtextsGroup[songnum], {x: (songnum <= curSelected) ? baseX - (curSelected-songnum)*25 : baseX - (songnum-curSelected)*25}, 0.4, {ease: FlxEase.quadOut});
+			changingYTween = FlxTween.tween(songtextsGroup[songnum], {y: 320+(songnum-curSelected)*115}, 0.4, {ease: FlxEase.quadOut});
+		}
 	}
 }
