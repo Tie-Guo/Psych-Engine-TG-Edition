@@ -284,8 +284,6 @@ class FreeplayState extends MusicBeatState
     		curSelected = songs.length - 1;
     		 
     	for (i in 0...songs.length) {
-    		moveByCurSelected(i, curSelected);
-    		
     		iconsArray[i].alpha = 0.5;
     		songtextsGroup[i].alpha = 0.5;
     	}
