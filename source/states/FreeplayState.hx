@@ -27,12 +27,14 @@ class FreeplayState extends MusicBeatState
     var songs:Array<SongMetadata> = [];
     var songtextsGroup:Array<FlxText> = [];
     
+    var baseX:Float = 200;
     var lastMouseY:Float = 0;
     var songtextsLastY:Array<Float> = [];
     var touchMoving:Bool = false;
     var curSelected:Int = 5;
     var curSelectedels:Float = 0;
     var intendedColor:Int;
+    var iconsArray:Array<HealthIcon> = [];
     
     var changingYTween:FlxTween;
     var changingXTween:FlxTween;
@@ -91,7 +93,7 @@ class FreeplayState extends MusicBeatState
     	
     	for (i in 0...songs.length)
     	{
-    		var songText = new FlxText((i <= curSelected) ? 150 - (curSelected-i)*25 : 150 - (i-curSelected)*25, 320+(i-curSelected)*115, 0, songs[i].songName, 60);
+    		var songText = new FlxText((i <= curSelected) ? baseX - (curSelected-i)*25 : baseX - (i-curSelected)*25, 320+(i-curSelected)*115, 0, songs[i].songName, 60);
     		songText.setFormat(Paths.font("syht.ttf"), 60, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
     		if (songs[i].songName.length >= 15) {
     			songText.scale.x = 10 / songs[i].songName.length;
@@ -100,8 +102,15 @@ class FreeplayState extends MusicBeatState
     		add(songText);
     		
     		songtextsLastY.push(songText.y);
-    		lastMouseY = FlxG.mouse.y;
     		songtextsGroup.push(songText);
+    		
+    		Mods.currentModDirectory = songs[i].folder;
+		
+			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
+			icon.camera = game.camOther;
+			icon.scale.set(0.8, 0.8);
+			add(icon);
+			iconsArray.push(icon);
     	}
     	
     	var bars = new FlxSprite().loadGraphic(Paths.image('menus/freeplaybars'));
@@ -174,9 +183,9 @@ class FreeplayState extends MusicBeatState
     		
     			songtextsGroup[i].y =  320+(i-curSelectedels)*115;
     			if (i <= curSelectedels)
-    				songtextsGroup[i].x = 150 - (curSelectedels-i)*25;
+    				songtextsGroup[i].x = baseX - (curSelectedels-i)*25;
     			else
-    				songtextsGroup[i].x = 150 - (i-curSelectedels)*25;
+    				songtextsGroup[i].x = baseX - (i-curSelectedels)*25;
     		}
     	}
     	
@@ -194,8 +203,24 @@ class FreeplayState extends MusicBeatState
     			changingXTween.cancel;
     		}
     		
+    		if (FlxG.mouse.y > lastMouseY - 10 && FlxG.mouse.y < lastMouseY + 10)
+			{
+				for (i in 0...songs.length) {
+					if (FlxG.mouse.overlaps(songtextsGroup[i]))
+					{
+						curSelected = i;
+						break;
+					}
+				}
+			}
+    		
     		changeSelection(0);
     	}
+    	
+    	for (i in 0...songs.length) {
+			iconsArray[i].x = songtextsGroup[i].x - 150;
+			iconsArray[i].y = songtextsGroup[i].y - 25;
+		}
 
 		super.update(elapsed);
 	}
@@ -215,6 +240,8 @@ class FreeplayState extends MusicBeatState
 
 	function changeSelection(value:Int = 0, playSound:Bool = true)
 	{
+		if(playSound) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		
 		curSelected += value;
     	if (curSelected > (songs.length - 1))
     		curSelected = 0;
@@ -223,7 +250,13 @@ class FreeplayState extends MusicBeatState
     		 
     	for (i in 0...songs.length) {
     		moveByCurSelected(i, curSelected);
+    		
+    		iconsArray[i].alpha = 0.5;
+    		songtextsGroup[i].alpha = 0.5;
     	}
+    	
+    	iconsArray[curSelected].alpha = 1;
+    	songtextsGroup[curSelected].alpha = 1;
     	
     	var newColor:Int = songs[curSelected].color;
     	if(newColor != intendedColor) {
@@ -251,7 +284,7 @@ class FreeplayState extends MusicBeatState
 	
 	function moveByCurSelected(songnum, curSelected)
 	{
-		changingXTween = FlxTween.tween(songtextsGroup[songnum], {x: (songnum <= curSelected) ? 150 - (curSelected-songnum)*25 : 150 - (songnum-curSelected)*25}, 0.4, {ease: FlxEase.quadOut});
+		changingXTween = FlxTween.tween(songtextsGroup[songnum], {x: (songnum <= curSelected) ? baseX - (curSelected-songnum)*25 : baseX - (songnum-curSelected)*25}, 0.4, {ease: FlxEase.quadOut});
 		changingYTween = FlxTween.tween(songtextsGroup[songnum], {y: 320+(songnum-curSelected)*115}, 0.4, {ease: FlxEase.quadOut});
 	}
 }
