@@ -94,7 +94,7 @@ class FreeplayState extends MusicBeatState
     	for (i in 0...songs.length)
     	{
     		var songText = new FlxText((i <= curSelected) ? 150 - (curSelected-i)*25 : 150 - (i-curSelected)*25, 320+(i-curSelected)*115, 0, songs[i].songName, 60);
-    		songText.setFormat(Paths.font("syht.ttf"), 60, FlxColor.WHITE, 'LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+    		songText.setFormat(Paths.font("syht.ttf"), 60, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
     		if (songs[i].songName.length >= 15) {
     			songText.scale.x = 10 / songs[i].songName.length;
     			songText.updateHitbox();
