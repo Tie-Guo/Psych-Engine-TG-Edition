@@ -26,15 +26,15 @@ class FreeplayState extends MusicBeatState
 	var bg:FlxSprite;
     var songs:Array<SongMetadata> = [];
     var songtextsGroup:Array<FlxText> = [];
+    var iconsArray:Array<HealthIcon> = [];
+    var songtextsLastY:Array<Float> = [];
     
     var baseX:Float = 200;
     var lastMouseY:Float = 0;
-    var songtextsLastY:Array<Float> = [];
     var touchMoving:Bool = false;
-    var curSelected:Int = 5;
+    var curSelected:Int = 0;
     var curSelectedels:Float = 0;
     var intendedColor:Int;
-    var iconsArray:Array<HealthIcon> = [];
     
     var changingYTween:FlxTween;
     var changingXTween:FlxTween;
@@ -107,7 +107,6 @@ class FreeplayState extends MusicBeatState
     		Mods.currentModDirectory = songs[i].folder;
 		
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
-			icon.camera = game.camOther;
 			icon.scale.set(0.8, 0.8);
 			add(icon);
 			iconsArray.push(icon);
