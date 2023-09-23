@@ -85,7 +85,7 @@ jobs:
           haxelib set flixel 5.2.2
           haxelib set flixel-addons 3.0.2
           haxelib set hxcpp 4.2.1
-          haxelib set SScript 4.0.1
+          haxelib set BrewScript
           haxelib list
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
