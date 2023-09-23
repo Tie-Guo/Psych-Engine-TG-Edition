@@ -77,8 +77,8 @@ import psychlua.LuaUtils;
 import psychlua.HScript;
 #end
 
-#if (SScript >= "3.0.0")
-import tea.SScript;
+#if BrewScript
+import brew.BrewScript;
 #end
 
 class PlayState extends MusicBeatState
@@ -332,7 +332,6 @@ class PlayState extends MusicBeatState
 		addAndroidControls();
 		MusicBeatState.androidc.visible = true;
 		MusicBeatState.androidc.alpha = 0.000001;
-		
 		#end
 
 		persistentUpdate = true;
@@ -863,7 +862,7 @@ class PlayState extends MusicBeatState
 		
 		if(doPush)
 		{
-			if(SScript.global.exists(scriptFile))
+			if(BrewScript.global.exists(scriptFile))
 				doPush = false;
 
 			if(doPush) initHScript(scriptFile);
@@ -1223,6 +1222,25 @@ class PlayState extends MusicBeatState
 			});
 		}
 		callOnScripts('onUpdateScore', [miss]);
+	}
+	
+	public function updateScoreBot()
+	{
+		scoreTxt.text += 'Bot Play';
+
+		if(ClientPrefs.data.scoreZoom)
+		{
+			if(scoreTxtTween != null) {
+				scoreTxtTween.cancel();
+			}
+			scoreTxt.scale.x = 1.05;
+			scoreTxt.scale.y = 1.05;
+			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2, {
+				onComplete: function(twn:FlxTween) {
+					scoreTxtTween = null;
+				}
+			});
+		}
 	}
 
 	public function setSongTime(time:Float)
@@ -2572,6 +2590,8 @@ class PlayState extends MusicBeatState
 				RecalculateRating(false);
 			}
 		}
+		
+		if (cpuControlled) updateScoreBot();
 
 		var uiPrefix:String = "";
 		var uiSuffix:String = '';
@@ -3275,7 +3295,7 @@ class PlayState extends MusicBeatState
 		
 		if(FileSystem.exists(scriptToLoad))
 		{
-			if (SScript.global.exists(scriptToLoad)) return false;
+			if (BrewScript.global.exists(scriptToLoad)) return false;
 	
 			initHScript(scriptToLoad);
 			return true;
@@ -3311,16 +3331,16 @@ class PlayState extends MusicBeatState
 
 					newScript.destroy();
 					hscriptArray.remove(newScript);
-					trace('failed to initialize sscript interp!!! ($file)');
+					trace('failed to initialize BrewScript interp!!! ($file)');
 				}
-				else trace('initialized sscript interp successfully: $file');
+				else trace('initialized BrewScript interp successfully: $file');
 			}
 			
 		}
 		catch(e)
 		{
 			addTextToDebug('ERROR ($file) - ' + e.message.substr(0, e.message.indexOf('\n')), FlxColor.RED);
-			var newScript:HScript = cast (SScript.global.get(file), HScript);
+			var newScript:HScript = cast (BrewScript.global.get(file), HScript);
 			if(newScript != null)
 			{
 				newScript.destroy();

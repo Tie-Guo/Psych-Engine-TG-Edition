@@ -164,6 +164,12 @@ class FreeplayState extends MusicBeatState
     	bars.antialiasing = ClientPrefs.data.antialiasing;
     	bars.screenCenter();
     	
+    	difficultieImage = new FlxSprite(0, 625).loadGraphic(Paths.image('menudifficulties/hard'));
+    	add(difficultieImage);
+    			
+    	difficultieText = new FlxText(0, 625, 0, '', 60);
+    	add(difficultieText);
+    	
     	bg.color = songs[curSelected].color;
     	changeSelection(0);
     	add(bars);
@@ -240,7 +246,7 @@ class FreeplayState extends MusicBeatState
     	else if (curSelectedels < 0)
     		curSelectedels = 0;
     
-    	if (FlxG.mouse.justPressed && FlxG.mouse.y < 400)
+    	if (FlxG.mouse.justPressed && FlxG.mouse.x < 400)
     	{
     		lastMouseY = FlxG.mouse.y;
     		curSelectedels = curSelected;
@@ -370,9 +376,6 @@ class FreeplayState extends MusicBeatState
     		if (difficultieImage != null) {
     			difficultieImage.loadGraphic(Paths.image('menudifficulties/' + Paths.formatToSongPath(newDiffName)));
     			difficultieImage.updateHitbox();
-    		} else {
-    			difficultieImage = new FlxSprite(0, 625).loadGraphic(Paths.image('menudifficulties/' + Paths.formatToSongPath(newDiffName)));
-    			add(difficultieImage);
     		}
     		
     		difficultieImage.x = 1025 - difficultieImage.width/2;
@@ -385,9 +388,6 @@ class FreeplayState extends MusicBeatState
     		if (difficultieText != null) {
     			difficultieText.text = newDiffName;
     			difficultieText.updateHitbox();
-    		} else {
-    			difficultieText = new FlxText(0, 625, 0, newDiffName, 60);
-    			add(difficultieText);
     		}
     		
     		difficultieText.x = 1025 - difficultieText.width/2;
