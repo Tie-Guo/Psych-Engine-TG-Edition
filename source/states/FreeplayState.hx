@@ -16,6 +16,7 @@ import substates.ResetScoreSubState;
 
 import flixel.addons.ui.FlxInputText;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.group.FlxGroup;
 
 #if MODS_ALLOWED
 import sys.FileSystem;
@@ -44,6 +45,8 @@ class FreeplayState extends MusicBeatState
 	var leftArrow:FlxSprite;
 	var difficultieImage:FlxSprite;
 	var difficultieText:FlxText;
+	
+	var difficultySelectors:FlxGroup;
     
     var changingYTween:FlxTween;
     var changingXTween:FlxTween;
@@ -145,6 +148,10 @@ class FreeplayState extends MusicBeatState
     	var bars = new FlxSprite().loadGraphic(Paths.image('menus/freeplaybars'));
     	bars.antialiasing = ClientPrefs.data.antialiasing;
     	bars.screenCenter();
+    	bars.alpha = 0.75;
+    	
+    	difficultySelectors = new FlxGroup();
+		add(difficultySelectors);
     	
     	var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
 	
@@ -154,7 +161,8 @@ class FreeplayState extends MusicBeatState
     	leftArrow.animation.addByPrefix('idle', "arrow left");
     	leftArrow.animation.addByPrefix('press', "arrow push left");
     	leftArrow.animation.play('idle');
-    	add(leftArrow);
+    	difficultySelectors.add(leftArrow);
+    	
     	
     	rightArrow = new FlxSprite(0, 615);
     	rightArrow.antialiasing = ClientPrefs.data.antialiasing;
@@ -163,6 +171,7 @@ class FreeplayState extends MusicBeatState
     	rightArrow.animation.addByPrefix('press', "arrow push right", 24, false);
     	rightArrow.animation.play('idle');
     	add(rightArrow);
+    	difficultySelectors.add(rightArrow);
     	
     	difficultieImage = new FlxSprite(0, 625).loadGraphic(Paths.image('menudifficulties/hard'));
     	add(difficultieImage);
