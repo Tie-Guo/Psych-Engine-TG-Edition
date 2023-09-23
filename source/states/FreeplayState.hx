@@ -167,6 +167,10 @@ class FreeplayState extends MusicBeatState
     	bg.color = songs[curSelected].color;
     	changeSelection(0);
     	add(bars);
+    	
+    	#if android
+			addVirtualPad(FULL, A_B_C_X_Y_Z);
+		#end
 	
 		super.create();
 	}
