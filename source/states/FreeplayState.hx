@@ -93,24 +93,6 @@ class FreeplayState extends MusicBeatState
     	add(illustrationOverlap);
     	illustrationOverlap.alpha = 0;
     	
-    	var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
-	
-    	leftArrow = new FlxSprite(0, 615);
-    	leftArrow.antialiasing = ClientPrefs.data.antialiasing;
-    	leftArrow.frames = ui_tex;
-    	leftArrow.animation.addByPrefix('idle', "arrow left");
-    	leftArrow.animation.addByPrefix('press', "arrow push left");
-    	leftArrow.animation.play('idle');
-    	add(leftArrow);
-    	
-    	rightArrow = new FlxSprite(0, 615);
-    	rightArrow.antialiasing = ClientPrefs.data.antialiasing;
-    	rightArrow.frames = ui_tex;
-    	rightArrow.animation.addByPrefix('idle', 'arrow right');
-    	rightArrow.animation.addByPrefix('press', "arrow push right", 24, false);
-    	rightArrow.animation.play('idle');
-    	add(rightArrow);
-    	
     	for (i in 0...WeekData.weeksList.length) {
     		if(weekIsLocked(WeekData.weeksList[i])) continue;
     
@@ -164,9 +146,27 @@ class FreeplayState extends MusicBeatState
     	bars.antialiasing = ClientPrefs.data.antialiasing;
     	bars.screenCenter();
     	
+    	var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+	
+    	leftArrow = new FlxSprite(0, 615);
+    	leftArrow.antialiasing = ClientPrefs.data.antialiasing;
+    	leftArrow.frames = ui_tex;
+    	leftArrow.animation.addByPrefix('idle', "arrow left");
+    	leftArrow.animation.addByPrefix('press', "arrow push left");
+    	leftArrow.animation.play('idle');
+    	add(leftArrow);
+    	
+    	rightArrow = new FlxSprite(0, 615);
+    	rightArrow.antialiasing = ClientPrefs.data.antialiasing;
+    	rightArrow.frames = ui_tex;
+    	rightArrow.animation.addByPrefix('idle', 'arrow right');
+    	rightArrow.animation.addByPrefix('press', "arrow push right", 24, false);
+    	rightArrow.animation.play('idle');
+    	add(rightArrow);
+    	
     	difficultieImage = new FlxSprite(0, 625).loadGraphic(Paths.image('menudifficulties/hard'));
     	add(difficultieImage);
-    			
+    	
     	difficultieText = new FlxText(0, 625, 0, '', 60);
     	add(difficultieText);
     	
