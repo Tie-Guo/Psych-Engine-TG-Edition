@@ -3153,7 +3153,7 @@ class PlayState extends MusicBeatState
 			if(script != null)
 			{
 				script.call('onDestroy');
-				script.destroy();
+				script.kill();
 			}
 
 		while (hscriptArray.length > 0)
@@ -3309,13 +3309,13 @@ class PlayState extends MusicBeatState
 		{
 			var newScript:HScript = new HScript(null, file);
 			@:privateAccess
-			if(newScript.parsingExceptions != null && newScript.parsingExceptions.length > 0)
+			if(newScript.parsingException != null && newScript.parsingException.length > 0)
 			{
 				@:privateAccess
-				for (e in newScript.parsingExceptions)
+				for (e in newScript.parsingException)
 					if(e != null)
 						addTextToDebug('ERROR ON LOADING ($file): ${e.message.substr(0, e.message.indexOf('\n'))}', FlxColor.RED);
-				newScript.destroy();
+				newScript.kill();
 				return;
 			}
 
@@ -3329,7 +3329,7 @@ class PlayState extends MusicBeatState
 						if (e != null)
 							addTextToDebug('ERROR ($file: onCreate) - ${e.message.substr(0, e.message.indexOf('\n'))}', FlxColor.RED);
 
-					newScript.destroy();
+					newScript.kill();
 					hscriptArray.remove(newScript);
 					trace('failed to initialize BrewScript interp!!! ($file)');
 				}
@@ -3343,7 +3343,7 @@ class PlayState extends MusicBeatState
 			var newScript:HScript = cast (BrewScript.global.get(file), HScript);
 			if(newScript != null)
 			{
-				newScript.destroy();
+				newScript.kill();
 				hscriptArray.remove(newScript);
 			}
 		}
