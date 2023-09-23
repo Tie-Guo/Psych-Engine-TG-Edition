@@ -319,7 +319,6 @@ class FreeplayState extends MusicBeatState
     			if(tmr.finished)
     				missingText.visible = false;
     			});
-    			missingText.camera = game.camOther;
     			FlxG.sound.play(Paths.sound('cancelMenu'));
     
     			return;
@@ -334,7 +333,6 @@ class FreeplayState extends MusicBeatState
     		DiscordClient.loadModRPC();
     		#end
     	}
-    }
 
 		super.update(elapsed);
 	}
