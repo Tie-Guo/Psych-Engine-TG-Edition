@@ -31,14 +31,19 @@ class FreeplayState extends MusicBeatState
     
     var baseX:Float = 200;
     var lastMouseY:Float = 0;
-    var touchMoving:Bool = false;
-    var curSelected:Int = 0;
     var curSelectedels:Float = 0;
+    var curSelected:Int = 0;
+    var curDifficulty:Int = 0;
     var intendedColor:Int;
+    var touchMoving:Bool = false;
     
     var illustration:FlxSprite;
 	var illustrationBG:FlxSprite;
 	var illustrationOverlap:FlxSprite;
+	var rightArrow:FlxSprite;
+	var leftArrow:FlxSprite;
+	var difficultieImage:FlxSprite;
+	var difficultieText:FlxText;
     
     var changingYTween:FlxTween;
     var changingXTween:FlxTween;
@@ -87,6 +92,24 @@ class FreeplayState extends MusicBeatState
     	illustrationOverlap.updateHitbox();
     	add(illustrationOverlap);
     	illustrationOverlap.alpha = 0;
+    	
+    	var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+	
+    	leftArrow = new FlxSprite(0, 615);
+    	leftArrow.antialiasing = ClientPrefs.data.antialiasing;
+    	leftArrow.frames = ui_tex;
+    	leftArrow.animation.addByPrefix('idle', "arrow left");
+    	leftArrow.animation.addByPrefix('press', "arrow push left");
+    	leftArrow.animation.play('idle');
+    	add(leftArrow);
+    	
+    	rightArrow = new FlxSprite(0, 615);
+    	rightArrow.antialiasing = ClientPrefs.data.antialiasing;
+    	rightArrow.frames = ui_tex;
+    	rightArrow.animation.addByPrefix('idle', 'arrow right');
+    	rightArrow.animation.addByPrefix('press', "arrow push right", 24, false);
+    	rightArrow.animation.play('idle');
+    	add(rightArrow);
     	
     	for (i in 0...WeekData.weeksList.length) {
     		if(weekIsLocked(WeekData.weeksList[i])) continue;
@@ -144,10 +167,6 @@ class FreeplayState extends MusicBeatState
     	bg.color = songs[curSelected].color;
     	changeSelection(0);
     	add(bars);
-
-		#if android
-			addVirtualPad(FULL, A_B_C_X_Y_Z);
-		#end
 				
 		super.create();
 	}
@@ -183,18 +202,33 @@ class FreeplayState extends MusicBeatState
 		if (controls.UI_UP_P && !touchMoving)
 		{
 			changeSelection(-1);
+			moveByCurSelected();
 		}
 		if (controls.UI_DOWN_P && !touchMoving)
 		{
 			changeSelection(1);
+			moveByCurSelected();
 		}
+		
+		if ( (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.justPressed) || controls.UI_LEFT_P) changeDiff(-1);
+		if ( (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.justPressed) || controls.UI_RIGHT_P) changeDiff(1);
+	
+		if ( (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.pressed) || controls.UI_LEFT) leftArrow.animation.play('press');
+		else leftArrow.animation.play('idle');
+		if ( (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.pressed) || controls.UI_RIGHT) rightArrow.animation.play('press');
+		else rightArrow.animation.play('idle');
+		
+		if (curSelectedels > (songs.length + 2))
+			curSelectedels = 0;
+		else if (curSelectedels < -3)
+			curSelectedels = songs.length - 1;
 		
 		if (curSelectedels > (songs.length - 1))
     		curSelectedels = songs.length - 1;
     	else if (curSelectedels < 0)
     		curSelectedels = 0;
     
-    	if (FlxG.mouse.justPressed)
+    	if (FlxG.mouse.justPressed && FlxG.mouse.y < 400)
     	{
     		lastMouseY = FlxG.mouse.y;
     		curSelectedels = curSelected;
@@ -207,7 +241,7 @@ class FreeplayState extends MusicBeatState
     		}
     	}
     	
-    	if (FlxG.mouse.pressed)
+    	if (FlxG.mouse.pressed && touchMoving)
     	{	
     		for (i in 0...songs.length)
     		{
@@ -222,14 +256,12 @@ class FreeplayState extends MusicBeatState
     		}
     	}
     	
-    	if (FlxG.mouse.justReleased)
+    	if (FlxG.mouse.justReleased && touchMoving))
     	{
     		if (Math.round(curSelectedels) != curSelected) {
     			curSelected = Math.round(curSelectedels);
     			changeSelection(0);
     		}
-    		
-    		moveByCurSelected();
     		
     		touchMoving = false;
     		
@@ -245,17 +277,64 @@ class FreeplayState extends MusicBeatState
     				if (FlxG.mouse.overlaps(songtextsGroup[i]))
     				{
     					curSelected = i;
-    					moveByCurSelected();
+    					changeSelection()
     					break;
     				}
     			}
     		}
+    		
+    		moveByCurSelected();
     	}
     	
     	for (i in 0...songs.length) {
 			iconsArray[i].x = songtextsGroup[i].x - 150;
 			iconsArray[i].y = songtextsGroup[i].y - 25;
 		}
+		
+		if (controls.ACCEPT || FlxG.mouse.justReleased && FlxG.mouse.overlaps(illustration))
+    	{
+    		FlxG.mouse.visible = false;
+    		var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
+    		var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+    		try
+    		{
+    			PlayState.SONG = Song.loadFromJson(poop, songLowercase);
+    			PlayState.isStoryMode = false;
+    			PlayState.storyDifficulty = curDifficulty;
+    
+    			if(colorTween != null) {
+    				colorTween.cancel();
+    			}
+    		}
+    		catch(e:Dynamic)
+    		{
+    			var errorStr:String = Mods.currentModDirectory + '/data/' + songLowercase + '/' + poop + '.json';
+    			var missingText:FlxText = new FlxText(0, 680, 0, 'ERROR WHILE LOADING CHART: $errorStr', 20);
+    			missingText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left');
+    			add(missingText);
+    			
+    			missingText.visible = true;
+    			
+    			new FlxTimer().start(2, function(tmr:FlxTimer) {
+    			if(tmr.finished)
+    				missingText.visible = false;
+    			});
+    			missingText.camera = game.camOther;
+    			FlxG.sound.play(Paths.sound('cancelMenu'));
+    
+    			return;
+    		}
+    		
+    		LoadingState.loadAndSwitchState(new PlayState());
+    
+    		FlxG.sound.music.volume = 0;
+    				
+    		destroyFreeplayVocals();
+    		#if desktop
+    		DiscordClient.loadModRPC();
+    		#end
+    	}
+    }
 
 		super.update(elapsed);
 	}
@@ -267,11 +346,48 @@ class FreeplayState extends MusicBeatState
 		}
 		vocals = null;
 	}
-
-	function changeDiff(change:Int = 0)
-	{
 	
-	}
+    function changeDiff(value:Int)
+    {
+    	curDifficulty += value;
+    	if (curDifficulty < 0)
+    		curDifficulty = Difficulty.list.length-1;
+    	if (curDifficulty >= Difficulty.list.length)
+    		curDifficulty = 0;
+    		
+    	var newDiffName:String = Difficulty.list[curDifficulty];
+    	if ( Paths.image('menudifficulties/' + Paths.formatToSongPath(newDiffName)) != null) {
+    		if (difficultieImage != null) {
+    			difficultieImage.loadGraphic(Paths.image('menudifficulties/' + Paths.formatToSongPath(newDiffName)));
+    			difficultieImage.updateHitbox();
+    		} else {
+    			difficultieImage = new FlxSprite(0, 625).loadGraphic(Paths.image('menudifficulties/' + Paths.formatToSongPath(newDiffName)));
+    			add(difficultieImage);
+    		}
+    		
+    		difficultieImage.x = 1025 - difficultieImage.width/2;
+    		rightArrow.x = difficultieImage.x + difficultieImage.width + 15;
+    		leftArrow.x = difficultieImage.x - 65;
+    		
+    		if (difficultieImage != null) difficultieImage.alpha = 1;
+    		if (difficultieText != null) difficultieText.alpha = 0;
+    	} else {
+    		if (difficultieText != null) {
+    			difficultieText.text = newDiffName;
+    			difficultieText.updateHitbox();
+    		} else {
+    			difficultieText = new FlxText(0, 625, 0, newDiffName, 60);
+    			add(difficultieText);
+    		}
+    		
+    		difficultieText.x = 1025 - difficultieText.width/2;
+    		rightArrow.x = difficultieText.x + difficultieText.width + 15;
+    		leftArrow.x = difficultieText.x - 65;
+    		
+    		if (difficultieImage != null) difficultieImage.alpha = 0;
+    		if (difficultieText != null) difficultieText.alpha = 1;
+    	}
+    }
 
 	function changeSelection(value:Int = 0, playSound:Bool = true)
 	{
@@ -305,6 +421,12 @@ class FreeplayState extends MusicBeatState
     			}
     		});
     	}
+    	
+    	Mods.currentModDirectory = songs[curSelected].folder;
+		PlayState.storyWeek = songs[curSelected].week;
+		Difficulty.loadFromWeek();
+	
+		changeDiff(0);
 	}
 	
     function resetIllustration()
