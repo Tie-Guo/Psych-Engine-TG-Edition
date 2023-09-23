@@ -256,7 +256,7 @@ class FreeplayState extends MusicBeatState
     		}
     	}
     	
-    	if (FlxG.mouse.justReleased && touchMoving))
+    	if (FlxG.mouse.justReleased && touchMoving)
     	{
     		if (Math.round(curSelectedels) != curSelected) {
     			curSelected = Math.round(curSelectedels);
