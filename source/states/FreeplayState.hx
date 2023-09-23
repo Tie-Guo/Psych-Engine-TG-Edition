@@ -277,7 +277,7 @@ class FreeplayState extends MusicBeatState
     				if (FlxG.mouse.overlaps(songtextsGroup[i]))
     				{
     					curSelected = i;
-    					changeSelection()
+    					changeSelection();
     					break;
     				}
     			}
