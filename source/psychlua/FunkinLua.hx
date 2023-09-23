@@ -1791,7 +1791,7 @@ class FunkinLua {
 		{
 			hscript.active = false;
 			#if BrewScript
-			hscript.destroy();
+			hscript.kill();
 			#end
 			hscript = null;
 		}
