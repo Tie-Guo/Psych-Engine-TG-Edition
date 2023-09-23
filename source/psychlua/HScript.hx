@@ -5,32 +5,29 @@ import objects.Character;
 import psychlua.FunkinLua;
 import psychlua.CustomSubstate;
 
-#if (HSCRIPT_ALLOWED && SScript >= "3.0.0")
-import tea.SScript;
-class HScript extends SScript
+#if HSCRIPT_ALLOWED
+import brew.BrewScript;
+class HScript extends BrewScript
 {
 	public var parentLua:FunkinLua;
 	
 	public static function initHaxeModule(parent:FunkinLua)
 	{
-		#if (SScript >= "3.0.0")
 		if(parent.hscript == null)
 		{
 			trace('initializing haxe interp for: ${parent.scriptName}');
 			parent.hscript = new HScript(parent);
 		}
-		#end
+
 	}
 
 	public static function initHaxeModuleCode(parent:FunkinLua, code:String)
 	{
-		#if (SScript >= "3.0.0")
 		if(parent.hscript == null)
 		{
 			trace('initializing haxe interp for: ${parent.scriptName}');
 			parent.hscript = new HScript(parent, code);
 		}
-		#end
 	}
 
 	public var origin:String;
@@ -51,7 +48,7 @@ class HScript extends SScript
 
 	override function preset()
 	{
-		#if (SScript >= "3.0.0")
+		#if BrewScript
 		super.preset();
 
 		// Some very commonly used classes
@@ -204,7 +201,7 @@ class HScript extends SScript
 		#if LUA_ALLOWED
 		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
 			var retVal:SCall = null;
-			#if (SScript >= "3.0.0")
+			#if BrewScript
 			initHaxeModuleCode(funk, codeToRun);
 			if(varsToBring != null)
 			{
@@ -234,7 +231,7 @@ class HScript extends SScript
 		});
 		
 		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
-			#if (SScript >= "3.0.0")
+			#if BrewScript
 			var callValue = funk.hscript.executeFunction(funcToRun, funcArgs);
 			if (!callValue.succeeded)
 			{
@@ -259,12 +256,12 @@ class HScript extends SScript
 
 			var c = Type.resolveClass(str + libName);
 
-			#if (SScript >= "3.0.3")
+			#if BrewScript
 			if (c != null)
-				SScript.globalVariables[libName] = c;
+				BrewScript.globalVariables[libName] = c;
 			#end
 
-			#if (SScript >= "3.0.0")
+			#if BrewScript
 			if (funk.hscript != null)
 			{
 				try {
@@ -282,7 +279,7 @@ class HScript extends SScript
 		#end
 	}
 
-	#if (SScript >= "3.0.3")
+	#if BrewScript
 	override public function destroy()
 	{
 		origin = null;
