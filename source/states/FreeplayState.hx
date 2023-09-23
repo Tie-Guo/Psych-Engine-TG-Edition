@@ -43,6 +43,7 @@ class FreeplayState extends MusicBeatState
 	var illustrationOverlap:FlxSprite;
 	var rightArrow:FlxSprite;
 	var leftArrow:FlxSprite;
+	var bars:FlxSprite;
 	var difficultieImage:FlxSprite;
 	var difficultieText:FlxText;
 	
@@ -145,7 +146,7 @@ class FreeplayState extends MusicBeatState
 			iconsArray.push(icon);
     	}
     	
-    	var bars = new FlxSprite().loadGraphic(Paths.image('menus/freeplaybars'));
+    	bars = new FlxSprite().loadGraphic(Paths.image('menus/freeplaybars'));
     	bars.antialiasing = ClientPrefs.data.antialiasing;
     	bars.screenCenter();
     	bars.alpha = 0.75;
