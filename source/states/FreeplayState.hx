@@ -167,7 +167,7 @@ class FreeplayState extends MusicBeatState
     	bg.color = songs[curSelected].color;
     	changeSelection(0);
     	add(bars);
-				
+	
 		super.create();
 	}
 
@@ -209,13 +209,21 @@ class FreeplayState extends MusicBeatState
 			changeSelection(1);
 			moveByCurSelected();
 		}
-		
-		if ( (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.justPressed) || controls.UI_LEFT_P) changeDiff(-1);
-		if ( (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.justPressed) || controls.UI_RIGHT_P) changeDiff(1);
+
+		if (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.justPressed) changeDiff(-1);
+		if (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.justPressed) changeDiff(1);
 	
-		if ( (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.pressed) || controls.UI_LEFT) leftArrow.animation.play('press');
+		if (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.pressed) leftArrow.animation.play('press');
 		else leftArrow.animation.play('idle');
-		if ( (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.pressed) || controls.UI_RIGHT) rightArrow.animation.play('press');
+		if (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.pressed) rightArrow.animation.play('press');
+		else rightArrow.animation.play('idle');
+		
+		if (controls.UI_LEFT_P) changeDiff(-1);
+		if (controls.UI_RIGHT_P) changeDiff(1);
+	
+		if (controls.UI_LEFT) leftArrow.animation.play('press');
+		else leftArrow.animation.play('idle');
+		if (controls.UI_RIGHT) rightArrow.animation.play('press');
 		else rightArrow.animation.play('idle');
 		
 		if (curSelectedels > (songs.length + 2))
