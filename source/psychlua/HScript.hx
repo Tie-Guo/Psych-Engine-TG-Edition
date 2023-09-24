@@ -5,7 +5,7 @@ import objects.Character;
 import psychlua.FunkinLua;
 import psychlua.CustomSubstate;
 
-#if (HSCRIPT_ALLOWED && SScript >= "3.0.0")
+#if (HSCRIPT_ALLOWED && SScript)
 import tea.SScript;
 class HScript extends SScript
 {
@@ -13,7 +13,7 @@ class HScript extends SScript
 	
 	public static function initHaxeModule(parent:FunkinLua)
 	{
-		#if (SScript >= "3.0.0")
+		#if SScript
 		if(parent.hscript == null)
 		{
 			trace('initializing haxe interp for: ${parent.scriptName}');
@@ -24,7 +24,7 @@ class HScript extends SScript
 
 	public static function initHaxeModuleCode(parent:FunkinLua, code:String)
 	{
-		#if (SScript >= "3.0.0")
+		#if SScript
 		if(parent.hscript == null)
 		{
 			trace('initializing haxe interp for: ${parent.scriptName}');
@@ -39,7 +39,7 @@ class HScript extends SScript
 		if (file == null)
 			file = '';
 	
-		super(file, false, false);
+		super(file, false);
 		parentLua = parent;
 		if (parent != null)
 			origin = parent.scriptName;
@@ -51,7 +51,7 @@ class HScript extends SScript
 
 	override function preset()
 	{
-		#if (SScript >= "3.0.0")
+		#if SScript
 		super.preset();
 
 		// Some very commonly used classes
@@ -204,7 +204,7 @@ class HScript extends SScript
 		#if LUA_ALLOWED
 		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
 			var retVal:SCall = null;
-			#if (SScript >= "3.0.0")
+			#if SScript
 			initHaxeModuleCode(funk, codeToRun);
 			if(varsToBring != null)
 			{
@@ -225,8 +225,8 @@ class HScript extends SScript
 					FunkinLua.luaTrace(funk.hscript.origin + ":" + funk.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
 				return null;
 			}
-			else if (funk.hscript.returnValue != null)
-				return funk.hscript.returnValue;
+			else if (funk.hscript != null)
+				return funk.hscript;
 			#else
 			FunkinLua.luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
 			#end
@@ -234,7 +234,7 @@ class HScript extends SScript
 		});
 		
 		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
-			#if (SScript >= "3.0.0")
+			#if SScript
 			var callValue = funk.hscript.executeFunction(funcToRun, funcArgs);
 			if (!callValue.succeeded)
 			{
@@ -264,7 +264,7 @@ class HScript extends SScript
 				SScript.globalVariables[libName] = c;
 			#end
 
-			#if (SScript >= "3.0.0")
+			#if SScript
 			if (funk.hscript != null)
 			{
 				try {
