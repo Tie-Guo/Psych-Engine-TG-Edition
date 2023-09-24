@@ -33,6 +33,7 @@ class FreeplayState extends MusicBeatState
     
     var baseX:Float = 200;
     var lastMouseY:Float = 0;
+    var lastMouseX:Float = 0;
     private static var curSelectedels:Float = 0;
     private static var curSelected:Int = 0;
     public static var curDifficulty:Int = 0;
@@ -154,7 +155,7 @@ class FreeplayState extends MusicBeatState
     	bars = new FlxSprite().loadGraphic(Paths.image('menus/freeplaybars'));
     	bars.antialiasing = ClientPrefs.data.antialiasing;
     	bars.screenCenter();
-    	bars.alpha = 0.75;
+    	//bars.alpha = 0.75;
     	add(bars);
     	
     	difficultySelectors = new FlxGroup();
@@ -234,20 +235,12 @@ class FreeplayState extends MusicBeatState
 			moveByCurSelected();
 		}
 
-		if (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.justReleased) changeDiff(-1);
-		if (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.justReleased) changeDiff(1);
+		if ( (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.justReleased) || controls.UI_LEFT_R) changeDiff(-1);
+		if ( (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.justReleased) || controls.UI_RIGHT_R) changeDiff(1);
 	
-		if (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.pressed) leftArrow.animation.play('press');
+		if ( (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.pressed) || controls.UI_LEFT) leftArrow.animation.play('press');
 		else leftArrow.animation.play('idle');
-		if (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.pressed) rightArrow.animation.play('press');
-		else rightArrow.animation.play('idle');
-		
-		if (controls.UI_LEFT_R) changeDiff(-1);
-		if (controls.UI_RIGHT_R) changeDiff(1);
-	
-		if (controls.UI_LEFT) leftArrow.animation.play('press');
-		else leftArrow.animation.play('idle');
-		if (controls.UI_RIGHT) rightArrow.animation.play('press');
+		if ( (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.pressed) || controls.UI_RIGHT) rightArrow.animation.play('press');
 		else rightArrow.animation.play('idle');
 		
 		if (curSelectedels > (songs.length + 2))
@@ -259,10 +252,16 @@ class FreeplayState extends MusicBeatState
     		curSelectedels = songs.length - 1;
     	else if (curSelectedels < 0)
     		curSelectedels = 0;
-    
-    	if (FlxG.mouse.justPressed && FlxG.mouse.x < 400)
+    	
+    	if (FlxG.mouse.justPressed)
     	{
     		lastMouseY = FlxG.mouse.y;
+    		lastMouseX = FlxG.mouse.x;
+    		playSongTime = 0;
+    	}
+    		
+    	if (FlxG.mouse.justPressed && FlxG.mouse.x < 400)
+    	{
     		curSelectedels = curSelected;
     		touchMoving = true;
     		
@@ -326,7 +325,7 @@ class FreeplayState extends MusicBeatState
 		if (FlxG.mouse.pressed && FlxG.mouse.overlaps(illustration))
 		{
 			playSongTime += elapsed;
-			if (playingSong != curSelected && playSongTime >= 1.0)
+			if ((playingSong != curSelected) && playSongTime >= 2)
 			{
 				#if PRELOAD_ALL
 				playSongTime = 0;
@@ -349,21 +348,20 @@ class FreeplayState extends MusicBeatState
 				playingSong = curSelected;
 				#end
 			}
+			illustration.scale.x = FlxMath.lerp(illustrationSize[1]*0.95, illustrationSize[1], FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustration.scale.y = FlxMath.lerp(illustrationSize[2]*0.95, illustrationSize[2], FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 			
-			illustration.scale.x = FlxMath.lerp(illustrationSize[1] - 0.2, illustration.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
-			illustration.scale.y = FlxMath.lerp(illustrationSize[2] - 0.2, illustration.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
-			
-			illustrationBG.scale.x = FlxMath.lerp(0.8, illustrationBG.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
-			illustrationBG.scale.y = FlxMath.lerp(0.8, illustrationBG.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustrationBG.scale.x = FlxMath.lerp(0.95, illustrationBG.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustrationBG.scale.y = FlxMath.lerp(0.95, illustrationBG.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 		} else {
-			illustration.scale.x = FlxMath.lerp(illustrationSize[1], illustration.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
-			illustration.scale.y = FlxMath.lerp(illustrationSize[2], illustration.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustration.scale.x = FlxMath.lerp(illustrationSize[1], illustrationSize[1], FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustration.scale.y = FlxMath.lerp(illustrationSize[2], illustrationSize[2], FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 			
 			illustrationBG.scale.x = FlxMath.lerp(1, illustrationBG.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 			illustrationBG.scale.y = FlxMath.lerp(1, illustrationBG.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 		}
 		
-		if (controls.ACCEPT || FlxG.mouse.justReleased && FlxG.mouse.overlaps(illustration) && playSongTime < 1)
+		if ((controls.ACCEPT || (FlxG.mouse.justReleased && FlxG.mouse.overlaps(illustration)) ) && playSongTime < 2)
     	{
     		FlxG.mouse.visible = false;
     		var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
@@ -406,7 +404,7 @@ class FreeplayState extends MusicBeatState
     		#end
     	}
     	
-    	if (controls.BACK #if android || (FlxG.mouse.x > lastMouseY + 700) && FlxG.mouse.justReleased #end)
+    	if (controls.BACK #if android || ((FlxG.mouse.x > lastMouseX + 700) && FlxG.mouse.justReleased && playSongTime < 2) #end)
 		{
 			persistentUpdate = false;
 			FlxG.mouse.visible = false;
