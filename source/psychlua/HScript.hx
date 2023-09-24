@@ -283,7 +283,7 @@ class HScript extends BrewScript
 	}
 
 	#if BrewScript
-	override public function destroy()
+	public function destroy()
 	{
 		origin = null;
 		parentLua = null;
@@ -291,7 +291,7 @@ class HScript extends BrewScript
 		super.destroy();
 	}
 	#else
-	public function destroy()
+	public function kill()
 	{
 		active = false;
 	}
