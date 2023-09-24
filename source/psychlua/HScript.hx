@@ -283,7 +283,7 @@ class HScript extends BrewScript
 	}
 
 	#if BrewScript
-	public function kill()
+	override public function kill()
 	{
 		origin = null;
 		parentLua = null;
