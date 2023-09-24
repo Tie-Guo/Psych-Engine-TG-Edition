@@ -5,15 +5,15 @@ import objects.Character;
 import psychlua.FunkinLua;
 import psychlua.CustomSubstate;
 
-#if HSCRIPT_ALLOWED
-import brew.BrewScript;
-class HScript extends BrewScript
+#if (HSCRIPT_ALLOWED && SScript >= "3.0.0")
+import tea.SScript;
+class HScript extends SScript
 {
 	public var parentLua:FunkinLua;
 	
 	public static function initHaxeModule(parent:FunkinLua)
 	{
-		#if BrewScript
+		#if (SScript >= "3.0.0")
 		if(parent.hscript == null)
 		{
 			trace('initializing haxe interp for: ${parent.scriptName}');
@@ -24,7 +24,7 @@ class HScript extends BrewScript
 
 	public static function initHaxeModuleCode(parent:FunkinLua, code:String)
 	{
-		#if BrewScript
+		#if (SScript >= "3.0.0")
 		if(parent.hscript == null)
 		{
 			trace('initializing haxe interp for: ${parent.scriptName}');
@@ -51,7 +51,7 @@ class HScript extends BrewScript
 
 	override function preset()
 	{
-		#if BrewScript
+		#if (SScript >= "3.0.0")
 		super.preset();
 
 		// Some very commonly used classes
@@ -165,7 +165,7 @@ class HScript extends BrewScript
 		#end
 	}
 
-	public function executeCode(?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):BrewCall
+	public function executeCode(?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):SCall
 	{
 		if (funcToRun == null) return null;
 
@@ -191,7 +191,7 @@ class HScript extends BrewScript
 		return callValue;
 	}
 
-	public function executeFunction(funcToRun:String = null, funcArgs:Array<Dynamic>):BrewCall
+	public function executeFunction(funcToRun:String = null, funcArgs:Array<Dynamic>):SCall
 	{
 		if (funcToRun == null)
 			return null;
@@ -203,8 +203,8 @@ class HScript extends BrewScript
 	{
 		#if LUA_ALLOWED
 		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
-			var retVal:BrewCall = null;
-			#if BrewScript
+			var retVal:SCall = null;
+			#if (SScript >= "3.0.0")
 			initHaxeModuleCode(funk, codeToRun);
 			if(varsToBring != null)
 			{
@@ -234,7 +234,7 @@ class HScript extends BrewScript
 		});
 		
 		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
-			#if BrewScript
+			#if (SScript >= "3.0.0")
 			var callValue = funk.hscript.executeFunction(funcToRun, funcArgs);
 			if (!callValue.succeeded)
 			{
@@ -249,7 +249,7 @@ class HScript extends BrewScript
 			FunkinLua.luaTrace("runHaxeFunction: HScript isn't supported on this platform!", false, false, FlxColor.RED);
 			#end
 		});
-		// This function is unnecessary because import already exists in BrewScript as a native feature
+		// This function is unnecessary because import already exists in SScript as a native feature
 		funk.addLocalCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
 			var str:String = '';
 			if(libPackage.length > 0)
@@ -259,12 +259,12 @@ class HScript extends BrewScript
 
 			var c = Type.resolveClass(str + libName);
 
-			#if BrewScript
+			#if (SScript >= "3.0.3")
 			if (c != null)
-				BrewScript.globalVariables[libName] = c;
+				SScript.globalVariables[libName] = c;
 			#end
 
-			#if BrewScript
+			#if (SScript >= "3.0.0")
 			if (funk.hscript != null)
 			{
 				try {
@@ -282,16 +282,16 @@ class HScript extends BrewScript
 		#end
 	}
 
-	#if BrewScript
-	override public function kill()
+	#if (SScript >= "3.0.3")
+	override public function destroy()
 	{
 		origin = null;
 		parentLua = null;
 
-		super.kill();
+		super.destroy();
 	}
 	#else
-	public public function kill()
+	public function destroy()
 	{
 		active = false;
 	}
