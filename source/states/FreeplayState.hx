@@ -25,25 +25,28 @@ import sys.FileSystem;
 class FreeplayState extends MusicBeatState
 {
 	var bg:FlxSprite;
-    var songs:Array<SongMetadata> = [];
+	var bars:FlxSprite;
+    public static var songs:Array<SongMetadata> = [];
     var songtextsGroup:Array<FlxText> = [];
     var iconsArray:Array<HealthIcon> = [];
     var songtextsLastY:Array<Float> = [];
     
     var baseX:Float = 200;
     var lastMouseY:Float = 0;
-    var curSelectedels:Float = 0;
-    var curSelected:Int = 0;
-    var curDifficulty:Int = 0;
+    private static var curSelectedels:Float = 0;
+    private static var curSelected:Int = 0;
+    public static var curDifficulty:Int = 0;
+    private static var playSongTime:Float = 0;
+    private static var playingSong:Int = -1;
     var intendedColor:Int;
     var touchMoving:Bool = false;
     
     var illustration:FlxSprite;
 	var illustrationBG:FlxSprite;
 	var illustrationOverlap:FlxSprite;
+	var illustrationSize:Array<Float> = [1, 1];
 	var rightArrow:FlxSprite;
 	var leftArrow:FlxSprite;
-	var bars:FlxSprite;
 	var difficultieImage:FlxSprite;
 	var difficultieText:FlxText;
 	
@@ -71,7 +74,9 @@ class FreeplayState extends MusicBeatState
 		#end
 		
 		songs = [];
+		#if !mobile
 		FlxG.mouse.visible = true;
+		#end
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
     	bg.antialiasing = ClientPrefs.data.antialiasing;
@@ -150,6 +155,7 @@ class FreeplayState extends MusicBeatState
     	bars.antialiasing = ClientPrefs.data.antialiasing;
     	bars.screenCenter();
     	bars.alpha = 0.75;
+    	add(bars);
     	
     	difficultySelectors = new FlxGroup();
 		add(difficultySelectors);
@@ -163,7 +169,6 @@ class FreeplayState extends MusicBeatState
     	leftArrow.animation.addByPrefix('press', "arrow push left");
     	leftArrow.animation.play('idle');
     	difficultySelectors.add(leftArrow);
-    	
     	
     	rightArrow = new FlxSprite(0, 615);
     	rightArrow.antialiasing = ClientPrefs.data.antialiasing;
@@ -182,7 +187,6 @@ class FreeplayState extends MusicBeatState
     	
     	bg.color = songs[curSelected].color;
     	changeSelection(0);
-    	add(bars);
     	
     	#if android
 			addVirtualPad(NONE, NONE);
@@ -230,16 +234,16 @@ class FreeplayState extends MusicBeatState
 			moveByCurSelected();
 		}
 
-		if (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.justPressed) changeDiff(-1);
-		if (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.justPressed) changeDiff(1);
+		if (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.justReleased) changeDiff(-1);
+		if (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.justReleased) changeDiff(1);
 	
 		if (FlxG.mouse.overlaps(leftArrow) && FlxG.mouse.pressed) leftArrow.animation.play('press');
 		else leftArrow.animation.play('idle');
 		if (FlxG.mouse.overlaps(rightArrow) && FlxG.mouse.pressed) rightArrow.animation.play('press');
 		else rightArrow.animation.play('idle');
 		
-		if (controls.UI_LEFT_P) changeDiff(-1);
-		if (controls.UI_RIGHT_P) changeDiff(1);
+		if (controls.UI_LEFT_R) changeDiff(-1);
+		if (controls.UI_RIGHT_R) changeDiff(1);
 	
 		if (controls.UI_LEFT) leftArrow.animation.play('press');
 		else leftArrow.animation.play('idle');
@@ -319,7 +323,47 @@ class FreeplayState extends MusicBeatState
 			iconsArray[i].y = songtextsGroup[i].y - 25;
 		}
 		
-		if (controls.ACCEPT || FlxG.mouse.justReleased && FlxG.mouse.overlaps(illustration))
+		if (FlxG.mouse.pressed && FlxG.mouse.overlaps(illustration))
+		{
+			playSongTime += elapsed;
+			if (playingSong != curSelected && playSongTime >= 1.0)
+			{
+				#if PRELOAD_ALL
+				playSongTime = 0;
+				destroyFreeplayVocals();
+				FlxG.sound.music.volume = 0;
+				Mods.currentModDirectory = songs[curSelected].folder;
+				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
+				PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+				if (PlayState.SONG.needsVoices)
+					vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+				else
+					vocals = new FlxSound();
+
+				FlxG.sound.list.add(vocals);
+				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
+				vocals.play();
+				vocals.persist = true;
+				vocals.looped = true;
+				vocals.volume = 0.7;
+				playingSong = curSelected;
+				#end
+			}
+			
+			illustration.scale.x = FlxMath.lerp(illustrationSize[1] - 0.2, illustration.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustration.scale.y = FlxMath.lerp(illustrationSize[2] - 0.2, illustration.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			
+			illustrationBG.scale.x = FlxMath.lerp(0.8, illustrationBG.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustrationBG.scale.y = FlxMath.lerp(0.8, illustrationBG.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+		} else {
+			illustration.scale.x = FlxMath.lerp(illustrationSize[1], illustration.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustration.scale.y = FlxMath.lerp(illustrationSize[2], illustration.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			
+			illustrationBG.scale.x = FlxMath.lerp(1, illustrationBG.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustrationBG.scale.y = FlxMath.lerp(1, illustrationBG.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+		}
+		
+		if (controls.ACCEPT || FlxG.mouse.justReleased && FlxG.mouse.overlaps(illustration) && playSongTime < 1)
     	{
     		FlxG.mouse.visible = false;
     		var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
@@ -361,6 +405,17 @@ class FreeplayState extends MusicBeatState
     		DiscordClient.loadModRPC();
     		#end
     	}
+    	
+    	if (controls.BACK #if android || (FlxG.mouse.x > lastMouseY + 700) && FlxG.mouse.justReleased #end)
+		{
+			persistentUpdate = false;
+			FlxG.mouse.visible = false;
+			if(colorTween != null) {
+				colorTween.cancel();
+			}
+			FlxG.sound.play(Paths.sound('cancelMenu'));
+			MusicBeatState.switchState(new MainMenuState());
+		}
 
 		super.update(elapsed);
 	}
@@ -465,6 +520,8 @@ class FreeplayState extends MusicBeatState
     		illustration.scale.y = 425/illustration.height;
     		illustration.updateHitbox();
     	}
+    	
+    	illustrationSize = [illustration.scale.x, illustration.scale.y];
     	
     	illustration.angle = 0;
     	illustrationBG.angle = 0;
