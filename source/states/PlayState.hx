@@ -1226,7 +1226,7 @@ class PlayState extends MusicBeatState
 	
 	public function updateScoreBot()
 	{
-		scoreTxt.text += 'Bot Play';
+		scoreTxt.text = 'BOT PLAY | NO SCORE | NO ACCURACY';
 
 		if(ClientPrefs.data.scoreZoom)
 		{
