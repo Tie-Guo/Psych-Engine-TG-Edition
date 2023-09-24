@@ -68,6 +68,8 @@ jobs:
           haxelib git linc_luajit https://github.com/Sirox228/linc_luajit
           haxelib git extension-androidtools https://github.com/MaysLastPlay77/extension-androidtools
           haxelib install hxcpp-debug-server
+          haxelib git androiddialogs https://github.com/beihu235/AndroidDialogs
+          haxelib git devicelanguage https://github.com/beihu235/devicelanguage
           haxelib list
 
       - name: Create Version Tag
@@ -85,6 +87,8 @@ jobs:
           haxelib set flixel 5.2.2
           haxelib set flixel-addons 3.0.2
           haxelib set hxcpp 4.2.1
+          haxelib set SScript 4.0.1
+          haxelib set hxmath 0.18.0 
           haxelib list
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
@@ -135,5 +139,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@main
         with:
-          name: Android
-          path: export/release/android/bin/app/build/outputs/apk/debug
+          name: android
+          path: export/release/android/bin/app/build/outputs/apk/debug          
