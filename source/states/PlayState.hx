@@ -3310,7 +3310,7 @@ class PlayState extends MusicBeatState
 		{
 			var newScript:HScript = new HScript(null, file);
 			@:privateAccess
-			if(newScript.parsingExceptions != null && newScript.parsingExceptions.length > 0)
+			if(newScript.parsingExceptions != null)
 			{
 				@:privateAccess
 				for (e in newScript.parsingExceptions)
