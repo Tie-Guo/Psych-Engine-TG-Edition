@@ -42,6 +42,7 @@ class FreeplayState extends MusicBeatState
     private static var playingSong:Int = -1;
     var intendedColor:Int;
     var touchMoving:Bool = false;
+    var haveMissText:Bool = false;
     
     var illustration:FlxSprite;
 	var illustrationBG:FlxSprite;
@@ -458,10 +459,13 @@ class FreeplayState extends MusicBeatState
         			if (!missingText.visible) add(missingText);
         			
         			missingText.visible = true;
+        			haveMissText = true;
         			
         			new FlxTimer().start(4, function(tmr:FlxTimer) {
-        			if(tmr.finished)
-        				missingText.visible = false;
+        			if(tmr.finished) {
+        					missingText.visible = false;
+        					haveMissText = false
+        				}
         			});
         			FlxG.sound.play(Paths.sound('cancelMenu'));
         
@@ -504,11 +508,14 @@ class FreeplayState extends MusicBeatState
     			if (!missingText.visible) add(missingText);
     			
     			missingText.visible = true;
-    			
-    			new FlxTimer().start(4, function(tmr:FlxTimer) {
-    			if(tmr.finished)
-    				missingText.visible = false;
-    			});
+    			haveMissText = true;
+        			
+        		new FlxTimer().start(4, function(tmr:FlxTimer) {
+        		if(tmr.finished) {
+        				missingText.visible = false;
+        				haveMissText = false
+        			}
+        		});
     			FlxG.sound.play(Paths.sound('cancelMenu'));
     
     			return;
