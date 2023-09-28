@@ -41,7 +41,7 @@ class FlashingState extends MusicBeatState
 		languChText.text = '< ' + Language.defaultLanguage + ' >';
 		
 		#if android
-			addVirtualPad(LEFT_RIGHT, A_B);
+		addVirtualPad(LEFT_RIGHT, A);
 		#end
 	}
 
@@ -114,16 +114,14 @@ class FlashingState extends MusicBeatState
 	function event()
 	{
 		if (Language.get() == 'English') {
-		warnText = new FlxText(0, 0, FlxG.width,
-			"Hey, watch out!\n
+		warnText = new FlxText(0, 0, FlxG.width, "Hey, watch out!\n
 			This Mod contains some flashing lights!\n
 			Press " +  #if android "A" #else "ENTER" #end + " to disable them now or go to Options Menu.\n
 			Press " +  #if android "B" #else "ESCAPE" #end + " to ignore this message.\n
 			You've been warned!",
 			32);
 		} else {
-		warnText = new FlxText(0, 0, FlxG.width,
-			"注意!\n
+		warnText = new FlxText(0, 0, FlxG.width, "注意!\n
 			部分模组中可能出现闪光特效!\n
 			按下 " +  #if android "A" #else "ENTER" #end + " 现在来关闭闪光特效, 或前往设置.\n
 			按下 " +  #if android "B" #else "ESCAPE" #end + " 忽略此信息.\n

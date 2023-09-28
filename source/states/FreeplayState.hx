@@ -214,8 +214,8 @@ class FreeplayState extends MusicBeatState
 		
 		for (i in 0...songs.length)
 		{
-    		game.remove(songtextsGroup[i]);
-    		game.remove(iconsArray[i]);
+    		remove(songtextsGroup[i]);
+    		remove(iconsArray[i]);
 		}
 		
 		songs = suitedSong;
