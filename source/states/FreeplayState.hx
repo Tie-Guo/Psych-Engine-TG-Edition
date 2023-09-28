@@ -189,6 +189,11 @@ class FreeplayState extends MusicBeatState
 	function doSearch()
 	{
 		if (searchInput.text == '') {
+			for (i in 0...songs.length)
+			{
+    			remove(songtextsGroup[i]);
+    			remove(iconsArray[i]);
+			}
 			loadSong();
 			addSongTxt();
 			return;
@@ -210,12 +215,6 @@ class FreeplayState extends MusicBeatState
 		if (suitedSong.length < 1) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			return;
-		}
-		
-		for (i in 0...songs.length)
-		{
-    		remove(songtextsGroup[i]);
-    		remove(iconsArray[i]);
 		}
 		
 		songs = suitedSong;
@@ -256,6 +255,7 @@ class FreeplayState extends MusicBeatState
 	function loadSong()
 	{
 		songs = [];
+		if (bars != null) remove(bars);
 		for (i in 0...WeekData.weeksList.length) {
     		if(weekIsLocked(WeekData.weeksList[i])) continue;
     
@@ -279,9 +279,8 @@ class FreeplayState extends MusicBeatState
     			}
     			addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
     		}
-    		
-    		if (songs.length > 10) break;
-    	}
+       	}
+    	add(bars);
 	}
 
 	var instPlaying:Int = -1;
@@ -442,10 +441,11 @@ class FreeplayState extends MusicBeatState
 				} catch(e:Dynamic) {
 					var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
     				var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+    				
         			var errorStr:String = Mods.currentModDirectory + '/data/' + songLowercase + '/' + poop + '.json';
         			var missingText:FlxText = new FlxText(0, 680, 0, 'ERROR WHILE LOADING CHART: $errorStr', 20);
         			missingText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left');
-        			add(missingText);
+        			if (!missingText.visible) add(missingText);
         			
         			missingText.visible = true;
         			
@@ -491,7 +491,7 @@ class FreeplayState extends MusicBeatState
     			var errorStr:String = Mods.currentModDirectory + '/data/' + songLowercase + '/' + poop + '.json';
     			var missingText:FlxText = new FlxText(0, 680, 0, 'ERROR WHILE LOADING CHART: $errorStr', 20);
     			missingText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left');
-    			add(missingText);
+    			if (!missingText.visible) add(missingText);
     			
     			missingText.visible = true;
     			
