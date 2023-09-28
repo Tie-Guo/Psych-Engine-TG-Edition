@@ -149,28 +149,24 @@ class FreeplayState extends MusicBeatState
     	searchInput.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
     	searchInput.backgroundColor = FlxColor.TRANSPARENT;
     	searchInput.fieldBorderColor = FlxColor.TRANSPARENT;
-    	searchInput.camera = cam;
+    	searchInput.font = Language.font();
     	add(searchInput);
     	
     	tipSearchText = new FlxText(50, 50, 0, 'Name...', 20);
     	tipSearchText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left', FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-    	tipSearchText.camera = cam;
     	tipSearchText.alpha = 0.5;
     	add(tipSearchText);
     		
     	underline = new FlxSprite(50, 80).makeGraphic(400, 6, FlxColor.WHITE);
-    	underline.camera = cam;
     	underline.alpha = 0.6;
     	add(underline);
     	
     	searchText = new FlxText(465, 50, 0, 'Search', 20);
     	searchText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left', FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-    	searchText.camera = cam;
     	searchText.alpha = 0.75;
     	add(searchText);
     	
     	searchTextBG = new FlxSprite(460, 45).makeGraphic(80, 40, FlxColor.WHITE);
-    	searchTextBG.camera = cam;
     	searchTextBG.alpha = 0;
     	add(searchTextBG);
     	
