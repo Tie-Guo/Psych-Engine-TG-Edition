@@ -464,7 +464,7 @@ class FreeplayState extends MusicBeatState
         			new FlxTimer().start(4, function(tmr:FlxTimer) {
         			if(tmr.finished) {
         					missingText.visible = false;
-        					haveMissText = false
+        					haveMissText = false;
         				}
         			});
         			FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -513,7 +513,7 @@ class FreeplayState extends MusicBeatState
         		new FlxTimer().start(4, function(tmr:FlxTimer) {
         		if(tmr.finished) {
         				missingText.visible = false;
-        				haveMissText = false
+        				haveMissText = false;
         			}
         		});
     			FlxG.sound.play(Paths.sound('cancelMenu'));
