@@ -196,6 +196,7 @@ class FreeplayState extends MusicBeatState
 			}
 			loadSong();
 			addSongTxt();
+			changeSelection(0);
 			return;
 		}
 		
@@ -226,10 +227,20 @@ class FreeplayState extends MusicBeatState
 	
 	function addSongTxt()
 	{
+		if (songs.length >= 1)
+		{
+			for (i in 0...songs.length)
+			{
+    			remove(songtextsGroup[i]);
+    			remove(iconsArray[i]);
+			}
+		}
+		
 		songtextsLastY = [];
     	songtextsGroup = [];
     	iconsArray = [];
     	
+    	if (bars != null) remove(bars);
 		for (i in 0...songs.length)
     	{
     		var songText = new FlxText((i <= curSelected) ? baseX - (curSelected-i)*25 : baseX - (i-curSelected)*25, 320+(i-curSelected)*115, 0, songs[i].songName, 60);
@@ -250,12 +261,12 @@ class FreeplayState extends MusicBeatState
     		add(icon);
     		iconsArray.push(icon);
     	}
+    	add(bars);
 	}
 	
 	function loadSong()
 	{
 		songs = [];
-		if (bars != null) remove(bars);
 		for (i in 0...WeekData.weeksList.length) {
     		if(weekIsLocked(WeekData.weeksList[i])) continue;
     
@@ -280,7 +291,6 @@ class FreeplayState extends MusicBeatState
     			addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
     		}
        	}
-    	add(bars);
 	}
 
 	var instPlaying:Int = -1;
