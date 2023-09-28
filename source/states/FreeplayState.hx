@@ -347,6 +347,8 @@ class FreeplayState extends MusicBeatState
     				vocals.volume = 0.7;
     				playingSong = curSelected;
 				} catch(e:Dynamic) {
+					var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
+    				var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
         			var errorStr:String = Mods.currentModDirectory + '/data/' + songLowercase + '/' + poop + '.json';
         			var missingText:FlxText = new FlxText(0, 680, 0, 'ERROR WHILE LOADING CHART: $errorStr', 20);
         			missingText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left');
@@ -379,7 +381,6 @@ class FreeplayState extends MusicBeatState
 		
 		if ((controls.ACCEPT || (FlxG.mouse.justReleased && FlxG.mouse.overlaps(illustration)) ) && playSongTime < 2)
     	{
-    		FlxG.mouse.visible = false;
     		var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
     		var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
     		try
@@ -411,6 +412,7 @@ class FreeplayState extends MusicBeatState
     		}
     		
     		LoadingState.loadAndSwitchState(new PlayState());
+    		FlxG.mouse.visible = false;
     
     		FlxG.sound.music.volume = 0;
     				
