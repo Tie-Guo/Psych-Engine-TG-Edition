@@ -50,6 +50,11 @@ class FreeplayState extends MusicBeatState
 	var leftArrow:FlxSprite;
 	var difficultieImage:FlxSprite;
 	var difficultieText:FlxText;
+	var underline:FlxSprite;
+    var tipSearchText:FlxText;
+    var searchText:FlxText;
+    var searchTextBG:FlxSprite;
+    var searchInput:FlxInputText;
 	
 	var difficultySelectors:FlxGroup;
     
@@ -103,54 +108,8 @@ class FreeplayState extends MusicBeatState
     	add(illustrationOverlap);
     	illustrationOverlap.alpha = 0;
     	
-    	for (i in 0...WeekData.weeksList.length) {
-    		if(weekIsLocked(WeekData.weeksList[i])) continue;
-    
-    		var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
-    		var leSongs:Array<String> = [];
-    		var leChars:Array<String> = [];
-    
-    		for (j in 0...leWeek.songs.length)
-    		{
-    			leSongs.push(leWeek.songs[j][0]);
-    			leChars.push(leWeek.songs[j][1]);
-    		}
-    
-    		WeekData.setDirectoryFromWeek(leWeek);
-    		for (song in leWeek.songs)
-    		{
-    			var colors:Array<Int> = song[2];
-    			if(colors == null || colors.length < 3)
-    			{
-    				colors = [146, 113, 253];
-    			}
-    			addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
-    		}
-    	}
-    	Mods.loadTopMod();
-    
-    	WeekData.setDirectoryFromWeek();
-    	
-    	for (i in 0...songs.length)
-    	{
-    		var songText = new FlxText((i <= curSelected) ? baseX - (curSelected-i)*25 : baseX - (i-curSelected)*25, 320+(i-curSelected)*115, 0, songs[i].songName, 60);
-    		songText.setFormat(Paths.font("syht.ttf"), 60, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-    		if (songs[i].songName.length >= 20) {
-    			songText.scale.x = 10 / songs[i].songName.length;
-    			songText.updateHitbox();
-    		}
-    		add(songText);
-    		
-    		songtextsLastY.push(songText.y);
-    		songtextsGroup.push(songText);
-    		
-    		Mods.currentModDirectory = songs[i].folder;
-		
-			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
-			icon.scale.set(0.8, 0.8);
-			add(icon);
-			iconsArray.push(icon);
-    	}
+    	loadSong();
+		addSongTxt();
     	
     	bars = new FlxSprite().loadGraphic(Paths.image('menus/freeplaybars'));
     	bars.antialiasing = ClientPrefs.data.antialiasing;
@@ -186,6 +145,35 @@ class FreeplayState extends MusicBeatState
     	difficultieText = new FlxText(0, 625, 0, '', 60);
     	add(difficultieText);
     	
+    	searchInput = new FlxInputText(50, 50, 400, '', 20, 0x00FFFFFF);
+    	searchInput.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
+    	searchInput.backgroundColor = FlxColor.TRANSPARENT;
+    	searchInput.fieldBorderColor = FlxColor.TRANSPARENT;
+    	searchInput.camera = cam;
+    	add(searchInput);
+    	
+    	tipSearchText = new FlxText(50, 50, 0, 'Name...', 20);
+    	tipSearchText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left', FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+    	tipSearchText.camera = cam;
+    	tipSearchText.alpha = 0.5;
+    	add(tipSearchText);
+    		
+    	underline = new FlxSprite(50, 80).makeGraphic(400, 6, FlxColor.WHITE);
+    	underline.camera = cam;
+    	underline.alpha = 0.6;
+    	add(underline);
+    	
+    	searchText = new FlxText(465, 50, 0, 'Search', 20);
+    	searchText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left', FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+    	searchText.camera = cam;
+    	searchText.alpha = 0.75;
+    	add(searchText);
+    	
+    	searchTextBG = new FlxSprite(460, 45).makeGraphic(80, 40, FlxColor.WHITE);
+    	searchTextBG.camera = cam;
+    	searchTextBG.alpha = 0;
+    	add(searchTextBG);
+    	
     	bg.color = songs[curSelected].color;
     	changeSelection(0);
     	
@@ -200,6 +188,104 @@ class FreeplayState extends MusicBeatState
 		changeSelection(0, false);
 		persistentUpdate = true;
 		super.closeSubState();
+	}
+	
+	function doSearch()
+	{
+		if (searchInput.text == '') {
+			loadSong();
+			addSongTxt();
+			return;
+		}
+		
+		loadSong();
+		
+		var suitedSong:Array<SongMetadata> = [];
+		var searchString = searchInput.text.toLowerCase();
+		for (i in 0...songs.length)
+		{
+			var name:String = songs[i].songName.toLowerCase();
+			if (name.indexOf(searchString) != -1)
+			{
+				suitedSong.push(songs[i]);
+			}
+		}
+		
+		if (suitedSong.length < 1) {
+			FlxG.sound.play(Paths.sound('cancelMenu'));
+			return;
+		}
+		
+		for (i in 0...songs.length)
+		{
+    		game.remove(songtextsGroup[i]);
+    		game.remove(iconsArray[i]);
+		}
+		
+		songs = suitedSong;
+    	
+    	addSongTxt();
+    	changeSelection(0);
+    	moveByCurSelected();
+	}
+	
+	function addSongTxt()
+	{
+		songtextsLastY = [];
+    	songtextsGroup = [];
+    	iconsArray = [];
+    	
+		for (i in 0...songs.length)
+    	{
+    		var songText = new FlxText((i <= curSelected) ? baseX - (curSelected-i)*25 : baseX - (i-curSelected)*25, 320+(i-curSelected)*115, 0, songs[i].songName, 60);
+    		songText.setFormat(Paths.font("syht.ttf"), 60, FlxColor.WHITE, 'left', FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+    		if (songs[i].songName.length >= 17) {
+    			songText.scale.x = 10 / songs[i].songName.length;
+    			songText.updateHitbox();
+    		}
+    		add(songText);
+    		
+    		songtextsLastY.push(songText.y);
+    		songtextsGroup.push(songText);
+    		
+    		Mods.currentModDirectory = songs[i].folder;
+    		
+    		var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
+    		icon.scale.set(0.8, 0.8);
+    		add(icon);
+    		iconsArray.push(icon);
+    	}
+	}
+	
+	function loadSong()
+	{
+		songs = [];
+		for (i in 0...WeekData.weeksList.length) {
+    		if(weekIsLocked(WeekData.weeksList[i])) continue;
+    
+    		var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
+    		var leSongs:Array<String> = [];
+    		var leChars:Array<String> = [];
+    
+    		for (j in 0...leWeek.songs.length)
+    		{
+    			leSongs.push(leWeek.songs[j][0]);
+    			leChars.push(leWeek.songs[j][1]);
+    		}
+    
+    		WeekData.setDirectoryFromWeek(leWeek);
+    		for (song in leWeek.songs)
+    		{
+    			var colors:Array<Int> = song[2];
+    			if(colors == null || colors.length < 3)
+    			{
+    				colors = [146, 113, 253];
+    			}
+    			addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
+    		}
+    		
+    		if (songs.length > 10) break;
+    	}
 	}
 
 	var instPlaying:Int = -1;
@@ -252,12 +338,23 @@ class FreeplayState extends MusicBeatState
     		curSelectedels = songs.length - 1;
     	else if (curSelectedels < 0)
     		curSelectedels = 0;
+    		
+    	if (searchInput.text.length > 0) tipSearchText.visible = false;
+		else tipSearchText.visible = true;
+
     	
     	if (FlxG.mouse.justPressed)
-    	{
+        {
     		lastMouseY = FlxG.mouse.y;
     		lastMouseX = FlxG.mouse.x;
     		playSongTime = 0;
+    		
+    		if (FlxG.mouse.overlaps(searchTextBG))
+			{
+				searchTextBG.alpha = 0.75;
+				FlxTween.tween(searchTextBG, {alpha: 0}, 0.25);
+				doSearch();
+			}
     	}
     		
     	if (FlxG.mouse.justPressed && FlxG.mouse.x < 600)
@@ -366,14 +463,14 @@ class FreeplayState extends MusicBeatState
         		}
         		#end
 			}
-			illustration.scale.x = FlxMath.lerp(illustrationSize[1]*0.95, illustrationSize[1], FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
-			illustration.scale.y = FlxMath.lerp(illustrationSize[2]*0.95, illustrationSize[2], FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustration.scale.x = FlxMath.lerp(illustrationSize[0]*0.95, illustration.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustration.scale.y = FlxMath.lerp(illustrationSize[1]*0.95, illustration.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 			
 			illustrationBG.scale.x = FlxMath.lerp(0.95, illustrationBG.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 			illustrationBG.scale.y = FlxMath.lerp(0.95, illustrationBG.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 		} else {
-			illustration.scale.x = FlxMath.lerp(illustrationSize[1], illustrationSize[1], FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
-			illustration.scale.y = FlxMath.lerp(illustrationSize[2], illustrationSize[2], FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustration.scale.x = FlxMath.lerp(illustrationSize[0], illustration.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
+			illustration.scale.y = FlxMath.lerp(illustrationSize[1], illustration.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 			
 			illustrationBG.scale.x = FlxMath.lerp(1, illustrationBG.scale.x, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
 			illustrationBG.scale.y = FlxMath.lerp(1, illustrationBG.scale.y, FlxMath.bound(1 - (elapsed * 8.5), 0, 1));
