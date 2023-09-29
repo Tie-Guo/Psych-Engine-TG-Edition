@@ -222,6 +222,8 @@ class FreeplayState extends MusicBeatState
 	
 	function doSearch()
 	{
+		var oldSong:Array<SongMetadata> = songs;
+
 		loadSong();
 		
 		var suitedSong:Array<SongMetadata> = [];
@@ -240,9 +242,15 @@ class FreeplayState extends MusicBeatState
 			return;
 		}
 		
-		if ((suitedSong.length == songs.length) && searchInput.text == '') {
+		if (oldSong.length == suitedSong.length && searchInput.text == '') {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			return;
+		}
+		
+		for (i in 0...oldSong.length)
+		{
+    		remove(songtextsGroup[i]);
+    		remove(iconsArray[i]);
 		}
 		
 		songs = suitedSong;
@@ -254,15 +262,6 @@ class FreeplayState extends MusicBeatState
 	
 	function addSongTxt()
 	{
-		if (songs.length >= 1)
-		{
-			for (i in 0...songs.length)
-			{
-    			remove(songtextsGroup[i]);
-    			remove(iconsArray[i]);
-			}
-		}
-
 		songtextsLastY = [];
     	songtextsGroup = [];
     	iconsArray = [];
@@ -492,7 +491,8 @@ class FreeplayState extends MusicBeatState
     				
         			var errorStr:String = Mods.currentModDirectory + '/data/' + songLowercase + '/' + poop + '.json';
         			var missingText:FlxText = new FlxText(0, 680, 0, 'ERROR WHILE LOADING CHART: $errorStr', 20);
-        			missingText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left');
+        			missingText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, LEFT);
+        			missingText.camera = camUI;
         			if (!haveMissText) add(missingText);
         			
         			missingText.visible = true;
@@ -541,7 +541,8 @@ class FreeplayState extends MusicBeatState
     		{
     			var errorStr:String = Mods.currentModDirectory + '/data/' + songLowercase + '/' + poop + '.json';
     			var missingText:FlxText = new FlxText(0, 680, 0, 'ERROR WHILE LOADING CHART: $errorStr', 20);
-    			missingText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left');
+    			missingText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, LEFT);
+    			missingText.camera = camUI;
     			if (!haveMissText) add(missingText);
     			
     			missingText.visible = true;
