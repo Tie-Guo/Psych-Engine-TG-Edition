@@ -93,7 +93,9 @@ class FreeplayState extends MusicBeatState
 		#end
 		
 		camGame = new FlxCamera();
+		camGame.bgColor = 0x00;
 		camUI = new FlxCamera();
+		camUI.bgColor = 0x00;
 		
 		FlxG.cameras.add(camGame, false);
 		FlxG.cameras.add(camUI, false);
