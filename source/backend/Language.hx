@@ -4,9 +4,9 @@ class Language {
 	public static var languages:Array<String> = ['English', 'Chinese'];
 	public static var defaultLanguage:String = 'English';
 	
-	public static function font()
+	public function font()
 	{
-		if (ClientPrefs.data.language != 'English')
+		if (ClientPrefs.data.language == 'English')
 			return Paths.font('vcr.ttf');
 		else
 			return Paths.font('syht.ttf');
