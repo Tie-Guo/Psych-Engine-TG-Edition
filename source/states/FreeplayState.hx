@@ -491,7 +491,7 @@ class FreeplayState extends MusicBeatState
         			var errorStr:String = Mods.currentModDirectory + '/data/' + songLowercase + '/' + poop + '.json';
         			var missingText:FlxText = new FlxText(0, 680, 0, 'ERROR WHILE LOADING CHART: $errorStr', 20);
         			missingText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left');
-        			if (!missingText.visible) add(missingText);
+        			if (!haveMissText) add(missingText);
         			
         			missingText.visible = true;
         			haveMissText = true;
@@ -540,7 +540,7 @@ class FreeplayState extends MusicBeatState
     			var errorStr:String = Mods.currentModDirectory + '/data/' + songLowercase + '/' + poop + '.json';
     			var missingText:FlxText = new FlxText(0, 680, 0, 'ERROR WHILE LOADING CHART: $errorStr', 20);
     			missingText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left');
-    			if (!missingText.visible) add(missingText);
+    			if (!haveMissText) add(missingText);
     			
     			missingText.visible = true;
     			haveMissText = true;
