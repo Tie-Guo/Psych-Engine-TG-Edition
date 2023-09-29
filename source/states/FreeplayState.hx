@@ -40,6 +40,10 @@ class FreeplayState extends MusicBeatState
     public static var curDifficulty:Int = 0;
     private static var playSongTime:Float = 0;
     private static var playingSong:Int = -1;
+    var lerpScore:Int = 0;
+	var lerpRating:Float = 0;
+	var intendedScore:Int = 0;
+	var intendedRating:Float = 0;
     var intendedColor:Int;
     var touchMoving:Bool = false;
     var haveMissText:Bool = false;
@@ -56,6 +60,9 @@ class FreeplayState extends MusicBeatState
     var searchText:FlxText;
     var searchTextBG:FlxSprite;
     var searchInput:FlxInputText;
+    var camGame:FlxCamera;
+    var camUI:FlxCamera;
+    var scoreText:FlxText;
 	
 	var difficultySelectors:FlxGroup;
     
@@ -84,16 +91,27 @@ class FreeplayState extends MusicBeatState
 		#if !mobile
 		FlxG.mouse.visible = true;
 		#end
+		
+		camGame = new FlxCamera();
+		camUI = new FlxCamera();
+		
+		FlxG.cameras.add(camGame, false);
+		FlxG.cameras.add(camUI, false);
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
     	bg.antialiasing = ClientPrefs.data.antialiasing;
+    	bg.camera = camGame;
     	add(bg);
     	intendedColor = bg.color;
     	bg.screenCenter();
     	
+    	loadSong();
+		addSongTxt();
+    	
     	illustrationBG = new FlxSprite(780+20, 100+20).makeGraphic(425, 425, FlxColor.GRAY);
     	illustrationBG.antialiasing = ClientPrefs.data.antialiasing;
     	illustrationBG.updateHitbox();
+    	illustrationBG.camera = camUI;
     	add(illustrationBG);
     	
     	illustration = new FlxSprite(780, 100).loadGraphic(Paths.image('unknownMod'));
@@ -101,22 +119,27 @@ class FreeplayState extends MusicBeatState
     	illustration.scale.x = 425/illustration.width;
     	illustration.scale.y = 425/illustration.height;
     	illustration.updateHitbox();
+    	illustration.camera = camUI;
     	add(illustration);
     	
     	illustrationOverlap = new FlxSprite(780, 100).makeGraphic(425, 425, FlxColor.WHITE);
     	illustrationOverlap.antialiasing = ClientPrefs.data.antialiasing;
     	illustrationOverlap.updateHitbox();
+    	illustrationOverlap.camera = camUI;
     	add(illustrationOverlap);
     	illustrationOverlap.alpha = 0;
-    	
-    	loadSong();
-		addSongTxt();
     	
     	bars = new FlxSprite().loadGraphic(Paths.image('menus/freeplaybars'));
     	bars.antialiasing = ClientPrefs.data.antialiasing;
     	bars.screenCenter();
+    	bars.camera = camUI;
     	//bars.alpha = 0.75;
     	add(bars);
+    	
+    	scoreText = new FlxText(FlxG.width * 0.7, 2.5, 0, "", 32);
+		scoreText.setFormat(Language.font(), 32, FlxColor.WHITE, 'right');
+		scoreText.camera = camUI;
+		add(scoreText);
     	
     	difficultySelectors = new FlxGroup();
 		add(difficultySelectors);
@@ -129,6 +152,7 @@ class FreeplayState extends MusicBeatState
     	leftArrow.animation.addByPrefix('idle', "arrow left");
     	leftArrow.animation.addByPrefix('press', "arrow push left");
     	leftArrow.animation.play('idle');
+    	leftArrow.camera = camUI;
     	difficultySelectors.add(leftArrow);
     	
     	rightArrow = new FlxSprite(0, 615);
@@ -137,13 +161,15 @@ class FreeplayState extends MusicBeatState
     	rightArrow.animation.addByPrefix('idle', 'arrow right');
     	rightArrow.animation.addByPrefix('press', "arrow push right", 24, false);
     	rightArrow.animation.play('idle');
-    	add(rightArrow);
+    	rightArrow.camera = camUI;
     	difficultySelectors.add(rightArrow);
     	
     	difficultieImage = new FlxSprite(0, 625).loadGraphic(Paths.image('menudifficulties/hard'));
+    	difficultieImage.camera = camUI;
     	add(difficultieImage);
     	
     	difficultieText = new FlxText(0, 625, 0, '', 60);
+    	difficultieText.camera = camUI;
     	add(difficultieText);
     	
     	searchInput = new FlxInputText(50, 50, 400, '', 20, 0x00FFFFFF);
@@ -151,24 +177,29 @@ class FreeplayState extends MusicBeatState
     	searchInput.backgroundColor = FlxColor.TRANSPARENT;
     	searchInput.fieldBorderColor = FlxColor.TRANSPARENT;
     	searchInput.font = Language.font();
+    	searchInput.camera = camUI;
     	add(searchInput);
     	
     	tipSearchText = new FlxText(50, 50, 0, 'Name...', 20);
     	tipSearchText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left', FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
     	tipSearchText.alpha = 0.5;
+    	tipSearchText!=.camera = camUI;
     	add(tipSearchText);
     		
     	underline = new FlxSprite(50, 80).makeGraphic(400, 6, FlxColor.WHITE);
     	underline.alpha = 0.6;
+    	underline.camera = camUI;
     	add(underline);
     	
     	searchText = new FlxText(465, 50, 0, 'Search', 20);
     	searchText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left', FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
     	searchText.alpha = 0.75;
+    	searchText.camera = camUI;
     	add(searchText);
     	
     	searchTextBG = new FlxSprite(460, 45).makeGraphic(80, 40, FlxColor.WHITE);
     	searchTextBG.alpha = 0;
+    	searchTextBG.camera = camUI;
     	add(searchTextBG);
     	
     	bg.color = songs[curSelected].color;
@@ -189,18 +220,6 @@ class FreeplayState extends MusicBeatState
 	
 	function doSearch()
 	{
-		if (searchInput.text == '') {
-			for (i in 0...songs.length)
-			{
-    			remove(songtextsGroup[i]);
-    			remove(iconsArray[i]);
-			}
-			loadSong();
-			addSongTxt();
-			changeSelection(0);
-			return;
-		}
-		
 		loadSong();
 		
 		var suitedSong:Array<SongMetadata> = [];
@@ -215,6 +234,11 @@ class FreeplayState extends MusicBeatState
 		}
 		
 		if (suitedSong.length < 1) {
+			FlxG.sound.play(Paths.sound('cancelMenu'));
+			return;
+		}
+		
+		if ((suitedSong.length == songs.length) && searchInput.text == '') {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			return;
 		}
@@ -236,7 +260,7 @@ class FreeplayState extends MusicBeatState
     			remove(iconsArray[i]);
 			}
 		}
-		
+
 		songtextsLastY = [];
     	songtextsGroup = [];
     	iconsArray = [];
@@ -246,6 +270,7 @@ class FreeplayState extends MusicBeatState
     	{
     		var songText = new FlxText((i <= curSelected) ? baseX - (curSelected-i)*25 : baseX - (i-curSelected)*25, 320+(i-curSelected)*115, 0, songs[i].songName, 60);
     		songText.setFormat(Paths.font("syht.ttf"), 60, FlxColor.WHITE, 'left', FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+    		songText.camera = camGame;
     		if (songs[i].songName.length >= 17) {
     			songText.scale.x = 10 / songs[i].songName.length;
     			songText.updateHitbox();
@@ -259,6 +284,7 @@ class FreeplayState extends MusicBeatState
     		
     		var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
     		icon.scale.set(0.8, 0.8);
+    		icon.camera = camGame;
     		add(icon);
     		iconsArray.push(icon);
     	}
@@ -304,8 +330,15 @@ class FreeplayState extends MusicBeatState
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
 		
-		
-		/* var ratingSplit:Array<String> = Std.string(CoolUtil.floorDecimal(lerpRating * 100, 2)).split('.');
+		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, FlxMath.bound(elapsed * 24, 0, 1)));
+		lerpRating = FlxMath.lerp(lerpRating, intendedRating, FlxMath.bound(elapsed * 12, 0, 1));
+
+		if (Math.abs(lerpScore - intendedScore) <= 10)
+			lerpScore = intendedScore;
+		if (Math.abs(lerpRating - intendedRating) <= 0.01)
+			lerpRating = intendedRating;
+
+		var ratingSplit:Array<String> = Std.string(CoolUtil.floorDecimal(lerpRating * 100, 2)).split('.');
 		if(ratingSplit.length < 2) { //No decimals, add an empty space
 			ratingSplit.push('');
 		}
@@ -314,7 +347,9 @@ class FreeplayState extends MusicBeatState
 			ratingSplit[1] += '0';
 		}
 
-		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%)'; */
+		scoreText.text = 'Score: ' + lerpScore + ' | Accuracy: ' + ratingSplit.join('.') + '%';
+		
+		scoreText.x = FlxG.width - scoreText.width - 15;
 		
 		if (controls.UI_UP_P && !touchMoving)
 		{
@@ -578,7 +613,7 @@ class FreeplayState extends MusicBeatState
     	} else {
     		if (difficultieText != null) {
     			difficultieText.text = newDiffName;
-    			difficultieText.setFormat(Paths.font("syht.ttf"));
+    			difficultieText.setFormat(Paths.font("syht.ttf"), 60);
     			difficultieText.updateHitbox();
     		}
     		
@@ -597,6 +632,9 @@ class FreeplayState extends MusicBeatState
     		rightArrow.visible = true;
     		leftArrow.visible = true;
     	}
+    	
+    	intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
+		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
     }
 
 	function changeSelection(value:Int = 0, playSound:Bool = true)
