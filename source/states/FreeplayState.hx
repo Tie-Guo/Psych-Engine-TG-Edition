@@ -183,7 +183,7 @@ class FreeplayState extends MusicBeatState
     	tipSearchText = new FlxText(50, 50, 0, 'Name...', 20);
     	tipSearchText.setFormat(Paths.font("syht.ttf"), 20, FlxColor.WHITE, 'left', FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
     	tipSearchText.alpha = 0.5;
-    	tipSearchText!=.camera = camUI;
+    	tipSearchText.camera = camUI;
     	add(tipSearchText);
     		
     	underline = new FlxSprite(50, 80).makeGraphic(400, 6, FlxColor.WHITE);
