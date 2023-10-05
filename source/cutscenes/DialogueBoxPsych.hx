@@ -103,8 +103,8 @@ class DialogueBoxPsych extends FlxSpriteGroup
 
 		daText = new FlxTypeText(DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_WIDTH, '', DEFAULT_TEXT_SIZE);
 		
-		daText.setFormat(Paths.font('dialogueFont.ttf'));
-		daText.showCursor = true;
+		daText.setFormat(Paths.font('dialogueFont.ttf'), DEFAULT_TEXT_SIZE);
+		daText.showCursor = false;
 		daText.skipKeys = null;
 		daText.sounds = [returnSound('dialogue')];
 		daText.color = FlxColor.BLACK;
