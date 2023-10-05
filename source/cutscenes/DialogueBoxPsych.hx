@@ -50,6 +50,8 @@ class DialogueBoxPsych extends FlxSpriteGroup
 	var bgFade:FlxSprite = null;
 	var box:FlxSprite;
 	var textToType:String = '';
+	
+	public var finishedText:Bool = false;
 
 	var arrayCharacters:Array<DialogueCharacter> = [];
 
@@ -104,13 +106,16 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		daText.setFormat(Paths.font('dialogueFont.ttf'));
 		daText.showCursor = true;
 		daText.skipKeys = null;
-		daText.sounds = [Paths.sound('dialogue')];
+		daText.sounds = [returnSound('dialogue')];
 		daText.color = FlxColor.BLACK;
 
 		add(daText);
 
 		startNextDialog();
 	}
+	
+	function returnSound(name:String = 'dialogue')
+		return FlxG.sound.load(Paths.sound(name));
 
 	var dialogueStarted:Bool = false;
 	var dialogueEnded:Bool = false;
@@ -379,8 +384,8 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		finishedText = false;
 
 		daText.resetText(curDialogue.text);
-		daText.sounds = [Paths.sound(curDialogue.sound)];
-		if(daText.sounds == null) daText.sounds = [Paths.sound(curDialogue.sound)];
+		daText.sounds = [returnSound(curDialogue.sound)];
+		if(daText.sounds == null) daText.sounds = [returnSound(curDialogue.sound)];
 		
 		daText.start(curDialogue.speed, true, false, null, function()
 		{
