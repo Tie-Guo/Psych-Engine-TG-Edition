@@ -1,5 +1,7 @@
 package cutscenes;
 
+import flixel.addons.text.FlxTypeText;
+
 import tjson.TJSON as Json;
 import openfl.utils.Assets;
 //import backend.Controls;
@@ -32,11 +34,15 @@ class DialogueBoxPsych extends FlxSpriteGroup
 {
 	public static var DEFAULT_TEXT_X = 175;
 	public static var DEFAULT_TEXT_Y = 460;
+	public static var DEFAULT_TEXT_WIDTH = 870;
+	public static var DEFAULT_TEXT_SIZE = 32;
 	public static var LONG_TEXT_ADD = 24;
 	var scrollSpeed = 4000;
 
 	var dialogue:TypedAlphabet;
 	var dialogueList:DialogueFile = null;
+	
+	var daText:FlxTypeText = null;
 
 	public var finishThing:Void->Void;
 	public var nextDialogueThing:Void->Void = null;
@@ -93,8 +99,14 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		box.updateHitbox();
 		add(box);
 
-		daText = new TypedAlphabet(DEFAULT_TEXT_X, DEFAULT_TEXT_Y, '');
-		daText.setScale(0.7);
+		daText = new FlxTypeText(DEFAULT_TEXT_X, DEFAULT_TEXT_Y, DEFAULT_TEXT_WIDTH, '', DEFAULT_TEXT_SIZE);
+		
+		daText.setFormat(Paths.font('dialogueFont.ttf'));
+		daText.showCursor = true;
+		daText.skipKeys = null;
+		daText.sounds = [Paths.sound('dialogue')];
+		daText.color = FlxColor.BLACK;
+
 		add(daText);
 
 		startNextDialog();
@@ -149,7 +161,6 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		}
 	}
 
-	var daText:TypedAlphabet = null;
 	var ignoreThisFrame:Bool = true; //First frame is reserved for loading dialogue images
 
 	public var closeSound:String = 'dialogueClose';
@@ -179,8 +190,8 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		        #end
 
 			if(FlxG.keys.justPressed.ESCAPE #if android || justTouched #end) {
-				if(!daText.finishedText) {
-					daText.finishText();
+				if(!finishedText) {
+					daText.skip();
 					if(skipDialogueThing != null) {
 						skipDialogueThing();
 					}
@@ -210,7 +221,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 					startNextDialog();
 				}
 				FlxG.sound.play(Paths.sound(closeSound), closeVolume);
-			} else if(daText.finishedText) {
+			} else if(finishedText) {
 				var char:DialogueCharacter = arrayCharacters[lastCharacter];
 				if(char != null && char.animation.curAnim != null && char.animationIsLoop() && char.animation.finished) {
 					char.playAnim(char.animation.curAnim.name, true);
@@ -364,18 +375,21 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		}
 		lastCharacter = character;
 		lastBoxType = boxType;
-
-		daText.text = curDialogue.text;
-		daText.delay = curDialogue.speed;
-		daText.sound = curDialogue.sound;
-		if(daText.sound == null || daText.sound.trim() == '') daText.sound = 'dialogue';
 		
-		daText.y = DEFAULT_TEXT_Y;
-		if(daText.rows > 2) daText.y -= LONG_TEXT_ADD;
+		finishedText = false;
 
+		daText.resetText(curDialogue.text);
+		daText.sounds = [Paths.sound(curDialogue.sound)];
+		if(daText.sounds == null) daText.sounds = [Paths.sound(curDialogue.sound)];
+		
+		daText.start(curDialogue.speed, true, false, null, function()
+		{
+			finishedText = true;
+		});
+		
 		var char:DialogueCharacter = arrayCharacters[character];
 		if(char != null) {
-			char.playAnim(curDialogue.expression, daText.finishedText);
+			char.playAnim(curDialogue.expression, finishedText);
 			if(char.animation.curAnim != null) {
 				var rate:Float = 24 - (((curDialogue.speed - 0.05) / 5) * 480);
 				if(rate < 12) rate = 12;
