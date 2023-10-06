@@ -33,8 +33,8 @@ typedef DialogueLine = {
 class DialogueBoxPsych extends FlxSpriteGroup
 {
 	public static var DEFAULT_TEXT_X = 175;
-	public static var DEFAULT_TEXT_Y = 460;
-	public static var DEFAULT_TEXT_WIDTH = 870;
+	public static var DEFAULT_TEXT_Y = 485;
+	public static var DEFAULT_TEXT_WIDTH = 920;
 	public static var DEFAULT_TEXT_SIZE = 32;
 	public static var LONG_TEXT_ADD = 24;
 	var scrollSpeed = 4000;
