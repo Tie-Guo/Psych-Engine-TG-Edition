@@ -24,12 +24,16 @@ import sys.FileSystem;
 
 class FreeplayState extends MusicBeatState
 {
+	var filePath:String = 'menuExtend/';
+    var font:String = Paths.font('montserrat.ttf');
+    
 	var bg:FlxSprite;
 	var bars:FlxSprite;
     public static var songs:Array<SongMetadata> = [];
     var songtextsGroup:Array<FlxText> = [];
     var iconsArray:Array<HealthIcon> = [];
     var songtextsLastY:Array<Float> = [];
+    var barsArray:Array<FlxSprite> = [];
     var illustrationSize:Array<Float> = [1, 1];
     
     var baseX:Float = 200;
@@ -72,6 +76,7 @@ class FreeplayState extends MusicBeatState
     var angleTween:FlxTween;
 	var angleTweenBG:FlxTween;
 	var angleTweenOverlap:FlxTween;
+	var missTextTimer:FlxTimer;
     
 	override function create()
 	{
@@ -110,7 +115,7 @@ class FreeplayState extends MusicBeatState
     	loadSong();
 		addSongTxt();
     	
-    	illustrationBG = new FlxSprite(780+20, 100+20).makeGraphic(425, 425, FlxColor.GRAY);
+    	/*illustrationBG = new FlxSprite(780+20, 100+20).makeGraphic(425, 425, FlxColor.GRAY);
     	illustrationBG.antialiasing = ClientPrefs.data.antialiasing;
     	illustrationBG.updateHitbox();
     	illustrationBG.camera = camUI;
@@ -129,7 +134,7 @@ class FreeplayState extends MusicBeatState
     	illustrationOverlap.updateHitbox();
     	illustrationOverlap.camera = camUI;
     	add(illustrationOverlap);
-    	illustrationOverlap.alpha = 0;
+    	illustrationOverlap.alpha = 0;*/
     	
     	bars = new FlxSprite().loadGraphic(Paths.image('menus/freeplaybars'));
     	bars.antialiasing = ClientPrefs.data.antialiasing;
@@ -242,7 +247,7 @@ class FreeplayState extends MusicBeatState
 			return;
 		}
 		
-		if (oldSong.length == suitedSong.length && searchInput.text == '') {
+		if (oldSong == suitedSong) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			return;
 		}
@@ -276,7 +281,6 @@ class FreeplayState extends MusicBeatState
     			songText.scale.x = 10 / songs[i].songName.length;
     			songText.updateHitbox();
     		}
-    		add(songText);
     		
     		songtextsLastY.push(songText.y);
     		songtextsGroup.push(songText);
@@ -286,8 +290,27 @@ class FreeplayState extends MusicBeatState
     		var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
     		icon.scale.set(0.8, 0.8);
     		icon.camera = camGame;
-    		add(icon);
     		iconsArray.push(icon);
+    		
+    		var barShadow:FlxSprite = new FlxSprite().loadGraphic(Paths.image(filePath + 'barShadow'));
+    		add(barShadow);
+    		barShadow.scale.set(1, 1);
+    		barShadow.x = songText.x - 200 ;
+    		barShadow.y = songText.y - 15;
+    		barShadow.updateHitbox();
+    		barShadow.color = songs[i].color;
+    		barsArray.push(barShadow);
+		
+    		var bar:FlxSprite = new FlxSprite().loadGraphic(Paths.image(filePath + 'bar'));
+    		add(bar);
+    		bar.scale.set(1, 1);
+    		bar.x = songText.x - 200 ;
+    		bar.y = songText.y - 15;
+    		bar.updateHitbox();
+    		barsArray.push(bar);
+    		
+    		add(songText);
+    		add(icon);
     	}
     	add(bars);
 	}
@@ -320,10 +343,16 @@ class FreeplayState extends MusicBeatState
     		}
        	}
 	}
+	
+	override function destroy()
+	{
+		for (i in iconsArray)
+		{
+			FlxTween.tween(i, {alpha: 0}, 0.1, {ease: FlxEase.quadOut});
+		}
+	}
 
-	var instPlaying:Int = -1;
 	public static var vocals:FlxSound = null;
-	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
 		if (FlxG.sound.music.volume < 0.7)
@@ -423,6 +452,12 @@ class FreeplayState extends MusicBeatState
     				songtextsGroup[i].x = baseX - (curSelectedels-i)*25;
     			else
     				songtextsGroup[i].x = baseX - (i-curSelectedels)*25;
+    				
+    			barsArray[i*2].x = songtextsGroup[i].x - 200;
+    			barsArray[i*2].y = songtextsGroup[i].y - 15;
+			
+    			barsArray[i*2+1].x = songtextsGroup[i].x - 200;
+    			barsArray[i*2+1].y = songtextsGroup[i].y - 15;
     		}
     	}
     	
@@ -447,7 +482,7 @@ class FreeplayState extends MusicBeatState
     				if (FlxG.mouse.overlaps(songtextsGroup[i]))
     				{
     					curSelected = i;
-    					changeSelection();
+    					if (curSelected != i) changeSelection();
     					break;
     				}
     			}
@@ -548,12 +583,15 @@ class FreeplayState extends MusicBeatState
     			missingText.visible = true;
     			haveMissText = true;
         			
-        		new FlxTimer().start(4, function(tmr:FlxTimer) {
+        		if (missTextTimer == null)
+        		missTextTimer = new FlxTimer().start(4, function(tmr:FlxTimer) {
         		if(tmr.finished) {
         				missingText.visible = false;
         				haveMissText = false;
+        				missTextTimer = null;
         			}
         		});
+        		
     			FlxG.sound.play(Paths.sound('cancelMenu'));
     
     			return;
@@ -680,7 +718,7 @@ class FreeplayState extends MusicBeatState
 		changeDiff(0);
 	}
 	
-    function resetIllustration()
+    /*function resetIllustration()
     {
     	Mods.currentModDirectory = songs[curSelected].folder;
     	
@@ -705,6 +743,8 @@ class FreeplayState extends MusicBeatState
     	
     	if (angleTween != null)
     		angleTween.cancel;
+    		angleTweenBG.cancel;
+    		angleTweenOverlap.cancel;
     	
     	angleTween = FlxTween.tween(illustration, {angle: -5}, 0.25, {ease: FlxEase.quadOut});
     	angleTweenBG = FlxTween.tween(illustrationBG, {angle: -5}, 0.25, {ease: FlxEase.quadOut});
@@ -712,7 +752,7 @@ class FreeplayState extends MusicBeatState
     	
     	illustrationOverlap.alpha = 0.75;
     	FlxTween.tween(illustrationOverlap, {alpha: 0}, 0.25, {ease: FlxEase.quadOut});
-    }
+    }*/
     
 	
 	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int)
@@ -733,3 +773,24 @@ class FreeplayState extends MusicBeatState
 		}
 	}
 }
+
+/*
+class SongMetadata
+{
+	public var songName:String = "";
+	public var week:Int = 0;
+	public var songCharacter:String = "";
+	public var color:Int = -7179779;
+	public var folder:String = "";
+	public var lastDifficulty:String = null;
+
+	public function new(song:String, week:Int, songCharacter:String, color:Int)
+	{
+		this.songName = song;
+		this.week = week;
+		this.songCharacter = songCharacter;
+		this.color = color;
+		this.folder = Mods.currentModDirectory;
+		if(this.folder == null) this.folder = '';
+	}
+}*/
