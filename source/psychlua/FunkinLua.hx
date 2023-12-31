@@ -1470,7 +1470,7 @@ class FunkinLua {
 		#end
 
 		// mod settings
-		addLocalCallback("getModSetting", function(saveTag:String, ?modName:String = null) {
+		/*addLocalCallback("getModSetting", function(saveTag:String, ?modName:String = null) {
 			if(modName == null)
 			{
 				if(this.modFolder == null)
@@ -1481,7 +1481,7 @@ class FunkinLua {
 				modName = this.modFolder;
 			}
 			return LuaUtils.getModSetting(saveTag, modName);
-		});
+		});*/
 		//
 
 		Lua_helper.add_callback(lua, "debugPrint", function(text:Dynamic = '', color:String = 'WHITE') PlayState.instance.addTextToDebug(text, CoolUtil.colorFromString(color)));
@@ -1494,7 +1494,7 @@ class FunkinLua {
 
 		#if desktop DiscordClient.addLuaCallbacks(lua); #end
 		#if SScript HScript.implement(this); #end
-		#if ACHIEVEMENTS_ALLOWED Achievements.addLuaCallbacks(lua); #end
+		//#if ACHIEVEMENTS_ALLOWED Achievements.addLuaCallbacks(lua); #end
 		#if flxanimate FlxAnimateFunctions.implement(this); #end
 		ReflectionFunctions.implement(this);
 		TextFunctions.implement(this);
