@@ -10,9 +10,20 @@ import openfl.display.BitmapData;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
+import backend.Achievements;
+
+#if MODS_ALLOWED
+import sys.io.File;
+import sys.FileSystem;
+#end
 
 #if (!flash && sys)
 import flixel.addons.display.FlxRuntimeShader;
+#end
+
+#if MODS_ALLOWED
+import sys.io.File;
+import sys.FileSystem;
 #end
 
 import cutscenes.DialogueBoxPsych;
@@ -148,7 +159,6 @@ class FunkinLua {
 		set('healthGainMult', game.healthGain);
 		set('healthLossMult', game.healthLoss);
 		#if FLX_PITCH set('playbackRate', game.playbackRate); #end
-		set('guitarHeroSustains', game.guitarHeroSustains);
 		set('instakillOnMiss', game.instakillOnMiss);
 		set('botPlay', game.cpuControlled);
 		set('practice', game.practiceMode);

@@ -4,6 +4,7 @@ import flixel.FlxBasic;
 import objects.Character;
 import psychlua.FunkinLua;
 import psychlua.CustomSubstate;
+import backend.Achievements;
 
 #if HSCRIPT_ALLOWED
 import tea.SScript;
@@ -76,7 +77,6 @@ class HScript extends SScript
 		set('FlxMath', flixel.math.FlxMath);
 		set('FlxSprite', flixel.FlxSprite);
 		set('FlxCamera', flixel.FlxCamera);
-		set('PsychCamera', backend.PsychCamera);
 		set('FlxTimer', flixel.util.FlxTimer);
 		set('FlxTween', flixel.tweens.FlxTween);
 		set('FlxEase', flixel.tweens.FlxEase);
@@ -123,6 +123,7 @@ class HScript extends SScript
 			if(color == null) color = FlxColor.WHITE;
 			PlayState.instance.addTextToDebug(text, color);
 		});
+		/*
 		set('getModSetting', function(saveTag:String, ?modName:String = null) {
 			if(modName == null)
 			{
@@ -134,7 +135,7 @@ class HScript extends SScript
 				modName = this.modFolder;
 			}
 			return LuaUtils.getModSetting(saveTag, modName);
-		});
+		});*/
 
 		// Keyboard & Gamepads
 		set('keyboardJustPressed', function(name:String) return Reflect.getProperty(FlxG.keys.justPressed, name));
